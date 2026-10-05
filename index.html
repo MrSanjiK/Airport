@@ -54,15 +54,11 @@
       <div class="nav-actions">
         <a class="nav-phone tnum" href="tel:+998901073333"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg>+998 90 107 33 33</a>
         <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">
-          <svg class="tt-svg" viewBox="0 0 40 24" aria-hidden="true">
-            <defs><clipPath id="ttHorizon"><rect x="0" y="0" width="40" height="17" /></clipPath></defs>
-            <g class="tt-stars"><circle cx="9" cy="6" r=".9" /><circle cx="30" cy="4.5" r=".7" /><circle cx="25" cy="9.5" r=".6" /><circle cx="14" cy="11" r=".5" /></g>
-            <g clip-path="url(#ttHorizon)">
-              <g class="tt-sun"><circle cx="20" cy="12" r="4.2" /><g class="tt-rays"><path d="M20 4.4v-2M20 21.6v-2M12.4 12h-2M29.6 12h-2M14.6 6.6l-1.4-1.4M26.8 18.8l-1.4-1.4M14.6 17.4l-1.4 1.4M26.8 5.2l-1.4 1.4" /></g></g>
-              <g class="tt-moon"><path d="M23.4 7.4a5.2 5.2 0 1 0 0 9.2a4.2 4.2 0 1 1 0-9.2z" /></g>
-            </g>
-            <path class="tt-horizon" d="M3 17.5h34" />
-          </svg>
+          <span class="tt-track" aria-hidden="true">
+            <span class="tt-stars"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="tt-clouds"><i></i><i></i></span>
+            <span class="tt-knob"><span class="tt-sun"></span><span class="tt-moon"><i></i><i></i><i></i></span></span>
+          </span>
           <span class="sr-only" data-i18n="nav.themeNight">Tungi xarita</span>
         </button>
         <div class="lang" id="lang">
@@ -219,6 +215,7 @@
 
   <footer class="footer" id="footer"></footer>
 
+  <p class="map-credit">Imagery: <a href="https://s2maps.eu" target="_blank" rel="noopener">Sentinel-2 cloudless 2016 by EOX IT Services GmbH</a> (contains modified Copernicus Sentinel data 2016 &amp; 2017, CC BY 4.0) · NASA Black Marble · NASA Blue Marble · © OpenStreetMap</p>
   <div class="coord" id="coord" aria-hidden="true"><span class="coord-k" data-i18n="map.cursor">Kursor</span> <span id="coordV">41°15′N 69°17′E</span></div>
   <nav class="rail" id="rail" aria-label="Route"></nav>
 

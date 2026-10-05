@@ -64,7 +64,8 @@ export function initStory(world, { places, nav, bus }) {
       world: world.worldAt(p[0], p[1], 0.3),
       html: () => `${TRI}<span class="wp-box"><span class="wp-name">${t(`cities.${k}`)}${row.iata ? `<span class="wp-code">${row.iata}</span>` : ''}</span><span class="wp-sub">${num(row.screens)} ${t('map.screens')} · ${num(row.venues)} ${t('map.venues')}</span></span>`,
       weights: { hero: heroCities.includes(k) ? 0.9 : 0, regions: 1, plan: 0.8, korzinka: 0.5, explore: 1 },
-      onClick: () => fly({ type: 'city', key: k }),
+      // in the Regions chapter a city label picks the city in the plate; elsewhere it opens the map card
+      onClick: () => (active === 'regions' && !exploring ? bus.dispatchEvent(new CustomEvent('regionpick', { detail: k })) : fly({ type: 'city', key: k })),
       key: k,
       far: 1,
     }).prio = 60 + row.screens / 10;
@@ -119,7 +120,12 @@ export function initStory(world, { places, nav, bus }) {
   // The approach plate around the 3D airport (comp-3): title band, callouts on leaders, zone photo, price profile.
   const frame = document.createElement('div');
   frame.className = 'apt-frame';
-  frame.innerHTML = `<div class="apt-band"></div><div class="apt-foot"><figure class="apt-photo"><img src="/img/air-arrival-32.webp" alt="" width="1600" height="890" /><figcaption></figcaption></figure><div class="apt-profile"></div></div>`;
+  frame.innerHTML = `<div class="apt-band"></div><div class="apt-foot"><figure class="apt-photo" role="button" tabindex="0"><img src="/img/air-arrival-32.webp" alt="" width="1600" height="890" /><figcaption></figcaption></figure><div class="apt-profile" role="button" tabindex="0"></div></div>`;
+  // the photo and the price ladder on the plate both lead to the zone's row in the list
+  frame.querySelectorAll('.apt-photo, .apt-profile').forEach((el) => {
+    el.addEventListener('click', () => pickZone(curZone));
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') pickZone(curZone); });
+  });
   labelsEl.append(frame);
   const callWrap = document.createElement('div');
   callWrap.className = 'callouts';
@@ -199,6 +205,12 @@ export function initStory(world, { places, nav, bus }) {
 
   const weights = Object.fromEntries(ALL.map((c) => [c, 0]));
   let introDone = false;
+  let cameraFree = false;
+  let focus = null;
+  bus.addEventListener('regionfocus', (e) => {
+    const c = e.detail && places.cities[e.detail];
+    focus = c ? world.goalFromPose({ t: c, dist: 240, az: 0, el: 50, shift: POSES.regions.shift }) : null;
+  });
   let exploring = false;
   let active = 'hero';
   const frameState = () => {
@@ -218,12 +230,22 @@ export function initStory(world, { places, nav, bus }) {
     CHAPTERS.forEach((c) => (weights[c] = 0));
     weights[a.id] = 1 - k;
     weights[b.id] = k;
-    if (introDone) {
-      world.setGoal({
+    if (cameraFree) {
+      const g = {
         tx: lerp(a.pose.tx, b.pose.tx, k), ty: lerp(a.pose.ty, b.pose.ty, k), tz: lerp(a.pose.tz, b.pose.tz, k),
         dist: Math.exp(lerp(Math.log(a.pose.dist), Math.log(b.pose.dist), k)),
         az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k),
-      });
+      };
+      // a city picked in the Regions plate pulls the chart down onto it while that chapter holds the screen
+      const fw = focus ? weights.regions : 0;
+      if (fw > 0.001) {
+        const f = focus;
+        Object.assign(g, {
+          tx: lerp(g.tx, f.tx, fw), ty: lerp(g.ty, f.ty, fw), tz: lerp(g.tz, f.tz, fw),
+          dist: Math.exp(lerp(Math.log(g.dist), Math.log(f.dist), fw)), az: lerpAngle(g.az, f.az, fw), el: lerp(g.el, f.el, fw), shift: lerp(g.shift, f.shift, fw),
+        });
+      }
+      world.setGoal(g);
     }
     const now = k < 0.5 ? a.id : b.id;
     if (now !== active) {
@@ -241,6 +263,14 @@ export function initStory(world, { places, nav, bus }) {
 
   // Hero plates: leader lines to their anchors and pointer tilt
   const plateEls = [...document.querySelectorAll('.hplate')];
+  // each hero plate is the doorway to its chapter
+  plateEls.forEach((el) => {
+    el.setAttribute('role', 'link');
+    el.tabIndex = 0;
+    const go = () => bus.dispatchEvent(new CustomEvent('goto', { detail: el.dataset.plate }));
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+  });
   const anchors = {
     airport: world.hubWorld.clone().setY(world.hubWorld.y + 0.4),
     korzinka: world.worldAt(...places.cities.samarqand, 0.3),
@@ -253,6 +283,7 @@ export function initStory(world, { places, nav, bus }) {
   world.onFrame(() => {
     frameState();
     const w = weights;
+    document.documentElement.classList.toggle('at-map', w.hero > 0.5 || exploring);
     const ex = w.explore;
     const dist = world.cur.dist;
     // far: clusters and city labels; near: individual venue icons
@@ -260,7 +291,9 @@ export function initStory(world, { places, nav, bus }) {
     const nearK = 1 - clamp((dist - 70) / 130);
     const farK = clamp((dist - 60) / 110);
 
-    const as = 1 + 329 * w.hero + (PLATE.scale - 1) * w.airport;
+    // the hero symbol is sized for the screen: a landmark on desktop, never a wall over the copy on a phone
+    const heroS = 329 * Math.min(1, Math.max(0.42, (Math.min(innerWidth, innerHeight * 1.6) - 300) / 1100));
+    const as = 1 + heroS * w.hero + (PLATE.scale - 1) * w.airport;
     // on the plate the volumes are drawn at half the hero symbol's height exaggeration, so the plan reads
     world.airport.group.scale.set(as, as * (1 - 0.45 * w.airport), as);
     world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0);
@@ -395,6 +428,7 @@ export function initStory(world, { places, nav, bus }) {
 
   return {
     introDone() { introDone = true; world.state.ready = true; },
+    releaseCamera() { cameraFree = true; },
     setExplore(v) { exploring = v; if (!v) frameState(); },
     weights,
   };

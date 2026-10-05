@@ -1,0 +1,117 @@
+{
+ "attribution": "Sentinel-2 cloudless \u2014 s2maps.eu by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2016 & 2017) \u00b7 Night lights: NASA Black Marble",
+ "layers": {
+  "base": {
+   "bounds": [
+    50.5,
+    80.5,
+    33.5,
+    48.5
+   ],
+   "size": [
+    4096,
+    2048
+   ],
+   "mobile": [
+    2048,
+    1024
+   ]
+  },
+  "core": {
+   "bounds": [
+    63.6,
+    73.6,
+    37.6,
+    42.6
+   ],
+   "size": [
+    4096,
+    2048
+   ],
+   "mobile": [
+    2048,
+    1024
+   ]
+  },
+  "fergana": {
+   "bounds": [
+    70.4,
+    73.2,
+    40.2,
+    41.4
+   ],
+   "size": [
+    3072,
+    1316
+   ],
+   "mobile": [
+    1536,
+    658
+   ]
+  },
+  "tashkent": {
+   "bounds": [
+    68.8,
+    69.8,
+    40.9,
+    41.6
+   ],
+   "size": [
+    2560,
+    1792
+   ],
+   "mobile": [
+    1280,
+    896
+   ]
+  },
+  "samarkand": {
+   "bounds": [
+    66.75,
+    67.15,
+    39.55,
+    39.8
+   ],
+   "size": [
+    1024,
+    640
+   ],
+   "mobile": [
+    512,
+    320
+   ]
+  },
+  "bukhara": {
+   "bounds": [
+    64.25,
+    64.65,
+    39.68,
+    39.88
+   ],
+   "size": [
+    1024,
+    512
+   ],
+   "mobile": [
+    512,
+    256
+   ]
+  },
+  "night": {
+   "bounds": [
+    50.5,
+    80.5,
+    33.5,
+    48.5
+   ],
+   "size": [
+    4096,
+    2048
+   ],
+   "mobile": [
+    2048,
+    1024
+   ]
+  }
+ }
+}

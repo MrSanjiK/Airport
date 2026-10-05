@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { toXZ, toLonLat, EXAG, W, D } from './geo.js';
-import { loadHeights, buildOverlays, createTerrain } from './terrain.js';
+import { toXZ, toLonLat, EXAG, W, D, LONC, LATC, KX, KZ } from './geo.js';
+import { loadHeights, buildOverlays, createTerrain, loadSatellite } from './terrain.js';
+import satMeta from '../data/satellite.json';
 import { createIcons, worldAt } from './layers.js';
 import { createAirport } from './airport.js';
 import { createDrapedLines, createRoute, createRoads } from './lines.js';
@@ -39,10 +40,16 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   scene.background = bg;
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 8000);
 
-  const heights = await loadHeights(quality.dem, (p) => onProgress?.(0.15 + p * 0.7));
+  // elevation and the whole-sheet imagery load together; the progress bar follows the larger of the two
+  let pH = 0, pS = 0;
+  const report = () => onProgress?.(0.15 + ((pH * 2 + pS * 1.3) / 3.3) * 0.72);
+  const [heights, sat] = await Promise.all([
+    loadHeights(quality.dem, (p) => { pH = p; report(); }),
+    loadSatellite(satMeta, quality.dem < 2048, document.documentElement.dataset.theme === 'night', (p) => { pS = p; report(); }),
+  ]);
   const overlays = buildOverlays(data.vectors, quality.overlay);
   onProgress?.(0.9);
-  const terrain = createTerrain(heights, overlays, quality.seg);
+  const terrain = createTerrain(heights, overlays, quality.seg, sat, [LONC, LATC, KX, KZ]);
   scene.add(terrain.mesh);
 
   const sample = heights.sample;
@@ -131,7 +138,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   resize();
   addEventListener('resize', resize);
 
-  const state = { night: 0, fold: 0, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches };
+  const state = { night: 0, parallax: 1, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches };
   const v3 = new THREE.Vector3();
   const project = (world, out = {}) => {
     v3.copy(world).project(camera);
@@ -222,16 +229,16 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     cur.ty += (goal.ty - cur.ty) * k;
     cur.tz += (goal.tz - cur.tz) * k;
     cur.dist = Math.exp(Math.log(cur.dist) + (Math.log(goal.dist) - Math.log(cur.dist)) * k);
-    cur.az += (goal.az + pointer.sx * 2.2 - cur.az) * k;
-    cur.el += (goal.el - pointer.sy * 1.4 - cur.el) * k;
+    // pointer parallax is held at zero through the intro: at a top-down view any azimuth sway would turn the map
+    // out of register with the loader's outline
+    cur.az += (goal.az + pointer.sx * 2.2 * state.parallax - cur.az) * k;
+    cur.el += (goal.el - pointer.sy * 1.4 * state.parallax - cur.el) * k;
     cur.shift += (goal.shift - cur.shift) * k;
     applyCamera();
 
     const u = terrain.uniforms;
     u.uCam.value.copy(camera.position);
-    u.uTime.value = time;
     u.uNight.value = state.night;
-    u.uFold.value = state.fold;
     u.uFogNear.value = cur.dist * 0.95 + 60;
     u.uFogFar.value = cur.dist * 2.7 + 280;
     bg.setRGB(0.929 + (0.039 - 0.929) * state.night, 0.949 + (0.09 - 0.949) * state.night, 0.965 + (0.161 - 0.965) * state.night);
@@ -259,6 +266,12 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },
     jump() { Object.assign(cur, goal); applyCamera(); },
+    // finer imagery streams in after the intro and cross-fades over the whole-sheet layer
+    async loadDetail(gsap) {
+      if (await terrain.loadDetail()) gsap.to(terrain.uniforms.uDetail, { value: 1, duration: 1.6, ease: 'power2.inOut' });
+    },
+    // compile every shader and upload every texture before the first visible frame
+    prewarm() { renderer.compile(scene, camera); renderer.render(scene, camera); },
     project, pick,
     onFrame(fn) { listeners.add(fn); return () => listeners.delete(fn); },
     start() { loop(); },

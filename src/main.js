@@ -10,6 +10,8 @@ import { initStory } from './story.js';
 import { drawFallback } from './scene/fallback.js';
 import { initExplore } from './explore.js';
 import { createLoader, introDist, INTRO_TARGET } from './loader.js';
+import { initMini } from './ui/mini.js';
+import { initLightbox } from './ui/lightbox.js';
 
 const bus = new EventTarget();
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -86,20 +88,33 @@ async function boot() {
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
   }
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href').slice(1);
+  const goTo = (id) => {
     const el = id === 'top' ? document.body : document.getElementById(id);
-    if (!el) return;
-    e.preventDefault();
+    if (!el) return false;
     let y = id === 'top' ? 0 : el.getBoundingClientRect().top + scrollY;
     if (el.classList.contains('chapter')) y += innerHeight * 0.42;
     if (id === 'plan') y += innerHeight * 0.18;
     if (id === 'inquiry') y -= 80;
     lenis ? lenis.scrollTo(y, { duration: 1.8 }) : scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
     history.replaceState(null, '', id === 'top' ? location.pathname : `#${id}`);
+    return true;
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    if (goTo(a.getAttribute('href').slice(1))) e.preventDefault();
   });
+  bus.addEventListener('goto', (e) => goTo(e.detail));
+  // bring an element into view through the smooth scroller (native scrollIntoView fights it)
+  bus.addEventListener('scrollto', (e) => {
+    const { el, offset = 0 } = e.detail;
+    const r = el.getBoundingClientRect();
+    if (r.top > innerHeight * 0.15 && r.bottom < innerHeight * 0.85) return;
+    const y = r.top + scrollY + offset;
+    lenis ? lenis.scrollTo(y, { duration: 1.2 }) : scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
+  });
+  initMini(bus);
+  initLightbox();
 
   const finish = () => loader.classList.add('is-done');
 
@@ -146,19 +161,18 @@ async function boot() {
     const q = new URLSearchParams(location.search).get('pose');
     if (q) { const [name, ...v] = q.split(':'); const [lon, lat, dist, az, el] = v[0].split(',').map(Number); POSES[name] = { t: [lon, lat], dist, az, el, shift: 0 }; }
   }
-  const tu = world.terrain.uniforms;
-  tu.uReveal.value = 99999;
-  tu.uDone.value = 1;
   const settle = () => {
     world.lines.opacity = 1;
     world.route.progress = 1;
     story.introDone();
+    story.releaseCamera();
   };
   initExplore(world, { bus, places, lenis, story });
   if (reduced || startY > innerHeight * 0.5 || new URLSearchParams(location.search).has('nointro')) {
     settle();
     if (startY <= innerHeight * 0.5) { world.setGoal(world.goalFromPose(POSES.hero)); world.jump(); }
     finish();
+    world.loadDetail(gsap);
     return;
   }
 
@@ -166,37 +180,44 @@ async function boot() {
   POSES.intro.dist = introDist();
   world.setGoal(world.goalFromPose(POSES.intro));
   world.jump();
+  world.state.parallax = 0;
   world.route.progress = 0;
   lenis?.stop();
   document.documentElement.classList.add('is-intro');
+  // every shader compiled and every texture uploaded while the page still covers the chart, so the first
+  // uncovered frames and the first frames of the flight never hitch
+  world.prewarm();
   await ld.complete(gsap);
-  loader.classList.add('is-done');
 
   const a = world.goalFromPose(POSES.intro);
   const b = world.goalFromPose(POSES.hero);
   const fly = { k: 0 };
   const lerp = (x, y, k) => x + (y - x) * k;
-  // no hold between the loader and the flight: the camera is already moving as the outline dissolves
-  const tl = gsap.timeline({ onComplete: () => lenis?.start() });
+  const tl = gsap.timeline({
+    // the scroll story takes the camera only once the flight has landed exactly on the hero pose
+    onComplete: () => { story.releaseCamera(); lenis?.start(); world.loadDetail(gsap); },
+  });
   tl.to(fly, {
-    k: 1, duration: 2.9, ease: 'power2.inOut',
+    k: 1, duration: 3.0, ease: 'power3.inOut',
     onUpdate: () => {
       const k = fly.k;
-      const kd = 1 - Math.pow(1 - k, 2.2);
+      // altitude drops a little ahead of the travel, and the tilt follows the descent: a landing, not a pan
+      const kd = 1 - Math.pow(1 - k, 1.8);
       world.setGoal({
         tx: lerp(a.tx, b.tx, k), ty: lerp(a.ty, b.ty, k), tz: lerp(a.tz, b.tz, k),
         dist: Math.exp(lerp(Math.log(a.dist), Math.log(b.dist), kd)),
-        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, Math.pow(k, 0.8)), shift: 0,
+        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, k * k * (3 - 2 * k)), shift: 0,
       });
     },
   }, 0);
-  tl.to(world.route, { progress: 1, duration: 2.4, ease: 'power2.inOut' }, 0.6);
+  tl.to(world.route, { progress: 1, duration: 2.4, ease: 'power2.inOut' }, 0.5);
+  tl.to(world.state, { parallax: 1, duration: 1.4, ease: 'power1.inOut' }, 2.4);
   tl.add(() => {
     story.introDone();
     document.documentElement.classList.remove('is-intro');
     const els = [...document.querySelectorAll('.hero-copy > *'), document.querySelector('.legend'), document.querySelector('.scroll-cue'), document.querySelector('.explore-fab')].filter(Boolean);
     els.forEach((el, j) => gsap.from(el, { y: 26, opacity: 0, duration: 1.3, delay: j * 0.1, ease: 'expo.out', clearProps: 'transform,opacity' }));
-  }, 2.0);
+  }, 1.9);
 }
 
 boot();

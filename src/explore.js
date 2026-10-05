@@ -276,6 +276,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     let it;
     if (d.type === 'tas') it = items[0];
     else if (d.type === 'city') it = items.find((x) => x.type === 'city' && x.key === d.key);
+    else if (d.type === 'horeca') it = items.find((x) => x.type === 'horeca' && x.name === d.name);
     else it = { type: 'town', name: d.name, ll: d.ll, dist: d.dist, w: world.worldAt(d.ll[0], d.ll[1], 0.4) };
     if (!it) return;
     flyTo(it);

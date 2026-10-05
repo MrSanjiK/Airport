@@ -1,9 +1,10 @@
 import { t, num, money, onLang } from './i18n/index.js';
 import { AIRPORT, LED_ZONES, LED_FACTS, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS } from './data/inventory.js';
 import { CITY_PHOTOS } from './data/photo-credits.js';
+import { CITY_VENUES, CITY_GALLERY, CITY_STORES } from './data/regions.js';
 import { credit } from './ui/credit.js';
 
-const img = (name, alt = '', eager = false) => `<img src="/img/${name}.webp" alt="${alt}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" />`;
+const img = (name, alt = '', eager = false) => `<img src="/img/${name}.webp" alt="${esc(alt)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" />`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 // Price ladder drawn as an approach descent profile.
@@ -48,13 +49,14 @@ export function profile(prices, caption = t('airport.profile'), { w: Wd = 520, p
   </figure>`;
 }
 
+// items: [value, label, fraction?, mini-card key?, plan id?] — a key makes the row open its mini card
 const readout = (items, cols = 3) =>
   `<dl class="readout" style="--cols:${cols}">${items
-    .map(([v, label, frac]) => `<div><dd>${v}</dd><dt>${esc(label)}</dt>${frac != null ? `<span class="tick"><i style="--v:${Math.round(frac * 100)}%"></i></span>` : ''}</div>`)
+    .map(([v, label, frac, mini, plan]) => `<div${mini ? ` data-mini="${mini}" role="button" tabindex="0" aria-expanded="false"${plan ? ` data-mini-plan="${plan}"` : ''}` : ''}><dd>${v}</dd><dt>${esc(label)}</dt>${frac != null ? `<span class="tick"><i style="--v:${Math.round(frac * 100)}%"></i></span>` : ''}</div>`)
     .join('')}</dl>`;
 
-function ring(a, b, la, lb) {
-  return `<div class="split" role="img" aria-label="${a}% ${esc(la)}, ${b}% ${esc(lb)}">
+function ring(a, b, la, lb, mini) {
+  return `<div class="split" role="button" tabindex="0" aria-expanded="false" data-mini="${mini}" aria-label="${a}% ${esc(la)}, ${b}% ${esc(lb)}"><span class="mini-v" hidden>${a}% · ${b}%</span><span class="mini-l" hidden>${esc(la)} · ${esc(lb)}</span>
     <div class="split-bar"><i style="width:${a}%"></i><i style="width:${b}%"></i></div>
     <div class="split-legend"><span><b>${a}%</b>${esc(la)}</span><span><b>${b}%</b>${esc(lb)}</span></div></div>`;
 }
@@ -72,17 +74,17 @@ export function initSections({ bus, places }) {
   const renderAirport = () => {
     document.getElementById('airportReadout').outerHTML = readout(
       [
-        [num(AIRPORT.visitsDay), t('airport.statDay')],
-        [num(AIRPORT.visitsMonth), t('airport.statMonth')],
-        [num(AIRPORT.visitsYear), t('airport.statYear')],
-        [num(AIRPORT.areaK * 1000), t('airport.statArea')],
-        [num(AIRPORT.halls), t('airport.statHalls')],
-        [`${AIRPORT.flightsDay}+`, t('airport.statFlights')],
+        [num(AIRPORT.visitsDay), t('airport.statDay'), null, 'aDay'],
+        [num(AIRPORT.visitsMonth), t('airport.statMonth'), null, 'aMonth'],
+        [num(AIRPORT.visitsYear), t('airport.statYear'), null, 'aYear'],
+        [num(AIRPORT.areaK * 1000), t('airport.statArea'), null, 'aArea'],
+        [num(AIRPORT.halls), t('airport.statHalls'), null, 'aHalls'],
+        [`${AIRPORT.flightsDay}+`, t('airport.statFlights'), null, 'aFlights'],
       ],
       3,
     ).replace('<dl class="readout"', '<dl class="readout" id="airportReadout"');
     document.getElementById('airportAudience').innerHTML =
-      ring(AIRPORT.men, AIRPORT.women, t('airport.men'), t('airport.women')) + ring(AIRPORT.citizens, AIRPORT.foreigners, t('airport.citizens'), t('airport.foreigners'));
+      ring(AIRPORT.men, AIRPORT.women, t('airport.men'), t('airport.women'), 'aGender') + ring(AIRPORT.citizens, AIRPORT.foreigners, t('airport.citizens'), t('airport.foreigners'), 'aCitizens');
 
     const zones = document.getElementById('zones');
     zones.innerHTML = LED_ZONES.map(
@@ -94,7 +96,7 @@ export function initSections({ bus, places }) {
           <span class="zone-from tnum"><b>${num(z.price[2])}–${num(z.price[0])}</b> ${esc(t('units.mln'))}</span>
         </button>
         <div class="zone-detail" id="zd-${z.id}"><div><div class="zone-inner">
-          <figure class="zone-photo" style="margin:0">${img(z.img, t(`airport.zones.${z.id}`))}</figure>
+          <figure class="zone-photo" style="margin:0" data-gallery>${img(z.img, t(`airport.zones.${z.id}`))}</figure>
           <div style="display:grid;gap:16px;align-content:start">
             <dl class="spec">
               <dt>${esc(t('airport.screensN'))}</dt><dd>${z.screens}</dd>
@@ -116,13 +118,13 @@ export function initSections({ bus, places }) {
     observeProfiles(zones);
 
     document.getElementById('tabTv').innerHTML = `
-      <div class="feature"><figure>${img(AIRPORT_TV.imgs[0], t('airport.tvTitle'))}</figure>
+      <div class="feature"><figure data-gallery>${img(AIRPORT_TV.imgs[0], t('airport.tvTitle'))}</figure>
         <div><h3>${esc(t('airport.tvTitle'))}</h3><p>${esc(t('airport.tvText'))}</p></div></div>
-      ${readout([[num(AIRPORT_TV.monitors), t('units.screens')], [AIRPORT_TV.diag, t('airport.size')], [num(AIRPORT_TV.playsDay), t('units.plays')]], 3)}
-      <div class="gallery">${AIRPORT_TV.imgs.slice(1).map((n) => `<figure>${img(n)}</figure>`).join('')}</div>
+      ${readout([[num(AIRPORT_TV.monitors), t('units.screens')], [AIRPORT_TV.diag, t('airport.size')], [num(AIRPORT_TV.playsDay), t('units.plays'), null, 'a247']], 3)}
+      <div class="gallery" data-gallery>${AIRPORT_TV.imgs.slice(1).map((n) => `<figure>${img(n, t('airport.tvTitle'))}</figure>`).join('')}</div>
       ${profile(AIRPORT_TV.price)}`;
     document.getElementById('tabLb').innerHTML = `
-      <div class="feature"><figure>${img(LIGHTBOX.imgs[0], t('airport.lbTitle'))}</figure>
+      <div class="feature"><figure data-gallery>${img(LIGHTBOX.imgs[0], t('airport.lbTitle'))}</figure>
         <div><h3>${esc(t('airport.lbTitle'))}</h3><p>${esc(t('airport.lbText'))}</p></div></div>
       ${readout([[num(LIGHTBOX.count), t('airport.lbZones')], [`${LIGHTBOX.areaM2}<small>${esc(t('units.m2'))}</small>`, t('airport.size')], ['B1–B14', t('airport.lbZones')]], 3)}
       <ul class="venues">${LIGHTBOX.zones.map((z) => `<li>${esc(z)}</li>`).join('')}</ul>
@@ -146,10 +148,17 @@ export function initSections({ bus, places }) {
     if (fromList && id) bus.dispatchEvent(new CustomEvent('zone', { detail: id }));
   };
   bus.addEventListener('zone', (e) => { if (openZone !== e.detail) setZone(e.detail, false); });
+  // picking a zone on the plate (callout, marker, photo) opens it in the list and brings the row into view
   bus.addEventListener('zonepick', (e) => {
     const tab = document.getElementById('tLed');
     if (tab.getAttribute('aria-selected') !== 'true') tab.click();
-    document.querySelector(`.zone[data-zone="${e.detail}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    const row = document.querySelector(`.zone[data-zone="${e.detail}"]`);
+    if (!row) return;
+    setZone(e.detail, false);
+    bus.dispatchEvent(new CustomEvent('scrollto', { detail: { el: row, offset: -innerHeight * 0.22 } }));
+    row.classList.remove('is-flash');
+    void row.offsetWidth;
+    row.classList.add('is-flash');
   });
 
   // Tabs with sliding ink
@@ -189,16 +198,16 @@ export function initSections({ bus, places }) {
     document.getElementById('kzBody').innerHTML = `
       <p class="lead">${esc(t('korzinka.lead'))}</p>
       ${readout([
-        [`${num(KORZINKA.venues)}+`, t('korzinka.venues')],
-        [num(KORZINKA.receiptsDay), t('korzinka.receipts')],
-        [`${num(KORZINKA.monitors)}+`, t('korzinka.monitors')],
-        [KORZINKA.playsDay, t('korzinka.plays')],
-        [num(KORZINKA.spotSec), t('korzinka.spot')],
-        [`${KORZINKA.audioShare}%`, t('korzinka.audioTitle')],
+        [`${num(KORZINKA.venues)}+`, t('korzinka.venues'), null, 'kVenues', 'korzinka'],
+        [num(KORZINKA.receiptsDay), t('korzinka.receipts'), null, 'kReceipts', 'korzinka'],
+        [`${num(KORZINKA.monitors)}+`, t('korzinka.monitors'), null, 'kMonitors', 'korzinka'],
+        [KORZINKA.playsDay, t('korzinka.plays'), null, 'kPlays', 'korzinka'],
+        [num(KORZINKA.spotSec), t('korzinka.spot'), null, 'kSpot', 'korzinka'],
+        [`${KORZINKA.audioShare}%`, t('korzinka.audioTitle'), null, 'kAudio', 'korzinka'],
       ])}
-      <div class="feature"><figure>${img('kz-checkout', t('korzinka.checkoutTitle'))}</figure>
+      <div class="feature"><figure data-gallery>${img('kz-checkout', t('korzinka.checkoutTitle'))}</figure>
         <div><h3>${esc(t('korzinka.checkoutTitle'))}</h3><p>${esc(t('korzinka.checkoutText'))}</p></div></div>
-      <div class="feature"><figure>${img('kz-checkout-screens', t('korzinka.audioTitle'))}</figure>
+      <div class="feature"><figure data-gallery>${img('kz-checkout-screens', t('korzinka.audioTitle'))}</figure>
         <div><h3>${esc(t('korzinka.audioTitle'))}</h3><p>${esc(t('korzinka.audioText'))}</p></div></div>
       <div class="growth"><p class="profile-cap"><span>${esc(t('korzinka.growth'))}</span><span>${esc(t('korzinka.growthNote'))}</span></p>
         <svg viewBox="0 0 520 120" aria-label="${esc(t('korzinka.growth'))}: 2025 ${KORZINKA.visitors2025}, 2026 ${KORZINKA.visitors2026}">
@@ -217,67 +226,133 @@ export function initSections({ bus, places }) {
 
   const mapped = new Set(places.horeca.map((h) => h.n.toLowerCase()));
   const isMapped = (v) => [...mapped].some((m) => m.includes(v.toLowerCase().split(' ')[0].replace(/[’']/g, '')) || v.toLowerCase().includes(m.split(' ')[0]));
+  const venuePlace = (v) => {
+    const w = v.toLowerCase().split(' ')[0].replace(/[’']/g, '');
+    return places.horeca.find((h) => h.n.toLowerCase().includes(w)) || places.horeca.find((h) => v.toLowerCase().includes(h.n.toLowerCase().split(' ')[0]));
+  };
   const renderHoreca = () => {
     document.getElementById('hrBody').innerHTML = `
       <p class="lead">${esc(t('horeca.lead'))}</p>
       ${readout([
-        [num(HORECA.visitors), t('horeca.visitors')],
-        [`${num(HORECA.venues)}+`, t('horeca.venues')],
-        [`${num(HORECA.monitors)}+`, t('horeca.monitors')],
-        [HORECA.playsDay, t('horeca.plays')],
-        [`${num(HORECA.avgCheck)}+`, t('horeca.check')],
-        [HORECA.dwell, t('horeca.dwell')],
+        [num(HORECA.visitors), t('horeca.visitors'), null, 'hVisitors', 'horeca'],
+        [`${num(HORECA.venues)}+`, t('horeca.venues'), null, 'hVenues', 'horeca'],
+        [`${num(HORECA.monitors)}+`, t('horeca.monitors'), null, 'hMonitors', 'horeca'],
+        [HORECA.playsDay, t('horeca.plays'), null, 'hPlays', 'horeca'],
+        [`${num(HORECA.avgCheck)}+`, t('horeca.check'), null, 'hCheck', 'horeca'],
+        [HORECA.dwell, t('horeca.dwell'), null, 'hDwell', 'horeca'],
       ])}
-      <div class="gallery">${['hr-akfa-screens', 'hr-terrace-tv', 'hr-hall-screens'].map((n) => `<figure>${img(n)}</figure>`).join('')}</div>
+      <div class="gallery" data-gallery>${['hr-akfa-screens', 'hr-terrace-tv', 'hr-hall-screens'].map((n) => `<figure>${img(n, t('horeca.title'))}</figure>`).join('')}</div>
       <p class="fits">${esc(t('horeca.audience'))} ${esc(t('horeca.since'))}.</p>
       <div><h3 style="margin-bottom:12px">${esc(t('horeca.venuesTitle'))}</h3>
-      <ul class="venues">${HORECA.venueList.map((v) => `<li class="${isMapped(v) ? 'is-mapped' : ''}">${esc(v)}</li>`).join('')}</ul></div>
+      <ul class="venues">${HORECA.venueList.map((v) => isMapped(v) ? `<li class="is-mapped"><button type="button" data-venue="${esc(v)}">${esc(v)}</button></li>` : `<li>${esc(v)}</li>`).join('')}</ul></div>
       ${profile(HORECA.price)}
       <p class="note">${esc(t('horeca.mapNote'))}</p>`;
+    document.querySelectorAll('#hrBody [data-venue]').forEach((b) => b.addEventListener('click', () => {
+      const h = venuePlace(b.dataset.venue);
+      if (h) bus.dispatchEvent(new CustomEvent('flyto', { detail: { type: 'horeca', name: h.n } }));
+    }));
     observeProfiles(document.getElementById('hrBody'));
   };
 
+  // Regions: pick a city from the chips or on the map; the city card brings its photo, figures, venue photos from
+  // the deck and the deck's venue list, and the chart flies to it.
+  let rgKey = 'all';
+  let rgOpen = false;
+  const korByCity = (key) => places.korzinka.filter((k) => {
+    const c = places.cities[key];
+    return c && Math.hypot((k.p[0] - c[0]) * 0.75, k.p[1] - c[1]) < 0.12;
+  }).length;
+  const renderCity = () => {
+    const box = document.getElementById('rgCity');
+    if (!box) return;
+    const tot = { screens: 0, venues: 0, daily: 0 };
+    REGIONS.rows.forEach((r) => { tot.screens += r.screens; tot.venues += r.venues; tot.daily += r.daily; });
+    if (rgKey === 'all') {
+      const max = Math.max(...REGIONS.rows.map((r) => r.screens));
+      box.innerHTML = `
+        <ol class="rg-rank">${REGIONS.rows.map((r) => `<li><button type="button" data-pick="${r.key}">
+          <span class="rg-rank-n">${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</span>
+          <span class="rg-rank-bar"><i style="--v:${Math.round((r.screens / max) * 100)}%"></i></span>
+          <span class="rg-rank-v tnum"><b>${r.screens}</b> ${esc(t('map.screens'))} · ${r.venues} ${esc(t('map.venues'))} · ${num(r.daily)}</span>
+        </button></li>`).join('')}</ol>
+        <p class="rg-total tnum"><span>${esc(t('regions.total'))}</span><b>${tot.screens}</b> ${esc(t('map.screens'))} · <b>${tot.venues}</b> ${esc(t('map.venues'))} · <b>${num(tot.daily)}</b> ${esc(t('regions.visitors'))}</p>
+        <div class="gallery" data-gallery>${['network-1', 'network-2', 'network-3'].map((n) => `<figure>${img(`rg/${n}`, t('card.networkPhoto'))}<figcaption>${esc(t('card.networkPhoto'))}</figcaption></figure>`).join('')}</div>`;
+    } else {
+      const r = REGIONS.rows.find((x) => x.key === rgKey);
+      const ph = CITY_PHOTOS[r.key];
+      const pct = (v, all) => Math.round((v / all) * 100);
+      const venues = CITY_VENUES[r.key] || [];
+      const shots = CITY_GALLERY[r.key] || 0;
+      const stores = korByCity(r.key);
+      const stat = (v, label, share) => `<div class="rg-stat"><b class="tnum">${v}</b><span>${esc(label)}</span><i style="--v:${share}%"></i><em>${share}% · ${esc(t('regions.share'))}</em></div>`;
+      box.innerHTML = `
+        <figure class="rg-hero" data-gallery>${ph ? img(`city-${r.key}`, t(`cities.${r.key}`)) : img('rg/network-1', t(`cities.${r.key}`))}
+          <figcaption class="rg-hero-cap"><span>${esc(t('regions.landmark'))}</span><b>${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</b></figcaption>
+          ${ph ? credit(ph) : ''}</figure>
+        <div class="rg-stats">
+          ${stat(r.screens, t('regions.thScreens'), pct(r.screens, tot.screens))}
+          ${stat(r.venues, t('regions.thVenues'), pct(r.venues, tot.venues))}
+          ${stat(num(r.daily), t('regions.thDaily'), pct(r.daily, tot.daily))}
+        </div>
+        ${shots || CITY_STORES.includes(r.key) ? `<div class="rg-shots-wrap"><h4>${esc(t('regions.photos'))}</h4><div class="rg-shots" data-gallery>
+          ${Array.from({ length: shots }, (_, i) => `<figure>${img(`rg/${r.key}-${i + 1}`, `${t(`cities.${r.key}`)} · ${t('card.networkPhoto')}`)}</figure>`).join('')}
+          ${CITY_STORES.includes(r.key) ? `<figure class="is-store">${img(`rg/kz-${r.key}-1`, `${t(`cities.${r.key}`)} · ${t('regions.storesPhoto')}`)}<figcaption>${esc(t('regions.storesPhoto'))}</figcaption></figure>` : ''}
+        </div></div>` : ''}
+        ${venues.length ? `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.venueList'))} <small>${venues.length}</small></h4>
+          <ol>${venues.map(([n, a]) => `<li><b>${esc(n)}</b><span>${esc(a)}</span></li>`).join('')}</ol>
+          ${venues.length > 6 ? `<button type="button" class="rg-more">${esc(t(rgOpen ? 'regions.collapse' : 'regions.expand'))}</button>` : ''}</div>`
+        : `<p class="note">${esc(t('regions.onRequest'))}</p>`}
+        ${['fargona', 'andijon', 'qoqon', 'margilon', 'asaka', 'namangan'].includes(r.key) ? `<details class="rg-valley"><summary>${esc(t('regions.valley'))}</summary><ol>${CITY_VENUES.valley.map(([n, a]) => `<li><b>${esc(n)}</b><span>${esc(a)}</span></li>`).join('')}</ol></details>` : ''}
+        <div class="rg-actions">
+          <button type="button" class="btn-quiet" data-rg-map><svg viewBox="0 0 16 16"><path d="M8 14s5-4.2 5-8.2A5 5 0 0 0 3 5.8C3 9.8 8 14 8 14z"/><circle cx="8" cy="6" r="1.8"/></svg>${esc(t('regions.showMap'))}</button>
+          <button type="button" class="btn-quiet" data-rg-plan><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg>${esc(t('ui.addPlan'))}</button>
+          ${stores ? `<span class="rg-stores tnum"><b>${stores}</b> ${esc(t('regions.stores'))}</span>` : ''}
+        </div>`;
+      box.querySelector('.rg-more')?.addEventListener('click', () => { rgOpen = !rgOpen; renderCity(); });
+      box.querySelector('[data-rg-map]').addEventListener('click', () => bus.dispatchEvent(new CustomEvent('flyto', { detail: { type: 'city', key: r.key } })));
+      box.querySelector('[data-rg-plan]').addEventListener('click', (e) => {
+        bus.dispatchEvent(new CustomEvent('planadd', { detail: 'regions' }));
+        e.currentTarget.lastChild.textContent = t('card.added');
+      });
+    }
+    box.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () => pickCity(b.dataset.pick)));
+    box.classList.remove('is-swap');
+    void box.offsetWidth;
+    box.classList.add('is-swap');
+  };
+  const pickCity = (key, { scroll = false } = {}) => {
+    rgKey = key;
+    rgOpen = false;
+    document.querySelectorAll('.rg-chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.key === key)));
+    renderCity();
+    bus.dispatchEvent(new CustomEvent('regionfocus', { detail: key === 'all' ? null : key }));
+    bus.dispatchEvent(new CustomEvent('region', { detail: key }));
+    if (scroll) bus.dispatchEvent(new CustomEvent('scrollto', { detail: { el: document.querySelector('.rg-pick'), offset: -(innerHeight * 0.16) } }));
+  };
+  bus.addEventListener('regionpick', (e) => pickCity(e.detail, { scroll: true }));
+
   const renderRegions = () => {
-    const max = Math.max(...REGIONS.rows.map((r) => r.screens));
-    const sum = (k) => REGIONS.rows.reduce((a, r) => a + r[k], 0);
     document.getElementById('rgBody').innerHTML = `
       <p class="lead">${esc(t('regions.lead'))}</p>
       ${readout([
-        [`${num(REGIONS.venues)}+`, t('regions.venues')],
-        [num(REGIONS.visitorsDay), t('regions.visitors')],
-        [REGIONS.playsDay, t('regions.plays')],
-        [REGIONS.monitorsPerVenue, t('regions.perVenue')],
-        [`${REGIONS.notice}%`, t('regions.notice')],
-        [`${REGIONS.see}%`, t('regions.see')],
+        [`${num(REGIONS.venues)}+`, t('regions.venues'), null, 'rVenues', 'regions'],
+        [num(REGIONS.visitorsDay), t('regions.visitors'), null, 'rVisitors', 'regions'],
+        [REGIONS.playsDay, t('regions.plays'), null, 'rPlays', 'regions'],
+        [REGIONS.monitorsPerVenue, t('regions.perVenue'), null, 'rPerVenue', 'regions'],
+        [`${REGIONS.notice}%`, t('regions.notice'), null, 'rNotice', 'regions'],
+        [`${REGIONS.see}%`, t('regions.see'), null, 'rSee', 'regions'],
       ])}
-      <table class="rtable">
-        <thead><tr><th>${esc(t('regions.thRegion'))}</th><th>${esc(t('regions.thScreens'))}</th><th>${esc(t('regions.thVenues'))}</th><th>${esc(t('regions.thDaily'))}</th></tr></thead>
-        <tbody>${REGIONS.rows
-          .map((r) => `<tr data-key="${r.key}" tabindex="0"><td>${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</td>
-            <td class="tnum">${r.screens}<span class="bar"><i style="--v:${Math.round((r.screens / max) * 100)}%"></i></span></td>
-            <td class="tnum">${r.venues}</td><td class="tnum">${num(r.daily)}</td></tr>`)
-          .join('')}</tbody>
-        <tfoot><tr><td>${esc(t('regions.total'))}</td><td class="tnum">${sum('screens')}</td><td class="tnum">${sum('venues')}</td><td class="tnum">${num(sum('daily'))}</td></tr></tfoot>
-      </table>
-      <section class="cities" aria-label="${esc(t('regions.citiesTitle'))}">
-        <h3>${esc(t('regions.citiesTitle'))}</h3>
-        <div class="cities-row">${REGIONS.rows.filter((r) => CITY_PHOTOS[r.key]).map((r) => `<button type="button" class="city" data-key="${r.key}">
-          <span class="city-ph">${img(`city-${r.key}`)}${credit(CITY_PHOTOS[r.key], { link: false })}</span>
-          <span class="city-name">${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</span>
-          <span class="city-meta">${r.screens} ${esc(t('map.screens'))} · ${r.venues} ${esc(t('map.venues'))}</span>
-        </button>`).join('')}</div>
-      </section>
-      <div class="gallery">${['rg-cafe-screens', 'rg-checkout', 'rg-foodcourt'].map((n) => `<figure>${img(n)}<figcaption>${esc(t('card.networkPhoto'))}</figcaption></figure>`).join('')}</div>
+      <div class="rg-pick" role="group" aria-label="${esc(t('regions.pick'))}">
+        <p class="rg-pick-k">${esc(t('regions.pick'))}</p>
+        <div class="rg-chips">
+          <button type="button" class="rg-chip" data-key="all" aria-pressed="${rgKey === 'all'}">${esc(t('regions.all'))}</button>
+          ${REGIONS.rows.map((r) => `<button type="button" class="rg-chip" data-key="${r.key}" aria-pressed="${rgKey === r.key}">${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</button>`).join('')}
+        </div>
+      </div>
+      <div class="rg-city" id="rgCity" aria-live="polite"></div>
       ${profile(REGIONS.price)}`;
-    document.querySelectorAll('.cities .city').forEach((b) => b.addEventListener('click', () => bus.dispatchEvent(new CustomEvent('flyto', { detail: { type: 'city', key: b.dataset.key } }))));
-    document.querySelectorAll('.rtable tbody tr').forEach((tr) => {
-      const fire = () => {
-        document.querySelectorAll('.rtable tbody tr').forEach((x) => x.classList.toggle('is-active', x === tr));
-        bus.dispatchEvent(new CustomEvent('region', { detail: tr.dataset.key }));
-      };
-      tr.addEventListener('pointerenter', fire);
-      tr.addEventListener('focus', fire);
-    });
+    document.querySelectorAll('.rg-chip').forEach((b) => b.addEventListener('click', () => pickCity(b.dataset.key)));
+    renderCity();
     observeProfiles(document.getElementById('rgBody'));
   };
 
