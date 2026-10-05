@@ -1,0 +1,206 @@
+{
+ "regions": [
+  {
+   "id": "nav-logo",
+   "kind": "chrome",
+   "grid": "B0:B0",
+   "note": "Media Port logo: navy italic wordmark with aircraft tail fin, from the deck vector"
+  },
+  {
+   "id": "nav-links",
+   "kind": "chrome",
+   "grid": "D0:G0",
+   "note": "navigation link row: Aeroport, Korzinka, HoReCa, Hududlar, Narxlar (rebuilt as Apple-style frosted bar per user instruction)"
+  },
+  {
+   "id": "nav-lang",
+   "kind": "control",
+   "grid": "H0:H0",
+   "note": "language switch, shown as UZ (rebuilt as flag switcher per user instruction)"
+  },
+  {
+   "id": "nav-cta",
+   "kind": "control",
+   "grid": "I0:I0",
+   "note": "outlined red Media-plan button"
+  },
+  {
+   "id": "hero-headline",
+   "kind": "text",
+   "grid": "B1:E3",
+   "note": "headline in three lines, bold navy grotesk: Aeroportdan har bir viloyatgacha — sizning ekraningiz."
+  },
+  {
+   "id": "hero-subline",
+   "kind": "text",
+   "grid": "B4:D4",
+   "snap": false,
+   "box": {
+    "x": 0.099,
+    "y": 0.38,
+    "w": 0.306,
+    "h": 0.06
+   },
+   "note": "two-line subline: Toshkent xalqaro aeroporti, Korzinka, 75+ restoran va 11 hudud — bitta xarid."
+  },
+  {
+   "id": "hero-cta",
+   "kind": "control",
+   "grid": "B5:C5",
+   "snap": false,
+   "box": {
+    "x": 0.099,
+    "y": 0.468,
+    "w": 0.139,
+    "h": 0.056
+   },
+   "note": "solid red primary button: Media-plan tuzish"
+  },
+  {
+   "id": "hero-link",
+   "kind": "control",
+   "grid": "C5:D5",
+   "snap": false,
+   "box": {
+    "x": 0.254,
+    "y": 0.48,
+    "w": 0.096,
+    "h": 0.033
+   },
+   "note": "underlined secondary text link: Narxlarni ko'rish"
+  },
+  {
+   "id": "relief-scene",
+   "kind": "chrome",
+   "grid": "A1:J9",
+   "container": true,
+   "note": "WebGL canvas: Uzbekistan relief map rendered at runtime from elevation data, navy contour and border lines on pale ground, oblique camera receding to the horizon",
+   "codeDrawn": true
+  },
+  {
+   "id": "route-arc",
+   "kind": "chrome",
+   "grid": "G3:J8",
+   "note": "red route ribbon rising from the airport toward the horizon, WebGL geometry",
+   "codeDrawn": true
+  },
+  {
+   "id": "terminal-model",
+   "kind": "chrome",
+   "grid": "G7:J9",
+   "note": "WebGL navy edge-line terminal model on a graduated compass ring",
+   "codeDrawn": true
+  },
+  {
+   "id": "terminal-label",
+   "kind": "text",
+   "grid": "H8:H9",
+   "note": "airport label set on the ring: UTTT TASHKENT (to read TAS Toshkent per naming rule)"
+  },
+  {
+   "id": "card-airport",
+   "kind": "chrome",
+   "grid": "F2:G4",
+   "snap": false,
+   "box": {
+    "x": 0.532,
+    "y": 0.19,
+    "w": 0.103,
+    "h": 0.254
+   },
+   "note": "upright approach-plate card frame with header text: UTTT 40 LED EKRAN 150/KUN"
+  },
+  {
+   "id": "photo-airport",
+   "kind": "image",
+   "grid": "F3:G4",
+   "snap": false,
+   "box": {
+    "x": 0.537,
+    "y": 0.28,
+    "w": 0.093,
+    "h": 0.153
+   },
+   "note": "real photo: giant LED screens above the airport baggage carousel",
+   "bleed": true
+  },
+  {
+   "id": "card-korzinka",
+   "kind": "chrome",
+   "grid": "H1:H3",
+   "snap": false,
+   "box": {
+    "x": 0.663,
+    "y": 0.154,
+    "w": 0.087,
+    "h": 0.204
+   },
+   "note": "upright card frame with header text: KORZINKA 300+ OBYEKT 900 000 CHEK/KUN"
+  },
+  {
+   "id": "photo-korzinka",
+   "kind": "image",
+   "grid": "H2:H3",
+   "snap": false,
+   "box": {
+    "x": 0.668,
+    "y": 0.229,
+    "w": 0.077,
+    "h": 0.124
+   },
+   "note": "real photo: Korzinka supermarket storefront",
+   "bleed": true
+  },
+  {
+   "id": "card-horeca",
+   "kind": "chrome",
+   "grid": "I1:I3",
+   "snap": false,
+   "box": {
+    "x": 0.78,
+    "y": 0.145,
+    "w": 0.078,
+    "h": 0.17
+   },
+   "note": "upright card frame with header text: HORECA 75+ RESTORAN"
+  },
+  {
+   "id": "photo-horeca",
+   "kind": "image",
+   "grid": "I2:I3",
+   "snap": false,
+   "box": {
+    "x": 0.784,
+    "y": 0.205,
+    "w": 0.068,
+    "h": 0.105
+   },
+   "note": "real photo: busy restaurant hall",
+   "bleed": true
+  },
+  {
+   "id": "wp-samarqand",
+   "kind": "text",
+   "grid": "F5:G6",
+   "note": "waypoint triangle and label: SAMARQAND 30 EKRAN 10 OBYEKT"
+  },
+  {
+   "id": "wp-buxoro",
+   "kind": "text",
+   "grid": "H4:H5",
+   "note": "waypoint triangle and label: BUXORO 25 EKRAN 10 OBYEKT"
+  },
+  {
+   "id": "wp-fergana",
+   "kind": "text",
+   "grid": "I3:I4",
+   "note": "waypoint triangle and label: FARG'ONA VODIYSI"
+  },
+  {
+   "id": "legend-strip",
+   "kind": "text",
+   "grid": "A8:E9",
+   "note": "legend strip lying on the paper in perspective: 50 000 / kun, 1 500 000 / oy, 18 000 000 / yil, 24/7"
+  }
+ ]
+}

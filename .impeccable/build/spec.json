@@ -1,0 +1,1162 @@
+{
+  "tool": "comp-spec",
+  "version": 1,
+  "createdAt": "2026-10-05T11:00:46.205Z",
+  "comp": ".impeccable/mocks/comp-2.png",
+  "warnings": [
+    "region relief-scene: \"codeDrawn\": true set in the regions file (the painted-material refusal is overridden: code draws this region)",
+    "region relief-scene: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)",
+    "region route-arc: \"codeDrawn\": true set in the regions file (the painted-material refusal is overridden: code draws this region)",
+    "region terminal-model: \"codeDrawn\": true set in the regions file (the painted-material refusal is overridden: code draws this region)",
+    "region photo-airport: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region photo-korzinka: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region photo-horeca: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)"
+  ],
+  "uncoveredInkCells": [],
+  "compSize": {
+    "width": 2752,
+    "height": 1536
+  },
+  "aspect": 1.7917,
+  "orientation": "landscape",
+  "palette": [
+    {
+      "hex": "#e5e6ee",
+      "coverage": 0.9105
+    },
+    {
+      "hex": "#1c3759",
+      "coverage": 0.0436
+    },
+    {
+      "hex": "#a0aec3",
+      "coverage": 0.0279
+    },
+    {
+      "hex": "#d10f1f",
+      "coverage": 0.0097
+    },
+    {
+      "hex": "#4d5a70",
+      "coverage": 0.0082
+    }
+  ],
+  "bands": [
+    {
+      "y": 0.0423,
+      "strength": 0.2429
+    },
+    {
+      "y": 0.1831,
+      "strength": 0.351
+    },
+    {
+      "y": 0.2254,
+      "strength": 0.2726
+    },
+    {
+      "y": 0.2535,
+      "strength": 0.3861
+    },
+    {
+      "y": 0.3521,
+      "strength": 0.4031
+    },
+    {
+      "y": 0.4648,
+      "strength": 0.261
+    },
+    {
+      "y": 0.5211,
+      "strength": 0.2654
+    }
+  ],
+  "regions": [
+    {
+      "id": "nav-logo",
+      "kind": "chrome",
+      "note": "Media Port logo: navy italic wordmark with aircraft tail fin, from the deck vector",
+      "grid": "B0:B0",
+      "box": {
+        "x": 0.1,
+        "y": 0,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 275,
+        "y": 0,
+        "w": 275,
+        "h": 154
+      },
+      "aspect": 1.7857,
+      "palette": [
+        {
+          "hex": "#e8e8f5",
+          "coverage": 0.8497
+        },
+        {
+          "hex": "#1e3a62",
+          "coverage": 0.126
+        },
+        {
+          "hex": "#7e8fa8",
+          "coverage": 0.0093
+        },
+        {
+          "hex": "#264050",
+          "coverage": 0.0076
+        },
+        {
+          "hex": "#a9bbcb",
+          "coverage": 0.0074
+        }
+      ],
+      "detail": {
+        "energy": 16.7186
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "nav-links",
+      "kind": "chrome",
+      "note": "navigation link row: Aeroport, Korzinka, HoReCa, Hududlar, Narxlar (rebuilt as Apple-style frosted bar per user instruction)",
+      "grid": "D0:G0",
+      "box": {
+        "x": 0.3,
+        "y": 0,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "px": {
+        "x": 826,
+        "y": 0,
+        "w": 1101,
+        "h": 154
+      },
+      "aspect": 7.1494,
+      "palette": [
+        {
+          "hex": "#e8e8f5",
+          "coverage": 0.9697
+        },
+        {
+          "hex": "#293a55",
+          "coverage": 0.0185
+        },
+        {
+          "hex": "#a3b3c3",
+          "coverage": 0.0046
+        },
+        {
+          "hex": "#3d5063",
+          "coverage": 0.0043
+        },
+        {
+          "hex": "#67778c",
+          "coverage": 0.0029
+        }
+      ],
+      "detail": {
+        "energy": 11.2857
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "nav-lang",
+      "kind": "control",
+      "note": "language switch, shown as UZ (rebuilt as flag switcher per user instruction)",
+      "grid": "H0:H0",
+      "coverBox": {
+        "x": 0.7,
+        "y": 0,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.7718,
+        "y": 0.0352,
+        "w": 0.0196,
+        "h": 0.0273
+      },
+      "px": {
+        "x": 2124,
+        "y": 54,
+        "w": 54,
+        "h": 42
+      },
+      "aspect": 1.2857,
+      "palette": [
+        {
+          "hex": "#e7e8f7",
+          "coverage": 0.7976
+        },
+        {
+          "hex": "#253952",
+          "coverage": 0.0794
+        },
+        {
+          "hex": "#a8b7c9",
+          "coverage": 0.0595
+        },
+        {
+          "hex": "#58687c",
+          "coverage": 0.0317
+        },
+        {
+          "hex": "#7282a2",
+          "coverage": 0.0317
+        }
+      ],
+      "detail": {
+        "energy": 9.7332
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "nav-cta",
+      "kind": "control",
+      "note": "outlined red Media-plan button",
+      "grid": "I0:I0",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8045,
+        "y": 0.0156,
+        "w": 0.0956,
+        "h": 0.0625
+      },
+      "px": {
+        "x": 2214,
+        "y": 24,
+        "w": 263,
+        "h": 96
+      },
+      "aspect": 2.7396,
+      "palette": [
+        {
+          "hex": "#ebe7f3",
+          "coverage": 0.8457
+        },
+        {
+          "hex": "#90282a",
+          "coverage": 0.0688
+        },
+        {
+          "hex": "#f8afb1",
+          "coverage": 0.0634
+        },
+        {
+          "hex": "#b3595d",
+          "coverage": 0.012
+        },
+        {
+          "hex": "#f7c3cd",
+          "coverage": 0.0101
+        }
+      ],
+      "detail": {
+        "energy": 33.0938
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-headline",
+      "kind": "text",
+      "note": "headline in three lines, bold navy grotesk: Aeroportdan har bir viloyatgacha — sizning ekraningiz.",
+      "grid": "B1:E3",
+      "coverBox": {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.4,
+        "h": 0.3
+      },
+      "box": {
+        "x": 0.0999,
+        "y": 0.1667,
+        "w": 0.3772,
+        "h": 0.2337
+      },
+      "px": {
+        "x": 275,
+        "y": 256,
+        "w": 1038,
+        "h": 359
+      },
+      "aspect": 2.8914,
+      "palette": [
+        {
+          "hex": "#e7e9f5",
+          "coverage": 0.7453
+        },
+        {
+          "hex": "#193558",
+          "coverage": 0.2302
+        },
+        {
+          "hex": "#a6b6c9",
+          "coverage": 0.0088
+        },
+        {
+          "hex": "#7a8a9f",
+          "coverage": 0.0085
+        },
+        {
+          "hex": "#596985",
+          "coverage": 0.007
+        }
+      ],
+      "detail": {
+        "energy": 68.2104
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-subline",
+      "kind": "text",
+      "note": "two-line subline: Toshkent xalqaro aeroporti, Korzinka, 75+ restoran va 11 hudud — bitta xarid.",
+      "grid": "B4:D4",
+      "snap": false,
+      "box": {
+        "x": 0.099,
+        "y": 0.38,
+        "w": 0.306,
+        "h": 0.06
+      },
+      "px": {
+        "x": 272,
+        "y": 584,
+        "w": 842,
+        "h": 92
+      },
+      "aspect": 9.1522,
+      "palette": [
+        {
+          "hex": "#e7e8f2",
+          "coverage": 0.8486
+        },
+        {
+          "hex": "#192b4b",
+          "coverage": 0.0715
+        },
+        {
+          "hex": "#1a3343",
+          "coverage": 0.0294
+        },
+        {
+          "hex": "#607188",
+          "coverage": 0.0277
+        },
+        {
+          "hex": "#9aaabf",
+          "coverage": 0.0228
+        }
+      ],
+      "detail": {
+        "energy": 66.3064
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-cta",
+      "kind": "control",
+      "note": "solid red primary button: Media-plan tuzish",
+      "grid": "B5:C5",
+      "snap": false,
+      "box": {
+        "x": 0.099,
+        "y": 0.468,
+        "w": 0.139,
+        "h": 0.056
+      },
+      "px": {
+        "x": 272,
+        "y": 719,
+        "w": 383,
+        "h": 86
+      },
+      "aspect": 4.4535,
+      "palette": [
+        {
+          "hex": "#d70919",
+          "coverage": 0.7989
+        },
+        {
+          "hex": "#b21b27",
+          "coverage": 0.0689
+        },
+        {
+          "hex": "#f7dfe3",
+          "coverage": 0.0626
+        },
+        {
+          "hex": "#ac3a48",
+          "coverage": 0.0546
+        },
+        {
+          "hex": "#f6aab5",
+          "coverage": 0.0151
+        }
+      ],
+      "detail": {
+        "energy": 29.5847
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-link",
+      "kind": "control",
+      "note": "underlined secondary text link: Narxlarni ko'rish",
+      "grid": "C5:D5",
+      "snap": false,
+      "box": {
+        "x": 0.254,
+        "y": 0.48,
+        "w": 0.096,
+        "h": 0.033
+      },
+      "px": {
+        "x": 699,
+        "y": 737,
+        "w": 264,
+        "h": 51
+      },
+      "aspect": 5.1765,
+      "palette": [
+        {
+          "hex": "#e6eaf1",
+          "coverage": 0.8073
+        },
+        {
+          "hex": "#152a44",
+          "coverage": 0.1183
+        },
+        {
+          "hex": "#5e6f87",
+          "coverage": 0.0385
+        },
+        {
+          "hex": "#aebdd2",
+          "coverage": 0.021
+        },
+        {
+          "hex": "#8e9bb7",
+          "coverage": 0.0149
+        }
+      ],
+      "detail": {
+        "energy": 57.2492
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "relief-scene",
+      "kind": "chrome",
+      "note": "WebGL canvas: Uzbekistan relief map rendered at runtime from elevation data, navy contour and border lines on pale ground, oblique camera receding to the horizon",
+      "grid": "A1:J9",
+      "codeDrawn": true,
+      "container": true,
+      "box": {
+        "x": 0,
+        "y": 0.1,
+        "w": 1,
+        "h": 0.9
+      },
+      "px": {
+        "x": 0,
+        "y": 154,
+        "w": 2752,
+        "h": 1382
+      },
+      "aspect": 1.9913,
+      "palette": [
+        {
+          "hex": "#e4e6ed",
+          "coverage": 0.8989
+        },
+        {
+          "hex": "#1c3659",
+          "coverage": 0.0456
+        },
+        {
+          "hex": "#a0aec3",
+          "coverage": 0.032
+        },
+        {
+          "hex": "#6c7990",
+          "coverage": 0.0125
+        },
+        {
+          "hex": "#d10f1f",
+          "coverage": 0.0109
+        }
+      ],
+      "detail": {
+        "energy": 33.1188
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "route-arc",
+      "kind": "chrome",
+      "note": "red route ribbon rising from the airport toward the horizon, WebGL geometry",
+      "grid": "G3:J8",
+      "codeDrawn": true,
+      "box": {
+        "x": 0.6,
+        "y": 0.3,
+        "w": 0.4,
+        "h": 0.6
+      },
+      "px": {
+        "x": 1651,
+        "y": 461,
+        "w": 1101,
+        "h": 922
+      },
+      "aspect": 1.1941,
+      "palette": [
+        {
+          "hex": "#e3e5eb",
+          "coverage": 0.8008
+        },
+        {
+          "hex": "#b0bed1",
+          "coverage": 0.1002
+        },
+        {
+          "hex": "#293d5c",
+          "coverage": 0.0422
+        },
+        {
+          "hex": "#808fa5",
+          "coverage": 0.0298
+        },
+        {
+          "hex": "#c71e2c",
+          "coverage": 0.0271
+        }
+      ],
+      "detail": {
+        "energy": 38.2632
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "terminal-model",
+      "kind": "chrome",
+      "note": "WebGL navy edge-line terminal model on a graduated compass ring",
+      "grid": "G7:J9",
+      "codeDrawn": true,
+      "box": {
+        "x": 0.6,
+        "y": 0.7,
+        "w": 0.4,
+        "h": 0.3
+      },
+      "px": {
+        "x": 1651,
+        "y": 1075,
+        "w": 1101,
+        "h": 461
+      },
+      "aspect": 2.3883,
+      "palette": [
+        {
+          "hex": "#e5e7ec",
+          "coverage": 0.7709
+        },
+        {
+          "hex": "#a8b6cb",
+          "coverage": 0.1386
+        },
+        {
+          "hex": "#243b59",
+          "coverage": 0.0464
+        },
+        {
+          "hex": "#798ba2",
+          "coverage": 0.0269
+        },
+        {
+          "hex": "#1e3363",
+          "coverage": 0.0172
+        }
+      ],
+      "detail": {
+        "energy": 39.0962
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "terminal-label",
+      "kind": "text",
+      "note": "airport label set on the ring: UTTT TASHKENT (to read TAS Toshkent per naming rule)",
+      "grid": "H8:H9",
+      "coverBox": {
+        "x": 0.7,
+        "y": 0.8,
+        "w": 0.1,
+        "h": 0.2
+      },
+      "box": {
+        "x": 0.7028,
+        "y": 0.8001,
+        "w": 0.097,
+        "h": 0.0677
+      },
+      "px": {
+        "x": 1934,
+        "y": 1229,
+        "w": 267,
+        "h": 104
+      },
+      "aspect": 2.5673,
+      "palette": [
+        {
+          "hex": "#e4e7ec",
+          "coverage": 0.4903
+        },
+        {
+          "hex": "#a0b1c8",
+          "coverage": 0.3346
+        },
+        {
+          "hex": "#1a3554",
+          "coverage": 0.0783
+        },
+        {
+          "hex": "#758aa5",
+          "coverage": 0.0488
+        },
+        {
+          "hex": "#182e5e",
+          "coverage": 0.0479
+        }
+      ],
+      "detail": {
+        "energy": 29.7878
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "card-airport",
+      "kind": "chrome",
+      "note": "upright approach-plate card frame with header text: UTTT 40 LED EKRAN 150/KUN",
+      "grid": "F2:G4",
+      "snap": false,
+      "box": {
+        "x": 0.532,
+        "y": 0.19,
+        "w": 0.103,
+        "h": 0.254
+      },
+      "px": {
+        "x": 1464,
+        "y": 292,
+        "w": 283,
+        "h": 390
+      },
+      "aspect": 0.7256,
+      "palette": [
+        {
+          "hex": "#cdd7e1",
+          "coverage": 0.6128
+        },
+        {
+          "hex": "#7d7171",
+          "coverage": 0.1173
+        },
+        {
+          "hex": "#aa9e98",
+          "coverage": 0.1157
+        },
+        {
+          "hex": "#534b4e",
+          "coverage": 0.0959
+        },
+        {
+          "hex": "#1d1818",
+          "coverage": 0.0583
+        }
+      ],
+      "detail": {
+        "energy": 35.1215
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "photo-airport",
+      "kind": "image",
+      "note": "real photo: giant LED screens above the airport baggage carousel",
+      "grid": "F3:G4",
+      "bleed": true,
+      "snap": false,
+      "box": {
+        "x": 0.537,
+        "y": 0.28,
+        "w": 0.093,
+        "h": 0.153
+      },
+      "px": {
+        "x": 1478,
+        "y": 430,
+        "w": 256,
+        "h": 235
+      },
+      "aspect": 1.0894,
+      "palette": [
+        {
+          "hex": "#7d7172",
+          "coverage": 0.2386
+        },
+        {
+          "hex": "#cdc8c8",
+          "coverage": 0.2149
+        },
+        {
+          "hex": "#544b4e",
+          "coverage": 0.1962
+        },
+        {
+          "hex": "#a69992",
+          "coverage": 0.1956
+        },
+        {
+          "hex": "#bfd2e7",
+          "coverage": 0.1546
+        }
+      ],
+      "detail": {
+        "energy": 34.2431
+      },
+      "medium": "raster",
+      "plate": "assets/plates/photo-airport.png",
+      "text": null
+    },
+    {
+      "id": "card-korzinka",
+      "kind": "chrome",
+      "note": "upright card frame with header text: KORZINKA 300+ OBYEKT 900 000 CHEK/KUN",
+      "grid": "H1:H3",
+      "snap": false,
+      "box": {
+        "x": 0.663,
+        "y": 0.154,
+        "w": 0.087,
+        "h": 0.204
+      },
+      "px": {
+        "x": 1825,
+        "y": 237,
+        "w": 239,
+        "h": 313
+      },
+      "aspect": 0.7636,
+      "palette": [
+        {
+          "hex": "#d0d8e0",
+          "coverage": 0.5133
+        },
+        {
+          "hex": "#6c97ce",
+          "coverage": 0.1813
+        },
+        {
+          "hex": "#3e4059",
+          "coverage": 0.14
+        },
+        {
+          "hex": "#636377",
+          "coverage": 0.0976
+        },
+        {
+          "hex": "#272238",
+          "coverage": 0.0677
+        }
+      ],
+      "detail": {
+        "energy": 31.6316
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "photo-korzinka",
+      "kind": "image",
+      "note": "real photo: Korzinka supermarket storefront",
+      "grid": "H2:H3",
+      "bleed": true,
+      "snap": false,
+      "box": {
+        "x": 0.668,
+        "y": 0.229,
+        "w": 0.077,
+        "h": 0.124
+      },
+      "px": {
+        "x": 1838,
+        "y": 352,
+        "w": 212,
+        "h": 190
+      },
+      "aspect": 1.1158,
+      "palette": [
+        {
+          "hex": "#6b97ce",
+          "coverage": 0.3455
+        },
+        {
+          "hex": "#584e60",
+          "coverage": 0.2168
+        },
+        {
+          "hex": "#2e2a40",
+          "coverage": 0.2168
+        },
+        {
+          "hex": "#7d7988",
+          "coverage": 0.1312
+        },
+        {
+          "hex": "#ddd9df",
+          "coverage": 0.0896
+        }
+      ],
+      "detail": {
+        "energy": 25.542
+      },
+      "medium": "raster",
+      "plate": "assets/plates/photo-korzinka.png",
+      "text": null
+    },
+    {
+      "id": "card-horeca",
+      "kind": "chrome",
+      "note": "upright card frame with header text: HORECA 75+ RESTORAN",
+      "grid": "I1:I3",
+      "snap": false,
+      "box": {
+        "x": 0.78,
+        "y": 0.145,
+        "w": 0.078,
+        "h": 0.17
+      },
+      "px": {
+        "x": 2147,
+        "y": 223,
+        "w": 215,
+        "h": 261
+      },
+      "aspect": 0.8238,
+      "palette": [
+        {
+          "hex": "#d5d8e5",
+          "coverage": 0.4425
+        },
+        {
+          "hex": "#51525c",
+          "coverage": 0.2094
+        },
+        {
+          "hex": "#b9a292",
+          "coverage": 0.1709
+        },
+        {
+          "hex": "#807571",
+          "coverage": 0.101
+        },
+        {
+          "hex": "#a0a5af",
+          "coverage": 0.0762
+        }
+      ],
+      "detail": {
+        "energy": 19.4517
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "photo-horeca",
+      "kind": "image",
+      "note": "real photo: busy restaurant hall",
+      "grid": "I2:I3",
+      "bleed": true,
+      "snap": false,
+      "box": {
+        "x": 0.784,
+        "y": 0.205,
+        "w": 0.068,
+        "h": 0.105
+      },
+      "px": {
+        "x": 2158,
+        "y": 315,
+        "w": 187,
+        "h": 161
+      },
+      "aspect": 1.1615,
+      "palette": [
+        {
+          "hex": "#535059",
+          "coverage": 0.4065
+        },
+        {
+          "hex": "#bda695",
+          "coverage": 0.2748
+        },
+        {
+          "hex": "#938680",
+          "coverage": 0.154
+        },
+        {
+          "hex": "#6e554c",
+          "coverage": 0.0862
+        },
+        {
+          "hex": "#6d757e",
+          "coverage": 0.0785
+        }
+      ],
+      "detail": {
+        "energy": 18.162
+      },
+      "medium": "raster",
+      "plate": "assets/plates/photo-horeca.png",
+      "text": null
+    },
+    {
+      "id": "wp-samarqand",
+      "kind": "text",
+      "note": "waypoint triangle and label: SAMARQAND 30 EKRAN 10 OBYEKT",
+      "grid": "F5:G6",
+      "box": {
+        "x": 0.5,
+        "y": 0.5,
+        "w": 0.2,
+        "h": 0.2
+      },
+      "px": {
+        "x": 1376,
+        "y": 768,
+        "w": 550,
+        "h": 307
+      },
+      "aspect": 1.7915,
+      "palette": [
+        {
+          "hex": "#e4e6e9",
+          "coverage": 0.7732
+        },
+        {
+          "hex": "#bac3d4",
+          "coverage": 0.1015
+        },
+        {
+          "hex": "#c61c2a",
+          "coverage": 0.0731
+        },
+        {
+          "hex": "#1f3353",
+          "coverage": 0.0359
+        },
+        {
+          "hex": "#7d889e",
+          "coverage": 0.0163
+        }
+      ],
+      "detail": {
+        "energy": 31.9943
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "wp-buxoro",
+      "kind": "text",
+      "note": "waypoint triangle and label: BUXORO 25 EKRAN 10 OBYEKT",
+      "grid": "H4:H5",
+      "coverBox": {
+        "x": 0.7,
+        "y": 0.4,
+        "w": 0.1,
+        "h": 0.2
+      },
+      "box": {
+        "x": 0.6999,
+        "y": 0.4551,
+        "w": 0.0999,
+        "h": 0.1445
+      },
+      "px": {
+        "x": 1926,
+        "y": 699,
+        "w": 275,
+        "h": 222
+      },
+      "aspect": 1.2387,
+      "palette": [
+        {
+          "hex": "#e2e4ea",
+          "coverage": 0.8757
+        },
+        {
+          "hex": "#aab3c4",
+          "coverage": 0.0548
+        },
+        {
+          "hex": "#364b6b",
+          "coverage": 0.0282
+        },
+        {
+          "hex": "#6e7d98",
+          "coverage": 0.028
+        },
+        {
+          "hex": "#1d3152",
+          "coverage": 0.0133
+        }
+      ],
+      "detail": {
+        "energy": 25.2774
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "wp-fergana",
+      "kind": "text",
+      "note": "waypoint triangle and label: FARG'ONA VODIYSI",
+      "grid": "I3:I4",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0.3,
+        "w": 0.1,
+        "h": 0.2
+      },
+      "box": {
+        "x": 0.8001,
+        "y": 0.3327,
+        "w": 0.048,
+        "h": 0.0853
+      },
+      "px": {
+        "x": 2202,
+        "y": 511,
+        "w": 132,
+        "h": 131
+      },
+      "aspect": 1.0076,
+      "palette": [
+        {
+          "hex": "#e3e4ea",
+          "coverage": 0.7768
+        },
+        {
+          "hex": "#505d75",
+          "coverage": 0.0673
+        },
+        {
+          "hex": "#a6b1c2",
+          "coverage": 0.0657
+        },
+        {
+          "hex": "#d1a3aa",
+          "coverage": 0.0631
+        },
+        {
+          "hex": "#7c859d",
+          "coverage": 0.027
+        }
+      ],
+      "detail": {
+        "energy": 14.3045
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "legend-strip",
+      "kind": "text",
+      "note": "legend strip lying on the paper in perspective: 50 000 / kun, 1 500 000 / oy, 18 000 000 / yil, 24/7",
+      "grid": "A8:E9",
+      "box": {
+        "x": 0,
+        "y": 0.8,
+        "w": 0.5,
+        "h": 0.2
+      },
+      "px": {
+        "x": 0,
+        "y": 1229,
+        "w": 1376,
+        "h": 307
+      },
+      "aspect": 4.4821,
+      "palette": [
+        {
+          "hex": "#e7e8ef",
+          "coverage": 0.8795
+        },
+        {
+          "hex": "#1d365d",
+          "coverage": 0.0582
+        },
+        {
+          "hex": "#adbdd0",
+          "coverage": 0.0339
+        },
+        {
+          "hex": "#75859f",
+          "coverage": 0.0236
+        },
+        {
+          "hex": "#213d4d",
+          "coverage": 0.0049
+        }
+      ],
+      "detail": {
+        "energy": 36.094
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    }
+  ]
+}

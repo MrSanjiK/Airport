@@ -1,0 +1,41 @@
+// A flat chart for browsers without WebGL2: same data, drawn top-down.
+export function drawFallback(canvas, { vectors, places }) {
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const w = innerWidth;
+  const h = innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
+  const g = canvas.getContext('2d');
+  g.scale(dpr, dpr);
+  const night = document.documentElement.dataset.theme === 'night';
+  const paper = night ? '#0a1729' : '#edf2f6';
+  const ink = night ? '#9ebde0' : '#163b67';
+  g.fillStyle = paper;
+  g.fillRect(0, 0, w, h);
+  const [lon0, lat0, lon1, lat1] = vectors.bbox;
+  const k = Math.cos((((lat0 + lat1) / 2) * Math.PI) / 180);
+  const sx = w / ((lon1 - lon0) * k);
+  const sy = h / (lat1 - lat0);
+  const s = Math.min(sx, sy) * 1.05;
+  const ox = (w - (lon1 - lon0) * k * s) / 2;
+  const oy = (h - (lat1 - lat0) * s) / 2;
+  const P = (p) => [ox + (p[0] - lon0) * k * s, oy + (lat1 - p[1]) * s];
+  const line = (r, close) => { g.beginPath(); r.forEach((p, i) => { const [x, y] = P(p); i ? g.lineTo(x, y) : g.moveTo(x, y); }); if (close) g.closePath(); };
+  g.fillStyle = night ? '#12304f' : '#c9ddee';
+  vectors.lakes.forEach((r) => { line(r, true); g.fill(); });
+  g.strokeStyle = night ? '#4d8fd8' : '#4c80b8';
+  g.lineWidth = 1;
+  vectors.rivers.forEach((r) => { line(r); g.stroke(); });
+  g.strokeStyle = ink;
+  g.globalAlpha = 0.45;
+  g.setLineDash([5, 4]);
+  vectors.neighbors.forEach((r) => { line(r); g.stroke(); });
+  g.setLineDash([]);
+  g.globalAlpha = 1;
+  g.lineWidth = 2;
+  vectors.uz.forEach((r) => { line(r, true); g.stroke(); });
+  g.fillStyle = '#e3000f';
+  places.korzinka.forEach((p) => { const [x, y] = P(p); g.beginPath(); g.arc(x, y, 2.2, 0, Math.PI * 2); g.fill(); });
+}

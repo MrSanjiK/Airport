@@ -1,0 +1,122 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-10-05T10:44:49.966Z",
+  "comp": ".impeccable/mocks/comp-2.png",
+  "direction": "80230076",
+  "breakpoint": "2752x1536",
+  "artifact": null,
+  "phase": "plates",
+  "phases": {
+    "comps": {
+      "status": "closed",
+      "openedAt": "2026-10-05T10:44:49.965Z",
+      "closedAt": "2026-10-05T10:52:10.996Z",
+      "attempts": 2,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "3 comps, 1 approved",
+        "approved": ".impeccable/mocks/comp-2.png",
+        "at": "2026-10-05T10:52:10.995Z"
+      },
+      "forced": null
+    },
+    "spec": {
+      "status": "closed",
+      "openedAt": "2026-10-05T10:52:11.068Z",
+      "closedAt": "2026-10-05T10:58:58.231Z",
+      "attempts": 2,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "22 regions, 3 plates, 7 text regions measured",
+        "at": "2026-10-05T10:58:58.231Z"
+      },
+      "forced": null
+    },
+    "plates": {
+      "status": "open",
+      "openedAt": "2026-10-05T10:58:58.231Z",
+      "closedAt": null,
+      "attempts": 5,
+      "notes": [],
+      "gate": {
+        "ok": false,
+        "reasons": [
+          "plate assets/plates/photo-airport.png: structure 33% against the comp region photo-airport: the composition of the plate is not the region's (different subject, orientation, or crop); regenerate with comp-spec.mjs --crop photo-airport as the reference image",
+          "plate assets/plates/photo-korzinka.png: structure 24% against the comp region photo-korzinka: the composition of the plate is not the region's (different subject, orientation, or crop); regenerate with comp-spec.mjs --crop photo-korzinka as the reference image",
+          "plate assets/plates/photo-horeca.png: structure 17% against the comp region photo-horeca: the composition of the plate is not the region's (different subject, orientation, or crop); regenerate with comp-spec.mjs --crop photo-horeca as the reference image"
+        ],
+        "summary": "3/3 plates",
+        "at": "2026-10-05T11:13:30.345Z"
+      },
+      "forced": null
+    },
+    "hero": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "sections": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "motion": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "responsive": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "review": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": null,
+  "plates": {
+    "photo-airport": {
+      "status": "ok",
+      "score": 0.4885,
+      "size": "640x587"
+    },
+    "photo-korzinka": {
+      "status": "ok",
+      "score": 0.4589,
+      "size": "640x576"
+    },
+    "photo-horeca": {
+      "status": "ok",
+      "score": 0.42,
+      "size": "640x554"
+    }
+  }
+}

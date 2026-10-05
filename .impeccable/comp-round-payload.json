@@ -1,0 +1,10 @@
+{
+  "title": "Parvoz xaritasi — kompozitsiyani tasdiqlang",
+  "question": "Uchta kompozitsiyadan qaysi biri saytning birinchi ekrani bo'lsin? Nimani olib qolish kerak, nima soxta tuyuladi — 'steer' maydoniga yozing (masalan: '2-chisi, lekin 3-chisidagi zona sxemasi aeroport bo'limida bo'lsin').",
+  "options": [
+    {"id": "comp-1", "label": "1 · Tekis xarita", "kicker": "CHOSEN DIRECTION", "lineage": "Parvoz xaritasi", "thesis": "Xarita tepadan: chapda sarlavha, o'ngda UTTT kompas halqasi va qizil marshrut, aeroport surati 'approach plate' ichida.", "palette": ["#EDF2F6", "#163B67", "#E3000F", "#9DB7CC"], "materials": ["buklangan xarita qog'ozi", "kontur relyef"], "viewport": "Tekis yuqoridan ko'rinish; marshrut va waypointlar xarita ustida.", "risk": "Eng sokin variant — 3D 'wow' scroll animatsiyasiga ko'proq tayanadi.", "comp": ".impeccable/mocks/comp-1.png"},
+    {"id": "comp-2", "label": "2 · 3D parvoz", "lineage": "Parvoz xaritasi", "thesis": "Past burchakdan kinematografik 3D: xarita ufqqa cho'ziladi, UTTT terminali kompas halqasida ko'tariladi, qizil marshrut qog'ozdan uzilib Samarqand, Buxoro, Farg'onaga uchadi; yo'l bo'yida real suratli plakatlar.", "palette": ["#EDF2F6", "#163B67", "#E3000F", "#9DB7CC"], "materials": ["3D relyef", "ko'tarilgan marshrut yoyi", "tik turgan foto-plakatlar"], "viewport": "Chapda katta sarlavha va CTA; o'ng-pastda 3D terminal; marshrut chuqurlikka ketadi.", "risk": "Eng og'ir WebGL sahna — telefonda soddalashtirilgan versiya kerak.", "comp": ".impeccable/mocks/comp-2.png"},
+    {"id": "comp-3", "label": "3 · Aeroport birinchi", "lineage": "Parvoz xaritasi", "thesis": "Aeroport Jeppesen 'plate'i: izometrik 3D terminal, raqamlangan zonalar, ekran surati va 3/6/12 oy narx 'tushish profili'.", "palette": ["#EDF2F6", "#163B67", "#E3000F", "#9DB7CC"], "materials": ["izometrik terminal modeli", "zona belgilari", "narx profili"], "viewport": "Chapda sarlavha; o'ngda katta aeroport sxemasi; chetda milliy marshrut davomi.", "risk": "Korzinka/HoReCa/Hududlar birinchi ekranda ko'rinmaydi — faqat scroll'da.", "comp": ".impeccable/mocks/comp-3.png"}
+  ],
+  "steer": true
+}

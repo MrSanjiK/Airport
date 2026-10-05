@@ -1,0 +1,16 @@
+# dependencies and build output
+node_modules/
+dist/
+
+# source commercial-offer PDFs (internal material, not part of the site)
+*.pdf
+
+# regenerable captures and scratch from the design workflow
+.impeccable/review/
+.impeccable/tmp/
+
+# local tooling
+.claude/
+.DS_Store
+*.log
+.vercel

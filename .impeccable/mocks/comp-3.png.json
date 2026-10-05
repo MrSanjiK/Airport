@@ -1,0 +1,13 @@
+{
+ "model": "higgsfield nano_banana_pro 2k 16:9",
+ "refs": [
+  "comp-1.png",
+  "Media Port logo",
+  "airport baggage LED photo (Media port new.pdf p7)"
+ ],
+ "direction": "80230076 assigned — Flight Plan",
+ "variation": "airport first: Jeppesen-style UTTT airport diagram plate with isometric extruded terminal, numbered zone markers, floating LED photo card, descent-profile price ladder 3/6/12",
+ "approved": false,
+ "role": "section reference (airport section), approved as part of the 2+3 combination",
+ "prompt": "Higgsfield nano_banana_pro 2k 16:9, refs comp-1 + logo + airport LED photo. Keep comp-1 world. NEW COMPOSITION airport first: left headline 'Toshkent aeroporti. 18 000 000 yo'lovchi. Endi — butun O'zbekiston.', subline, red CTA; right a Jeppesen-style plate 'UTTT TASHKENT — MEDIA PORT ZONALARI' with isometric extruded navy terminal, red numbered zone markers and callouts (FILTR 2560x720, VYLET 1 10112x786, VYLET 2 4096x512, DUTY FREE 640x1120, PRILYOT 32 EKRAN, CIP VYLET, CIP PRILYOT, TERMINAL 3), floating photo card 'PRILYOT 32 EKRAN 15 SEK 150/KUN', descent-profile price ladder 3 OY 500 MLN / 6 OY 400 MLN / 12 OY 300 MLN, oyiga QQS siz."
+}

@@ -1,0 +1,15 @@
+{
+ "model": "higgsfield nano_banana_pro 2k 16:9",
+ "refs": [
+  "comp-1.png",
+  "Media Port logo",
+  "airport baggage LED photo (Media port new.pdf p7)",
+  "Korzinka store photo (Korzinka 2026.pdf p1)",
+  "SOY restaurant photo (HORECA 2026.pdf p6)"
+ ],
+ "direction": "80230076 assigned — Flight Plan",
+ "variation": "oblique 3D flyover: receding relief chart, extruded UTTT terminal on compass ring, red route arc lifting off paper, upright approach-plate cards with real photos along the route",
+ "approved": true,
+ "approval_note": "User chose '2 + 3 birlashmasi' (2026-10-05): comp-2 is the approved first viewport; comp-3's isometric airport diagram plate + descent-profile price ladder governs the airport section reached by scroll. User override in words: navbar Apple-style (frosted, compact), language switcher shows flags instead of UZ/RU codes, all nav/switcher/buttons custom and unique with professional hover/animation — the comp's plain nav and buttons are not to be literalized.",
+ "prompt": "Higgsfield nano_banana_pro 2k 16:9, refs comp-1 + logo + airport LED, Korzinka, restaurant photos. Keep comp-1 world (#EDF2F6 paper, #163B67 navy linework, single #E3000F route). NEW COMPOSITION: low oblique cinematic 3D view of the raised-relief paper chart of Uzbekistan receding to a misty horizon; headline upper-left 'Aeroportdan har bir viloyatgacha — sizning ekraningiz.', red CTA 'Media-plan tuzish'; foreground UTTT TASHKENT extruded navy terminal on a graduated compass ring; red route arc lifting off the paper to SAMARQAND 30 EKRAN 10 OBYEKT, BUXORO 25 EKRAN 10 OBYEKT, FARG'ONA VODIYSI; three upright approach-plate cards with real photos (UTTT 40 LED EKRAN 150/KUN; KORZINKA 300+ OBYEKT 900 000 CHEK/KUN; HORECA 75+ RESTORAN); legend 50 000 / kun, 1 500 000 / oy, 18 000 000 / yil, 24/7."
+}
