@@ -104,10 +104,12 @@ export function createLoader(el, vectors) {
     const [px, py] = toPx(...toXZ(CORE[0], CORE[1]));
     read.style.setProperty('--ld-size', `${font.toFixed(0)}px`);
     read.style.transform = `translate(${px}px, ${py}px) translate(-50%, -50%)`;
+    requestAnimationFrame(() => el.classList.add('is-placed'));
   } else {
     const [, bottom] = toPx(0, toXZ(64, 37.1)[1]);
     read.style.setProperty('--ld-size', '56px');
     read.style.transform = `translate(${innerWidth / 2}px, ${Math.min(innerHeight - 110, bottom + 40)}px) translate(-50%, 0)`;
+    requestAnimationFrame(() => el.classList.add('is-placed'));
   }
 
   let target = 0;

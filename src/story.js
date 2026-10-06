@@ -5,7 +5,8 @@ import { REGIONS, LED_ZONES, LED_FACTS } from './data/inventory.js';
 import { profile } from './sections.js';
 import { formatDMS, toLonLat } from './scene/geo.js';
 
-const CHAPTERS = ['hero', 'airport', 'korzinka', 'horeca', 'regions', 'plan'];
+const CHAPTERS = ['hero', 'airport', 'flytv', 'mediagate', 'korzinka', 'horeca', 'regions', 'plan'];
+const RAIL = { airport: 'mediaport', regions: 'region' };
 const ALL = [...CHAPTERS, 'explore'];
 const TRI = '<svg class="wp-tri" viewBox="0 0 15 13" aria-hidden="true"><path d="M7.5 1.2L13.8 11.8H1.2z"/></svg>';
 const DOT = '<svg class="wp-tri wp-pin" viewBox="0 0 15 13" aria-hidden="true"><circle cx="7.5" cy="6.5" r="4.4"/></svg>';
@@ -185,8 +186,8 @@ export function initStory(world, { places, nav, bus }) {
   bus.addEventListener('region', (e) => labels.forEach((l) => l.el.classList.toggle('is-active', l.key === e.detail)));
 
   // Rail
-  rail.innerHTML = `<ol><span class="rail-fill"></span>${CHAPTERS.slice(1).map((c) => `<li><a href="#${c}" data-c="${c}"><span>${t(`rail.${c === 'airport' ? 'tas' : c}`)}</span><i></i></a></li>`).join('')}</ol>`;
-  onLang(() => rail.querySelectorAll('a').forEach((a) => (a.querySelector('span').textContent = t(`rail.${a.dataset.c === 'airport' ? 'tas' : a.dataset.c}`))));
+  rail.innerHTML = `<ol><span class="rail-fill"></span>${CHAPTERS.slice(1).map((c) => `<li><a href="#${c}" data-c="${c}"><span>${t(`rail.${RAIL[c] || c}`)}</span><i></i></a></li>`).join('')}</ol>`;
+  onLang(() => rail.querySelectorAll('a').forEach((a) => (a.querySelector('span').textContent = t(`rail.${RAIL[a.dataset.c] || a.dataset.c}`))));
 
   // Scroll keyframes
   let keys = [];
@@ -339,13 +340,15 @@ export function initStory(world, { places, nav, bus }) {
 
     // the hero symbol is sized for the screen: a landmark on desktop, never a wall over the copy on a phone
     const heroS = 329 * Math.min(1, Math.max(0.42, (Math.min(innerWidth, innerHeight * 1.6) - 300) / 1100));
-    const as = 1 + heroS * w.hero + (PLATE.scale - 1) * w.airport;
+    // the terminal keeps its plate size through all three airport directions
+    const wAir = w.airport + w.flytv + w.mediagate;
+    const as = 1 + heroS * w.hero + (PLATE.scale - 1) * wAir;
     // on the plate the volumes are drawn at half the hero symbol's height exaggeration, so the plan reads
-    world.airport.group.scale.set(as, as * (1 - 0.45 * w.airport), as);
+    world.airport.group.scale.set(as, as * (1 - 0.45 * wAir), as);
     // the terminal stands on the levelled Tashkent plate when that model is up
     world.airport.group.position.y = world.city.flatY(world.airport.group.position.x, world.airport.group.position.z, world.hubWorld.y);
-    world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0);
-    if (world.roads) world.roads.city = 1 - clamp((w.hero + w.airport) * 1.4);
+    world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0, w.flytv + w.mediagate);
+    if (world.roads) world.roads.city = 1 - clamp((w.hero + wAir) * 1.4);
     world.airport.setHot(w.airport);
     const cityNow = world.city.active;
     const noCity = 1 - world.city.k;

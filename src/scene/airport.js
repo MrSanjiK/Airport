@@ -458,15 +458,16 @@ export function createAirport(plan, detail, hubWorld) {
   const setHot = () => {};
   // hero: the terminal group as the route's origin symbol; plate: the full model; T3 waits off-diagram
   let mode = { hero: 0, plate: 0 };
-  const setSymbol = (k, plate = 0) => {
-    mode = { hero: k, plate };
-    flat.visible = k < 0.5 && plate < 0.15;
+  // solo: the terminal stands on its own over the map (Fly TV, Media Gate chapters): no airfield, no far terminal
+  const setSymbol = (k, plate = 0, solo = 0) => {
+    mode = { hero: k, plate, solo };
+    flat.visible = k < 0.5 && plate < 0.15 && solo < 0.3;
     context.visible = false;
     // on the plate, everything beyond the hall is drawn only inside the field (the plate pass), never across the map
     gates.visible = plate < 0.32;
     farGates.visible = k < 0.5 && plate < 0.32;
     terminals.T1?.parts.forEach((m) => (m.visible = k < 0.5 && plate < 0.32));
-    terminals.T3?.parts.forEach((m) => (m.visible = k < 0.5 && plate < 0.5));
+    terminals.T3?.parts.forEach((m) => (m.visible = k < 0.5 && plate < 0.5 && solo < 0.3));
   };
   // the plate pass draws the ground and surroundings too, faded with the field
   const plateOn = (fo) => {
@@ -479,7 +480,7 @@ export function createAirport(plan, detail, hubWorld) {
   };
   const plateOff = () => {
     flatMats.forEach((m) => (m.opacity = m.userData.base));
-    setSymbol(mode.hero, mode.plate);
+    setSymbol(mode.hero, mode.plate, mode.solo);
   };
 
   return { group, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, terminals };

@@ -16,6 +16,9 @@ export const POSES = {
   intro: { t: [64.6, 41.4], dist: 1900, az: 0, el: 89.9, shift: 0 },
   hero: { t: [68.3, 40.6], dist: 820, az: 4, el: 42, shift: 0 },
   airport: { t: [69.2687, 41.2634], dist: 46, az: 33, el: 56, shift: 0.24 },
+  // Fly TV and Media Gate look at the same terminal from two other sides, clear of their plates
+  flytv: { t: [69.2687, 41.2634], dist: 40, az: -52, el: 36, shift: -0.24 },
+  mediagate: { t: [69.2687, 41.2634], dist: 34, az: 128, el: 48, shift: 0.24 },
   korzinka: { t: [68.6, 40.8], dist: 1350, az: -6, el: 52, shift: -0.22 },
   horeca: { t: [69.26, 41.3], dist: 62, az: -10, el: 50, shift: 0.19 },
   regions: { t: [69.6, 40.35], dist: 1550, az: 8, el: 44, shift: -0.27 },
@@ -29,6 +32,7 @@ export const PLATE = { scale: 44, center: [-0.035, 0.07] };
 {
   const [x0, z0] = toXZ(69.2687, 41.2634);
   POSES.airport.t = toLonLat(x0 + PLATE.center[0] * PLATE.scale, z0 + PLATE.center[1] * PLATE.scale);
+  POSES.flytv.t = POSES.mediagate.t = POSES.airport.t;
 }
 
 export async function createWorld(canvas, { data, onProgress, quality }) {

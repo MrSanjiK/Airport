@@ -45,10 +45,10 @@
     <div class="nav-bar">
       <a class="nav-logo" href="#top" aria-label="Media Port"><span class="logo" data-logo></span></a>
       <ul class="nav-links" role="list">
-        <li><a href="#airport" data-mega="airport" data-i18n="nav.airport">Aeroport</a></li>
-        <li><a href="#korzinka" data-mega="korzinka" data-i18n="nav.korzinka">Korzinka</a></li>
-        <li><a href="#horeca" data-mega="horeca" data-i18n="nav.horeca">HoReCa</a></li>
-        <li><a href="#regions" data-mega="regions" data-i18n="nav.regions">Hududlar</a></li>
+        <li><a href="#airport" data-mega="mediaport">Media Port</a></li>
+        <li><a href="#flytv" data-mega="flytv">Fly TV</a></li>
+        <li><a href="#mediagate" data-mega="mediagate">Media Gate</a></li>
+        <li><a href="#korzinka" data-mega="tvline" data-also="horeca regions">TV Line</a></li>
         <li><a href="#plan" data-mega="plan" data-i18n="nav.plan">Narxlar</a></li>
       </ul>
       <div class="nav-actions">
@@ -99,6 +99,7 @@
           </a>
           <a class="btn-link" href="#plan"><span data-i18n="hero.link">Narxlarni ko'rish</span></a>
         </div>
+        <nav class="dock" id="dock" aria-label="Yo'nalishlar"></nav>
       </div>
 
       <aside class="plates" aria-label="Media Port">
@@ -131,7 +132,8 @@
 
     <!-- Airport (comp-3 plate) -->
     <section class="chapter chapter--left chapter--wide" id="airport" data-chapter="airport">
-      <article class="plate" aria-labelledby="airportTitle">
+      <article class="plate" aria-labelledby="airportTitle" data-brand="mediaport">
+        <div class="plate-brand" data-brandbar="mediaport"></div>
         <header class="plate-lede">
           <h2 id="airportTitle" data-i18n="airport.headline">Toshkent aeroporti. 18 000 000 tashrif. Endi — butun O'zbekiston.</h2>
           <p data-i18n="airport.headSub">LED ekranlar, 200 monitor va lightbox — hamda Korzinka, 75+ restoran, 11 hudud.</p>
@@ -147,21 +149,12 @@
           <p class="lead" data-i18n="airport.lead"></p>
           <dl class="readout" id="airportReadout"></dl>
           <div class="audience" id="airportAudience"></div>
-          <div class="tabs" role="tablist" id="airportTabs">
-            <button role="tab" aria-selected="true" aria-controls="tabLed" id="tLed" data-i18n="airport.tabLed">LED ekranlar</button>
-            <button role="tab" aria-selected="false" aria-controls="tabTv" id="tTv" data-i18n="airport.tabTv">TV tarmog'i</button>
-            <button role="tab" aria-selected="false" aria-controls="tabLb" id="tLb" data-i18n="airport.tabLb">Lightbox</button>
-            <span class="tabs-ink" aria-hidden="true"></span>
-          </div>
-          <div class="tab-panels">
-            <div role="tabpanel" id="tabLed" aria-labelledby="tLed">
-              <p class="facts" data-i18n="airport.ledFacts"></p>
-              <div class="zones" id="zones"></div>
-              <p class="note" data-i18n="airport.schematic"></p>
-            </div>
-            <div role="tabpanel" id="tabTv" aria-labelledby="tTv" hidden></div>
-            <div role="tabpanel" id="tabLb" aria-labelledby="tLb" hidden></div>
-          </div>
+          <section class="led" aria-labelledby="ledTitle">
+            <h3 id="ledTitle" data-i18n="airport.tabLed">LED ekranlar</h3>
+            <p class="facts" data-i18n="airport.ledFacts"></p>
+            <div class="zones" id="zones"></div>
+            <p class="note" data-i18n="airport.schematic"></p>
+          </section>
           <section class="why" aria-labelledby="whyTitle">
             <h3 id="whyTitle" data-i18n="airport.whyTitle">Nega aeroport</h3>
             <ol class="why-list" id="whyList"></ol>
@@ -172,8 +165,27 @@
       </article>
     </section>
 
+    <section class="chapter chapter--right" id="flytv" data-chapter="flytv">
+      <article class="plate" aria-labelledby="ftTitle" data-brand="flytv">
+        <div class="plate-brand" data-brandbar="flytv"></div>
+        <header class="plate-head">
+          <h2 id="ftTitle" data-i18n="flytv.title">200 monitor butun aeroport bo'ylab</h2></header>
+        <div class="plate-body" id="ftBody"></div>
+      </article>
+    </section>
+
+    <section class="chapter chapter--left" id="mediagate" data-chapter="mediagate">
+      <article class="plate" aria-labelledby="mgTitle" data-brand="mediagate">
+        <div class="plate-brand" data-brandbar="mediagate"></div>
+        <header class="plate-head">
+          <h2 id="mgTitle" data-i18n="mediagate.title">Ichki yoritgichli lightbox'lar — 10 zonada</h2></header>
+        <div class="plate-body" id="mgBody"></div>
+      </article>
+    </section>
+
     <section class="chapter chapter--right" id="korzinka" data-chapter="korzinka">
-      <article class="plate" aria-labelledby="kzTitle">
+      <article class="plate" aria-labelledby="kzTitle" data-brand="tvl-korzinka">
+        <div class="plate-brand" data-brandbar="tvl-korzinka"></div>
         <header class="plate-head">
           <h2 id="kzTitle" data-i18n="korzinka.title">Korzinka supermarketlari</h2></header>
         <div class="plate-body" id="kzBody"></div>
@@ -181,7 +193,8 @@
     </section>
 
     <section class="chapter chapter--left" id="horeca" data-chapter="horeca">
-      <article class="plate" aria-labelledby="hrTitle">
+      <article class="plate" aria-labelledby="hrTitle" data-brand="tvl-horeca">
+        <div class="plate-brand" data-brandbar="tvl-horeca"></div>
         <header class="plate-head">
           <h2 id="hrTitle" data-i18n="horeca.title">Restoran va kafelar</h2></header>
         <div class="plate-body" id="hrBody"></div>
@@ -189,7 +202,8 @@
     </section>
 
     <section class="chapter chapter--right" id="regions" data-chapter="regions">
-      <article class="plate" aria-labelledby="rgTitle">
+      <article class="plate" aria-labelledby="rgTitle" data-brand="tvl-region">
+        <div class="plate-brand" data-brandbar="tvl-region"></div>
         <header class="plate-head">
           <h2 id="rgTitle" data-i18n="regions.title">11 hudud</h2></header>
         <div class="plate-body" id="rgBody"></div>

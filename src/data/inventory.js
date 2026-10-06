@@ -36,14 +36,19 @@ export const LED_ZONES = [
 
 export const LED_FACTS = { count: 40, pitch: 'P2', playsDay: 150, spotSec: 15, hours: '24/7' };
 
-export const AIRPORT_TV = { monitors: 200, diag: '85 / 75 / 65″', playsDay: 96, spotSec: 15, hours: '22/7', price: [250, 200, 150], imgs: ['tv-checkin', 'tv-lounge', 'tv-hall'] };
+// Fly TV deck p6–7: 200 monitors across the airport; the deck prints "22/7" but states the monitors run round the clock.
+export const AIRPORT_TV = {
+  monitors: 200, diag: '85 / 75 / 65″', playsDay: 96, spotSec: 15, hours: '24/7', price: [250, 200, 150],
+  zones: ['vip', 'cip', 'dep', 'arr'],
+  imgs: ['tv-corridor', 'tv-gates', 'tv-checkin', 'tv-lounge', 'tv-vip', 'tv-hall'],
+};
 
 export const LIGHTBOX = {
   count: 10,
   zones: ['Filter', 'Registration 1', 'Registration 2', 'Corridor', 'Duty Free', 'B8–B10', 'Cofelito B1–B2', 'Gallery B3–B4', 'Safia B5–B7', 'Milliy B13–B14'],
   areaM2: 35,
   price: [300, 250, 200],
-  imgs: ['lb-bmw'],
+  imgs: ['lb-bmw', 'lb-gallery', 'lb-pillars', 'lb-stairs', 'lb-hall'],
 };
 
 export const KORZINKA = {
@@ -115,6 +120,17 @@ export const REGIONS = {
 export const HOLDING = { name: 'Orient Advertising', specialists: 100 };
 export const PHONES = ['+998 90 107 33 33', '+998 90 980 40 40'];
 export const TERMS = [3, 6, 12];
+
+// The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.
+export const DIRECTIONS = [
+  { id: 'mediaport', chapter: 'airport', brand: 'Media Port', color: '#163b67', accent: '#e3000f', logo: null, site: null, group: 'airport', items: () => LED_ZONES.map((z) => `led-${z.id}`) },
+  { id: 'flytv', chapter: 'flytv', brand: 'Fly TV', color: '#e40045', logo: 'flytv', site: 'flytv.uz', group: 'airport', items: () => ['tv'] },
+  { id: 'mediagate', chapter: 'mediagate', brand: 'Media Gate', color: '#153b66', accent: '#d0021b', logo: 'mediagate', site: 'mediagate.uz', group: 'airport', items: () => ['lightbox'] },
+  { id: 'tvl-korzinka', chapter: 'korzinka', brand: 'TV Line', sub: 'Korzinka', color: '#e2001b', logo: 'tvline', subLogo: 'korzinka', site: 'tvline.uz', group: 'tvline', items: () => ['korzinka'] },
+  { id: 'tvl-horeca', chapter: 'horeca', brand: 'TV Line', sub: 'HoReCa', color: '#e11783', logo: 'tvline', site: 'tvline.uz', group: 'tvline', items: () => ['horeca'] },
+  { id: 'tvl-region', chapter: 'regions', brand: 'TV Line', sub: 'Region', color: '#ad4482', logo: 'tvline', subLogo: 'region-script', site: 'tvline.uz', group: 'tvline', items: () => ['regions'] },
+];
+export const directionOf = (itemId) => DIRECTIONS.find((d) => d.items().includes(itemId));
 
 // Networks the media-plan calculator can combine.
 export const PLAN_ITEMS = [

@@ -1,17 +1,20 @@
 import { t, num, money, onLang } from './i18n/index.js';
-import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING } from './data/inventory.js';
+import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS } from './data/inventory.js';
 import logo from './assets/logo.svg?raw';
+import { badge, tagline } from './ui/brand.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const CHECK = '<svg viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7"/></svg>';
+// every product, tagged with the direction (brand) it is bought from
 const ITEMS = () => [
-  ...LED_ZONES.map((z, i) => ({ id: `led-${z.id}`, group: 'airport', name: `${i + 1}. ${t(`airport.zones.${z.id}`)}`, price: z.price })),
-  { id: 'tv', group: 'other', name: t('plan.tv'), price: AIRPORT_TV.price },
-  { id: 'lightbox', group: 'other', name: t('plan.lightbox'), price: LIGHTBOX.price },
-  { id: 'korzinka', group: 'other', name: t('plan.korzinka'), price: KORZINKA.price },
-  { id: 'horeca', group: 'other', name: t('plan.horeca'), price: HORECA.price },
-  { id: 'regions', group: 'other', name: t('plan.regions'), price: REGIONS.price },
+  ...LED_ZONES.map((z, i) => ({ id: `led-${z.id}`, dir: 'mediaport', name: `${i + 1}. ${t(`airport.zones.${z.id}`)}`, price: z.price, hit: z.hit })),
+  { id: 'tv', dir: 'flytv', name: t('plan.tv'), price: AIRPORT_TV.price },
+  { id: 'lightbox', dir: 'mediagate', name: t('plan.lightbox'), price: LIGHTBOX.price, note: t('plan.onRequest') },
+  { id: 'korzinka', dir: 'tvl-korzinka', name: t('plan.korzinka'), price: KORZINKA.price },
+  { id: 'horeca', dir: 'tvl-horeca', name: t('plan.horeca'), price: HORECA.price },
+  { id: 'regions', dir: 'tvl-region', name: t('plan.regions'), price: REGIONS.price },
 ];
+const dirName = (d) => `${d.brand}${d.sub ? ` · ${d.sub}` : ''}`;
 
 export function initPlanner({ bus }) {
   const calc = document.getElementById('calc');
@@ -27,14 +30,34 @@ export function initPlanner({ bus }) {
       <span class="chip-face"><span class="chip-box">${CHECK}</span><span class="chip-name">${esc(it.name)}</span>
       <span class="chip-price">${num(it.price[TERMS.indexOf(state.term)])} ${esc(t('units.mln'))} ${esc(t('units.perMonth'))}</span></span></label>`;
 
+  // one card per direction, in its brand colour; Media Port's card holds its ten LED zones, the others one package each
+  const priceOf = (it) => it.price[TERMS.indexOf(state.term)];
   const renderCalc = () => {
     const items = ITEMS();
+    const card = (d) => {
+      const own = items.filter((i) => i.dir === d.id);
+      const on = own.filter((i) => state.sel.has(i.id));
+      const from = Math.min(...own.map(priceOf));
+      const body = d.id === 'mediaport'
+        ? `<div class="dc-zones"><div class="dc-zones-head"><span>${esc(t('plan.zones'))}</span>
+             <button type="button" class="dc-all" data-all="${d.id}">${esc(t('plan.allZones'))}</button></div>
+             <div class="chips chips--zones">${own.map(chip).join('')}</div></div>`
+        : `<label class="dc-pick"><input type="checkbox" name="item" value="${own[0].id}" ${state.sel.has(own[0].id) ? 'checked' : ''}/>
+             <span class="dc-pick-face"><span class="chip-box">${CHECK}</span><span class="dc-pick-name">${esc(own[0].name)}</span>
+             <span class="dc-pick-price tnum" data-price="${own[0].id}">${num(priceOf(own[0]))} <small>${esc(t('units.mln'))} ${esc(t('units.perMonth'))}</small></span></span></label>
+             ${own[0].note ? `<p class="dc-note">${esc(own[0].note)}</p>` : ''}`;
+      return `<article class="dcard${on.length ? ' is-on' : ''}" data-dir="${d.id}" style="--brand:${d.color}">
+        <header class="dc-head">${badge(d, 'sm')}
+          <span class="dc-title"><b>${esc(dirName(d))}</b><small>${esc(tagline(d))}</small></span>
+          <span class="dc-from tnum">${d.id === 'mediaport' ? `${on.length ? `<b>${on.length}</b> / ${own.length} ${esc(t('plan.zonesN'))}` : `${num(from)}+`}` : ''}</span>
+        </header>
+        ${body}
+      </article>`;
+    };
     calc.innerHTML = `
-      <fieldset class="fbox"><legend><i>1</i>${esc(t('plan.groupAirport'))}</legend>
-        <div class="chips">${items.filter((i) => i.group === 'airport').map(chip).join('')}</div></fieldset>
-      <fieldset class="fbox"><legend><i>2</i>${esc(t('plan.groupOther'))}</legend>
-        <div class="chips">${items.filter((i) => i.group === 'other').map(chip).join('')}</div></fieldset>
-      <fieldset class="fbox"><legend><i>3</i>${esc(t('plan.term'))}</legend>
+      <fieldset class="fbox"><legend><i>1</i>${esc(t('dir.label'))}</legend>
+        <div class="dcards">${DIRECTIONS.map(card).join('')}</div></fieldset>
+      <fieldset class="fbox"><legend><i>2</i>${esc(t('plan.term'))}</legend>
         <div class="seg" role="radiogroup">${TERMS.map((m) => `<label><input type="radio" name="term" value="${m}" ${m === state.term ? 'checked' : ''}/><span>${esc(t(`units.month${m}`))}</span></label>`).join('')}<span class="seg-thumb" aria-hidden="true"></span></div>
       </fieldset>`;
     placeThumb();
@@ -85,13 +108,25 @@ export function initPlanner({ bus }) {
     return { items, monthly, total: monthly * state.term, save: (base - monthly) * state.term, ti };
   };
 
+  // the budget split across the directions: one bar in the brands' colours, then each direction's lines
+  const splitHTML = (items, ti) => {
+    const total = items.reduce((a, i) => a + i.price[ti], 0) || 1;
+    const groups = DIRECTIONS.map((d) => ({ d, its: items.filter((i) => i.dir === d.id) })).filter((g) => g.its.length);
+    const sum = (g) => g.its.reduce((a, i) => a + i.price[ti], 0);
+    return `<div class="split-k">${esc(t('plan.split'))}</div>
+      <div class="budget-bar">${groups.map((g) => `<i style="--brand:${g.d.color};flex:${sum(g)}" title="${esc(dirName(g.d))} · ${Math.round((sum(g) / total) * 100)}%"></i>`).join('')}</div>
+      <ul class="strip-groups">${groups.map((g) => `<li style="--brand:${g.d.color}">
+        <div class="sg-head"><i></i><b>${esc(dirName(g.d))}</b><span class="tnum">${num(sum(g))} <small>${esc(t('units.mln'))}</small></span><em class="tnum">${Math.round((sum(g) / total) * 100)}%</em></div>
+        ${g.its.length > 1 || g.d.id === 'mediaport' ? `<ul>${g.its.map((i) => `<li><span>${esc(i.name)}</span><b class="tnum">${num(i.price[ti])}</b></li>`).join('')}</ul>` : ''}
+      </li>`).join('')}</ul>`;
+  };
   const renderStrip = () => {
     const { items, ti } = totals();
     strip.innerHTML = `
       <div class="strip-row"><span class="strip-k">${esc(t('plan.monthly'))}</span><span class="strip-v" data-v="monthly"><span></span><small>${esc(t('units.mln'))}</small></span></div>
       <div class="strip-row"><span class="strip-k">${esc(t('plan.total'))} · ${esc(t(`units.month${state.term}`))}</span><span class="strip-v" data-v="total"><span></span><small>${esc(t('units.mln'))}</small></span></div>
       <div class="strip-row"><span class="strip-k">${esc(t('plan.saving'))}</span><span class="strip-v strip-v--sm strip-save" data-v="save"><span></span><small>${esc(t('units.mln'))}</small></span></div>
-      ${items.length ? `<ul class="strip-list">${items.map((i) => `<li><span>${esc(i.name)}</span><b>${num(i.price[ti])}</b></li>`).join('')}</ul>` : `<p class="strip-empty">${esc(t('plan.empty'))}</p>`}
+      ${items.length ? splitHTML(items, ti) : `<p class="strip-empty">${esc(t('plan.empty'))}</p>`}
       <p class="note">${esc(t('units.vat'))}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="btn-primary" href="#inquiry" data-send ${items.length ? '' : 'aria-disabled="true" style="opacity:.45;pointer-events:none"'}><span class="btn-primary-label">${esc(t('plan.send'))}</span>
@@ -120,11 +155,31 @@ export function initPlanner({ bus }) {
       const it = ITEMS().find((i) => i.id === id);
       el.textContent = `${num(it.price[TERMS.indexOf(state.term)])} ${t('units.mln')} ${t('units.perMonth')}`;
     });
+    calc.querySelectorAll('[data-price]').forEach((el) => {
+      const it = ITEMS().find((i) => i.id === el.dataset.price);
+      el.firstChild.textContent = `${num(priceOf(it))} `;
+    });
+    calc.querySelectorAll('.dcard').forEach((c) => {
+      const own = ITEMS().filter((i) => i.dir === c.dataset.dir);
+      const on = own.filter((i) => state.sel.has(i.id)).length;
+      c.classList.toggle('is-on', on > 0);
+      const f = c.querySelector('.dc-from');
+      if (c.dataset.dir === 'mediaport') f.innerHTML = on ? `<b>${on}</b> / ${own.length} ${esc(t('plan.zonesN'))}` : `${num(Math.min(...own.map(priceOf)))}+`;
+    });
     renderStrip();
     renderPlanLine();
     bus.dispatchEvent(new CustomEvent('plan', { detail: { sel: [...state.sel], term: state.term } }));
   };
 
+  calc.addEventListener('click', (e) => {
+    const all = e.target.closest('[data-all]');
+    if (!all) return;
+    const own = ITEMS().filter((i) => i.dir === all.dataset.all);
+    const every = own.every((i) => state.sel.has(i.id));
+    own.forEach((i) => (every ? state.sel.delete(i.id) : state.sel.add(i.id)));
+    calc.querySelectorAll('input[name="item"]').forEach((inp) => (inp.checked = state.sel.has(inp.value)));
+    update();
+  });
   calc.addEventListener('change', (e) => {
     if (e.target.name === 'item') e.target.checked ? state.sel.add(e.target.value) : state.sel.delete(e.target.value);
     if (e.target.name === 'term') { state.term = +e.target.value; placeThumb(); }
@@ -149,7 +204,9 @@ export function initPlanner({ bus }) {
     const { items, monthly, total } = totals();
     const m = money(monthly);
     const tt = money(total);
-    return `${t('form.planLabel')}: ${items.map((i) => i.name).join('; ')} — ${t(`units.month${state.term}`)}, ${m.value} ${m.unit} ${t('units.perMonth')} (${tt.value} ${tt.unit})`;
+    const lines = DIRECTIONS.map((d) => ({ d, its: items.filter((i) => i.dir === d.id) })).filter((g) => g.its.length)
+      .map((g) => `${dirName(g.d)}: ${g.its.map((i) => i.name).join(', ')}`);
+    return `${t('form.planLabel')}: ${lines.join('; ')} — ${t(`units.month${state.term}`)}, ${m.value} ${m.unit} ${t('units.perMonth')} (${tt.value} ${tt.unit})`;
   };
   const renderPlanLine = () => {
     const el = inquiry.querySelector('.form-plan');
@@ -243,11 +300,10 @@ export function initPlanner({ bus }) {
             <a class="pill" href="tel:${tel}"><i></i>${esc(t('form.call'))}</a>
           </div>
         </div>
-        <div><h3><b>01</b> · ${esc(t('footer.networks'))}</h3><ul>${['airport', 'korzinka', 'horeca', 'regions', 'plan'].map((k) => `<li><a href="#${k}">${esc(t(`nav.${k}`))}</a></li>`).join('')}</ul></div>
+        <div><h3><b>01</b> · ${esc(t('footer.networks'))}</h3><ul>${DIRECTIONS.map((d) => `<li><a href="#${d.chapter}">${esc(dirName(d))}</a></li>`).join('')}</ul></div>
         <div><h3><b>02</b> · ${esc(t('footer.contacts'))}</h3><ul class="footer-phones">${PHONES.map((p) => `<li><a class="tnum" href="tel:${p.replace(/\s/g, '')}">${p}</a></li>`).join('')}</ul><p class="footer-small">${HOLDING.name}</p></div>
-        <div><h3><b>03</b> · ${esc(t('footer.sourcesTitle'))}</h3><p class="footer-small">${esc(t('map.sources'))}</p><p class="footer-small">${esc(t('footer.photos'))}</p></div>
       </div>
-      <div class="footer-base"><span>© ${new Date().getFullYear()} ${esc(t('footer.rights'))}</span>
+      <div class="footer-base"><span>© ${new Date().getFullYear()} ${esc(t('footer.rights'))}<a class="footer-osm" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a></span>
         <div class="footer-author"><span>${esc(t('footer.author'))}</span>
           <a class="pill pill--sm" href="tel:+998943494994"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg><span class="tnum">+998 94 349 49 94</span></a>
           <a class="pill pill--sm" href="https://t.me/busanjik" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14.5 2.5 1.8 7.4c-.6.2-.6 1 0 1.2l3.1 1 1.2 3.7c.2.5.8.6 1.1.2l1.8-1.9 3.2 2.4c.4.3 1 .1 1.1-.4l2.1-10.1c.1-.6-.4-1.1-1-.9z"/><path d="m4.9 9.6 7.3-4.8-5.6 6"/></svg>Telegram</a>

@@ -4,7 +4,12 @@ import { flagSvg } from './flags.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const MEGA_KEYS = ['airport', 'korzinka', 'horeca', 'regions', 'plan'];
+import { DIRECTIONS } from '../data/inventory.js';
+import { badge, tagline } from './brand.js';
+
+const MEGA_KEYS = ['mediaport', 'flytv', 'mediagate', 'tvline', 'plan'];
+const HREF = { mediaport: 'airport', flytv: 'flytv', mediagate: 'mediagate', tvline: 'korzinka', plan: 'plan' };
+const DIR = { mediaport: 'mediaport', flytv: 'flytv', mediagate: 'mediagate' };
 
 export function mountLogos() {
   document.querySelectorAll('[data-logo]').forEach((el) => (el.innerHTML = logo));
@@ -31,13 +36,23 @@ export function initNav({ onTheme } = {}) {
 
   // Mega flyout
   const renderMega = () => {
-    megaInner.innerHTML = MEGA_KEYS.map(
-      (k) => `<div class="mega-panel" data-panel="${k}" hidden>
-        <p class="mega-title">${t(`mega.${k}.title`)}</p>
+    const dir = (id) => DIRECTIONS.find((d) => d.id === id);
+    megaInner.innerHTML = MEGA_KEYS.map((k) => {
+      if (k === 'tvline') {
+        // TV Line carries three networks: each one its own way in
+        const tl = DIRECTIONS.filter((d) => d.group === 'tvline');
+        return `<div class="mega-panel mega-panel--tvline" data-panel="${k}" hidden>
+          <div class="mega-head">${badge(tl[0], 'md').replace(/<i class="bd-sep".*<\/span>$/, '</span>')}<p class="mega-title">${t('mega.tvline.title')}</p><small>${t('dir.tvlineAbout')}</small></div>
+          <div class="mega-subs">${tl.map((d) => `<a class="mega-sub" href="#${d.chapter}" style="--brand:${d.color}">${badge(d, 'sm')}<b>${d.sub}</b><span>${tagline(d)}</span>${ARROW}</a>`).join('')}</div>
+        </div>`;
+      }
+      const d = DIR[k] && dir(DIR[k]);
+      return `<div class="mega-panel" data-panel="${k}" hidden>
+        <div class="mega-head">${d ? badge(d, 'md') : ''}<p class="mega-title">${t(`mega.${k}.title`)}</p></div>
         <ul class="mega-list"><li>${t(`mega.${k}.a`)}</li><li>${t(`mega.${k}.b`)}</li><li>${t(`mega.${k}.c`)}</li></ul>
-        <div class="mega-stat"><span><b>${t(`mega.${k}.stat`)}</b></span><a class="mega-go" href="#${k}">${t('mega.open')} ${ARROW}</a></div>
-      </div>`,
-    ).join('');
+        <div class="mega-stat"><span><b>${t(`mega.${k}.stat`)}</b></span><a class="mega-go" href="#${HREF[k]}">${t('mega.open')} ${ARROW}</a></div>
+      </div>`;
+    }).join('');
   };
   renderMega();
 
@@ -79,7 +94,8 @@ export function initNav({ onTheme } = {}) {
   const mobile = $('#mobileNav');
   const renderMobile = () => {
     mobile.innerHTML =
-      MEGA_KEYS.map((k) => `<a href="#${k}">${t(`nav.${k}`)} <small>${t(`mega.${k}.stat`)}</small></a>`).join('') +
+      DIRECTIONS.map((d) => `<a href="#${d.chapter}" style="--brand:${d.color}">${badge(d, 'sm')}<small>${tagline(d)}</small></a>`).join('') +
+      `<a href="#plan">${t('nav.plan')} <small>${t('mega.plan.stat')}</small></a>` +
       `<a class="btn-primary" href="#plan"><span class="btn-primary-label">${t('hero.cta')}</span></a>`;
   };
   renderMobile();
@@ -158,7 +174,8 @@ export function initNav({ onTheme } = {}) {
   onLang(() => { renderMega(); renderMobile(); renderLang(); syncTheme(); });
 
   // Current chapter dot in the nav
-  const setCurrent = (id) => links.querySelectorAll('a').forEach((a) => a.classList.toggle('is-current', a.getAttribute('href') === `#${id}`));
+  // TV Line stands for its three chapters
+  const setCurrent = (id) => links.querySelectorAll('a').forEach((a) => a.classList.toggle('is-current', !!id && (a.getAttribute('href') === `#${id}` || (a.dataset.also || '').split(' ').includes(id))));
   return { setCurrent };
 }
 

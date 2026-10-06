@@ -107,7 +107,7 @@ Static backlit lightboxes in departure zones: package of 10 lightboxes across 10
 
 ## Brand Commitments
 
-- **One brand: Media Port.** Every network (airport LED, airport TV, lightboxes, Korzinka, HoReCa, Regions) is presented as a Media Port network. Do not show the names Fly TV, Media Gate or TV LINE.
+- **Six directions under the Media Port site (since 2026-10-06, management decision).** The site name and umbrella logo stay Media Port; the content is split into the decks' original brands, each with its own logo and colour: **Media Port** (airport LED, 10 zones), **Fly TV** (airport TV, 200 monitors, flytv.uz), **Media Gate** (airport lightboxes, mediagate.uz), **TV Line Korzinka**, **TV Line HoReCa**, **TV Line Region** (tvline.uz). The calculator is grouped by direction. (Replaces the earlier rule that hid Fly TV, Media Gate and TV LINE.)
 - Logo: Media Port "Tashkent" wordmark with the aircraft tail fin (vector in the Media Port deck cover). Deck colors: navy #163B67 and red #E3000F.
 - Slogan used on the airport decks: "Osmon qadar hayratlanasiz".
 - Contact phones from the decks: +998 90 107 33 33, +998 90 980 40 40.

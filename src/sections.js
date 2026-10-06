@@ -3,6 +3,8 @@ import { AIRPORT, LED_ZONES, LED_FACTS, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, 
 import { CITY_PHOTOS } from './data/photo-credits.js';
 import { CITY_VENUES, CITY_GALLERY, CITY_STORES } from './data/regions.js';
 import { credit } from './ui/credit.js';
+import { DIRECTIONS } from './data/inventory.js';
+import { brandBar, badge, dirById, tagline } from './ui/brand.js';
 
 const img = (name, alt = '', eager = false) => `<img src="/img/${name}.webp" alt="${esc(alt)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" />`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -117,22 +119,6 @@ export function initSections({ bus, places }) {
     );
     observeProfiles(zones);
 
-    document.getElementById('tabTv').innerHTML = `
-      <div class="feature"><figure data-gallery>${img(AIRPORT_TV.imgs[0], t('airport.tvTitle'))}</figure>
-        <div><h3>${esc(t('airport.tvTitle'))}</h3><p>${esc(t('airport.tvText'))}</p></div></div>
-      ${readout([[num(AIRPORT_TV.monitors), t('units.screens')], [AIRPORT_TV.diag, t('airport.size')], [num(AIRPORT_TV.playsDay), t('units.plays'), null, 'a247']], 3)}
-      <div class="gallery" data-gallery>${AIRPORT_TV.imgs.slice(1).map((n) => `<figure>${img(n, t('airport.tvTitle'))}</figure>`).join('')}</div>
-      ${profile(AIRPORT_TV.price)}`;
-    document.getElementById('tabLb').innerHTML = `
-      <div class="feature"><figure data-gallery>${img(LIGHTBOX.imgs[0], t('airport.lbTitle'))}</figure>
-        <div><h3>${esc(t('airport.lbTitle'))}</h3><p>${esc(t('airport.lbText'))}</p></div></div>
-      ${readout([[num(LIGHTBOX.count), t('airport.lbZones')], [`${LIGHTBOX.areaM2}<small>${esc(t('units.m2'))}</small>`, t('airport.size')], ['B1–B14', t('airport.lbZones')]], 3)}
-      <ul class="venues">${LIGHTBOX.zones.map((z) => `<li>${esc(z)}</li>`).join('')}</ul>
-      ${profile(LIGHTBOX.price)}
-      <p class="note">${esc(t('airport.lbVip'))}</p>`;
-    observeProfiles(document.getElementById('tabTv'));
-    observeProfiles(document.getElementById('tabLb'));
-
     document.getElementById('whyList').innerHTML = [
       [WHY_ICONS[0], 'why1'], ['<b>53%</b>', 'why2'], [WHY_ICONS[2], 'why3'], ['<b>69%</b>', 'why4'],
     ].map(([ico, k]) => `<li>${ico}<span>${esc(t(`airport.${k}`))}</span></li>`).join('');
@@ -150,8 +136,6 @@ export function initSections({ bus, places }) {
   bus.addEventListener('zone', (e) => { if (openZone !== e.detail) setZone(e.detail, false); });
   // picking a zone on the plate (callout, marker, photo) opens it in the list and brings the row into view
   bus.addEventListener('zonepick', (e) => {
-    const tab = document.getElementById('tLed');
-    if (tab.getAttribute('aria-selected') !== 'true') tab.click();
     const row = document.querySelector(`.zone[data-zone="${e.detail}"]`);
     if (!row) return;
     setZone(e.detail, false);
@@ -161,37 +145,61 @@ export function initSections({ bus, places }) {
     row.classList.add('is-flash');
   });
 
-  // Tabs with sliding ink
-  const tabs = document.getElementById('airportTabs');
-  const ink = tabs.querySelector('.tabs-ink');
-  const placeInk = () => {
-    const sel = tabs.querySelector('[aria-selected="true"]');
-    const r = sel.getBoundingClientRect();
-    const p = tabs.getBoundingClientRect();
-    ink.style.width = `${r.width}px`;
-    ink.style.transform = `translateX(${r.left - p.left}px)`;
+  // Fly TV and Media Gate: the airport's two other directions, each with its own plate
+  const addBtn = (id) => `<button type="button" class="btn-quiet dir-add" data-plan="${id}"><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg>${esc(t('ui.addPlan'))}</button>`;
+  const renderFlytv = () => {
+    const el = document.getElementById('ftBody');
+    el.innerHTML = `
+      <p class="lead">${esc(t('flytv.lead'))}</p>
+      ${readout([
+        [num(AIRPORT_TV.monitors), t('flytv.monitors')],
+        [AIRPORT_TV.diag, t('flytv.diag')],
+        [num(AIRPORT_TV.playsDay), t('flytv.plays')],
+        [num(AIRPORT_TV.spotSec), t('flytv.spot')],
+        [AIRPORT_TV.hours, t('flytv.hours'), null, 'a247'],
+        [`${AIRPORT_TV.zones.length}`, t('flytv.zonesTitle')],
+      ])}
+      <div class="dir-zones"><h3>${esc(t('flytv.zonesTitle'))}</h3>
+        <ul>${AIRPORT_TV.zones.map((z) => `<li>${esc(t(`flytv.zones.${z}`))}</li>`).join('')}</ul></div>
+      <div class="gallery gallery--6" data-gallery>${AIRPORT_TV.imgs.map((n) => `<figure>${img(n, 'Fly TV')}</figure>`).join('')}</div>
+      ${profile(AIRPORT_TV.price)}
+      <div class="dir-actions">${addBtn('tv')}</div>`;
+    observeProfiles(el);
   };
-  tabs.addEventListener('click', (e) => {
-    const b = e.target.closest('[role="tab"]');
+  const renderMediagate = () => {
+    const el = document.getElementById('mgBody');
+    el.innerHTML = `
+      <p class="lead">${esc(t('mediagate.lead'))}</p>
+      ${readout([
+        [num(LIGHTBOX.count), t('mediagate.count')],
+        [num(LIGHTBOX.zones.length), t('mediagate.zones')],
+        [`${LIGHTBOX.areaM2}<small>${esc(t('units.m2'))}</small>`, t('mediagate.area')],
+        ['✓', t('mediagate.mount')],
+      ], 2)}
+      <div class="dir-zones"><h3>${esc(t('mediagate.zonesTitle'))}</h3>
+        <ul>${LIGHTBOX.zones.map((z) => `<li>${esc(z)}</li>`).join('')}</ul></div>
+      <div class="gallery gallery--6" data-gallery>${LIGHTBOX.imgs.map((n) => `<figure>${img(n, 'Media Gate')}</figure>`).join('')}</div>
+      <p class="fits">${esc(t('mediagate.design'))}</p>
+      ${profile(LIGHTBOX.price)}
+      <p class="note">${esc(t('mediagate.vip'))}</p>
+      <div class="dir-actions">${addBtn('lightbox')}</div>`;
+    observeProfiles(el);
+  };
+  // every direction plate opens with its brand; the hero carries the six as a dock
+  const renderBrands = () => {
+    document.querySelectorAll('[data-brandbar]').forEach((el) => (el.innerHTML = brandBar(dirById(el.dataset.brandbar))));
+    const dock = document.getElementById('dock');
+    if (dock) {
+      dock.setAttribute('aria-label', t('dir.label'));
+      dock.innerHTML = `<p class="dock-k">${esc(t('dir.dock'))}</p><div class="dock-row">${DIRECTIONS.map((d) => `<a class="dock-item" href="#${d.chapter}" style="--brand:${d.color}" title="${esc(`${d.brand}${d.sub ? ` ${d.sub}` : ''} — ${tagline(d)}`)}">${badge(d, 'sm')}</a>`).join('')}</div>`;
+    }
+  };
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.dir-add');
     if (!b) return;
-    tabs.querySelectorAll('[role="tab"]').forEach((x) => {
-      const on = x === b;
-      x.setAttribute('aria-selected', String(on));
-      x.tabIndex = on ? 0 : -1;
-      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
-    });
-    placeInk();
-  });
-  tabs.addEventListener('keydown', (e) => {
-    const list = [...tabs.querySelectorAll('[role="tab"]')];
-    const i = list.indexOf(document.activeElement);
-    if (i < 0) return;
-    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-    if (!step) return;
-    const dir = document.documentElement.dir === 'rtl' ? -step : step;
-    const n = list[(i + dir + list.length) % list.length];
-    n.focus();
-    n.click();
+    bus.dispatchEvent(new CustomEvent('planadd', { detail: b.dataset.plan }));
+    b.classList.add('is-done');
+    b.lastChild.textContent = t('card.added');
   });
 
   const renderKorzinka = () => {
@@ -397,15 +405,16 @@ export function initSections({ bus, places }) {
   };
 
   const renderAll = () => {
+    renderBrands();
     renderAirport();
+    renderFlytv();
+    renderMediagate();
     renderKorzinka();
     renderHoreca();
     renderRegions();
-    requestAnimationFrame(placeInk);
   };
   renderAll();
   onLang(renderAll);
-  addEventListener('resize', placeInk);
 }
 
 // Draw each price profile when it scrolls into view.
