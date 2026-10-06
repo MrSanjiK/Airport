@@ -401,7 +401,8 @@ export default {
     "tagKorzinka": "Dans les supermarchés Korzinka",
     "tagHoreca": "Dans les restaurants et cafés",
     "tagRegion": "Dans 11 régions",
-    "tvlineAbout": "TV Line a fondé la publicité TV indoor en Ouzbékistan : depuis 2010, plus de 1 000 campagnes."
+    "tvlineAbout": "TV Line a fondé la publicité TV indoor en Ouzbékistan : depuis 2010, plus de 1 000 campagnes.",
+    "holdingK": "Holding publicitaire"
   },
   "flytv": {
     "title": "200 moniteurs dans tout l'aéroport",

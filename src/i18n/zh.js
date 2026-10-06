@@ -401,7 +401,8 @@ export default {
     "tagKorzinka": "Korzinka 超市",
     "tagHoreca": "餐厅与咖啡馆",
     "tagRegion": "11 个地区",
-    "tvlineAbout": "TV Line 是乌兹别克斯坦室内电视广告的开创者：自 2010 年起，执行 1000 多个广告活动。"
+    "tvlineAbout": "TV Line 是乌兹别克斯坦室内电视广告的开创者：自 2010 年起，执行 1000 多个广告活动。",
+    "holdingK": "广告控股集团"
   },
   "flytv": {
     "title": "遍布机场的 200 台显示器",

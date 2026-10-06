@@ -6,14 +6,22 @@ const TAG = { mediaport: 'tagMediaport', flytv: 'tagFlytv', mediagate: 'tagMedia
 export const dirById = (id) => DIRECTIONS.find((d) => d.id === id);
 export const dirByChapter = (ch) => DIRECTIONS.find((d) => d.chapter === ch);
 
-// The direction's own mark, set on a white tile so every logo reads as printed, in either theme.
+// marks whose dark ink is lifted to white for the night chart (Korzinka's red reads on both)
+const NIGHT = new Set(['flytv', 'mediagate', 'tvline', 'region-script']);
+// A logo with no tile: the printed mark by day, its night cut on the dark chart.
+export const logoImg = (name, cls, alt = '') => (NIGHT.has(name)
+  ? `<img class="${cls} lg-day" src="/img/brand/${name}.png" alt="${alt}" decoding="async" /><img class="${cls} lg-night" src="/img/brand/${name}-d.png" alt="" aria-hidden="true" decoding="async" />`
+  : `<img class="${cls}" src="/img/brand/${name}.png" alt="${alt}" decoding="async" />`);
+
+// The direction's own mark. On a white tile it reads as printed in either theme; `bare` drops the tile.
 // size: 'sm' (calculator, dock), 'md' (chapter heads)
-export function badge(d, size = 'md') {
-  const main = d.logo ? `<img class="bd-logo bd-logo--${d.logo}" src="/img/brand/${d.logo}.png" alt="${d.brand}" />` : `<span class="bd-logo bd-logo--svg" aria-label="${d.brand}">${logo}</span>`;
+export function badge(d, size = 'md', bare = false) {
+  const img = (name, cls, alt) => (bare ? logoImg(name, cls, alt) : `<img class="${cls}" src="/img/brand/${name}.png" alt="${alt}" />`);
+  const main = d.logo ? img(d.logo, `bd-logo bd-logo--${d.logo}`, d.brand) : `<span class="bd-logo bd-logo--svg" aria-label="${d.brand}">${logo}</span>`;
   let sub = '';
-  if (d.subLogo) sub = `<img class="bd-sub bd-sub--${d.subLogo}" src="/img/brand/${d.subLogo}.png" alt="${d.sub}" />`;
+  if (d.subLogo) sub = img(d.subLogo, `bd-sub bd-sub--${d.subLogo}`, d.sub);
   else if (d.sub) sub = `<span class="bd-subtext">${d.sub}</span>`;
-  return `<span class="badge badge--${size} badge--${d.id}" style="--brand:${d.color}">${main}${sub ? `<i class="bd-sep" aria-hidden="true"></i>${sub}` : ''}</span>`;
+  return `<span class="badge badge--${size} badge--${d.id}${bare ? ' badge--bare' : ''}" style="--brand:${d.color}">${main}${sub ? `<i class="bd-sep" aria-hidden="true"></i>${sub}` : ''}</span>`;
 }
 
 export const tagline = (d) => t(`dir.${TAG[d.id]}`);

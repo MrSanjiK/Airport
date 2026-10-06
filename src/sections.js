@@ -191,7 +191,7 @@ export function initSections({ bus, places }) {
     const dock = document.getElementById('dock');
     if (dock) {
       dock.setAttribute('aria-label', t('dir.label'));
-      dock.innerHTML = `<p class="dock-k">${esc(t('dir.dock'))}</p><div class="dock-row">${DIRECTIONS.map((d) => `<a class="dock-item" href="#${d.chapter}" style="--brand:${d.color}" title="${esc(`${d.brand}${d.sub ? ` ${d.sub}` : ''} — ${tagline(d)}`)}">${badge(d, 'sm')}</a>`).join('')}</div>`;
+      dock.innerHTML = `<p class="dock-k">${esc(t('dir.dock'))}</p><div class="dock-row">${DIRECTIONS.map((d) => `<a class="dock-item" href="#${d.chapter}" style="--brand:${d.color}" title="${esc(`${d.brand}${d.sub ? ` ${d.sub}` : ''} — ${tagline(d)}`)}">${badge(d, 'sm', true)}</a>`).join('')}</div>`;
     }
   };
   document.addEventListener('click', (e) => {

@@ -401,7 +401,8 @@ export default {
     "tagKorzinka": "Korzinka süpermarketlerinde",
     "tagHoreca": "Restoran ve kafelerde",
     "tagRegion": "11 bölgede",
-    "tvlineAbout": "TV Line, Özbekistan'da iç mekân TV reklamcılığının kurucusu: 2010'dan beri, 1000'den fazla kampanya."
+    "tvlineAbout": "TV Line, Özbekistan'da iç mekân TV reklamcılığının kurucusu: 2010'dan beri, 1000'den fazla kampanya.",
+    "holdingK": "Reklam holdingi"
   },
   "flytv": {
     "title": "Havalimanı genelinde 200 monitör",

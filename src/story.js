@@ -29,6 +29,7 @@ export function initStory(world, { places, nav, bus }) {
   const tasDrop = world.hubWorld.clone();
   let heroW = 1;
   const heroCopy = document.querySelector('.hero-copy');
+  const holding = document.getElementById('holding');
   const legendEl = document.querySelector('.legend-sheet');
 
   const addLabel = ({ cls = '', world: w, html, weights, onClick, key, far = 0, near = 0 }) => {
@@ -196,6 +197,8 @@ export function initStory(world, { places, nav, bus }) {
     // centre the terminal in the airport plate's field, wherever the frame lands at this width
     const fr = frame.getBoundingClientRect();
     if (fr.width) POSES.airport.shift = Math.abs(fr.left + fr.width / 2 - innerWidth / 2) / innerWidth;
+    // the hero terminal stands clear below the holding chart (its tower tip sits a quarter down the screen unshifted)
+    POSES.hero.shiftY = holding.offsetParent ? -clamp((holding.offsetTop + holding.offsetHeight) / innerHeight + 0.035 - 0.25, 0, 0.2) : 0;
     keys = CHAPTERS.map((id) => {
       const el = document.querySelector(`[data-chapter="${id}"]`);
       const top = el.getBoundingClientRect().top + scrollY;
@@ -281,7 +284,7 @@ export function initStory(world, { places, nav, bus }) {
       const g = {
         tx: lerp(a.pose.tx, b.pose.tx, k), ty: lerp(a.pose.ty, b.pose.ty, k), tz: lerp(a.pose.tz, b.pose.tz, k),
         dist: Math.exp(lerp(Math.log(a.pose.dist), Math.log(b.pose.dist), k)),
-        az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k), shiftY: 0,
+        az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k), shiftY: lerp(a.pose.shiftY || 0, b.pose.shiftY || 0, k),
       };
       // a city picked in the Regions plate pulls the chart down onto it while that chapter holds the screen
       const fw = focus ? weights.regions : 0;
@@ -308,9 +311,10 @@ export function initStory(world, { places, nav, bus }) {
     });
   };
 
-  // Hero plates: leader lines to their anchors and pointer tilt
-  const plateEls = [...document.querySelectorAll('.hplate')];
-  // each hero plate is the doorway to its chapter
+  // Hero: the holding chart. Orient Advertising branches into the airport's three brands and TV Line's three
+  // networks; every leaf is the doorway to its chapter.
+  const wires = document.getElementById('holdWires');
+  const plateEls = [...holding.querySelectorAll('.hleaf')];
   plateEls.forEach((el) => {
     el.setAttribute('role', 'link');
     el.tabIndex = 0;
@@ -318,10 +322,45 @@ export function initStory(world, { places, nav, bus }) {
     el.addEventListener('click', go);
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
   });
+  // org-chart wiring, laid out from the boxes themselves (offsets are untouched by the tilt)
+  const box = (el) => { let x = 0; let y = 0; let n = el; while (n && n !== holding) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return { x, y, w: el.offsetWidth, h: el.offsetHeight }; };
+  const elbow = (x1, y1, x2, y2, yb, cls) => {
+    const r = Math.min(8, Math.abs(x2 - x1) / 2);
+    if (r < 1) return `<path class="${cls}" pathLength="1" d="M${x1} ${y1}V${y2}"/>`;
+    const s = Math.sign(x2 - x1);
+    return `<path class="${cls}" pathLength="1" d="M${x1} ${y1}V${yb - r}Q${x1} ${yb} ${x1 + s * r} ${yb}H${x2 - s * r}Q${x2} ${yb} ${x2} ${yb + r}V${y2}"/>`;
+  };
+  const wire = () => {
+    if (!holding.offsetParent) return;
+    const hub = box(holding.querySelector('.hold-hub'));
+    const hx = hub.x + hub.w / 2;
+    const hy = hub.y + hub.h;
+    let svg = '';
+    const dots = [[hx, hy]];
+    holding.querySelectorAll('.hold-group').forEach((g) => {
+      const head = box(g.querySelector('.hold-gk'));
+      const gx = head.x + head.w / 2;
+      svg += elbow(hx, hy, gx, head.y, (hy + head.y) / 2, 'hw-group');
+      dots.push([gx, head.y], [gx, head.y + head.h]);
+      const leaves = [...g.querySelectorAll('.hleaf')].map(box);
+      const ly = leaves[0].y;
+      leaves.forEach((l) => {
+        const lx = l.x + l.w / 2;
+        svg += elbow(gx, head.y + head.h, lx, ly, (head.y + head.h + ly) / 2, 'hw-leaf');
+        dots.push([lx, ly]);
+      });
+    });
+    svg += dots.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6"/>`).join('');
+    wires.innerHTML = svg;
+  };
+  wire();
+  addEventListener('resize', wire);
+  onLang(() => requestAnimationFrame(wire));
+  document.fonts?.ready.then(wire);
+  // two leaders reach the map: the airport's brands to the terminal they share, Region to the Fergana valley towns
   const anchors = {
-    airport: world.hubWorld.clone().setY(world.hubWorld.y + 0.4),
-    korzinka: world.worldAt(...places.cities.samarqand, 0.3),
-    horeca: world.worldAt(...places.cities.toshkent, 0.3),
+    flytv: world.hubWorld.clone().setY(world.hubWorld.y + 0.4),
+    regions: world.worldAt(...places.cities.fargona, 0.3),
   };
   const ptr = { x: 0, y: 0 };
   addEventListener('pointermove', (e) => { ptr.x = e.clientX / innerWidth - 0.5; ptr.y = e.clientY / innerHeight - 0.5; }, { passive: true });
@@ -387,11 +426,11 @@ export function initStory(world, { places, nav, bus }) {
     // panels the map labels must never run under: chapter plates, the airport frame, the open card, the bars
     const blockers = [];
     // (in the explorer the chapters are faded out: only its own bar, the card and the nav count)
-    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hplate, .planner-sheet').forEach((el) => {
+    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hleaf, .hold-hub, .hold-gk, .planner-sheet').forEach((el) => {
       if (el.style.visibility === 'hidden' || el.offsetParent === null) return;
       const r = el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > innerHeight || r.width < 2) return;
-      if (el.classList.contains('hplate') && +el.style.opacity < 0.3) return;
+      if (holding.contains(el) && +holding.style.opacity < 0.3) return;
       blockers.push([r.left - 6, r.top - 6, r.right + 6, r.bottom + 6]);
     });
     // labels: compute targets, then declutter greedily by priority
@@ -489,33 +528,33 @@ export function initStory(world, { places, nav, bus }) {
       });
     }
 
-    // hero plates
+    // hero holding chart
     const heroOp = introDone && !exploring ? clamp(w.hero * 1.6 - 0.4) : 0;
-    plateEls.forEach((el, i) => {
-      const key = el.dataset.plate;
-      el.style.opacity = heroOp.toFixed(3);
-      el.style.visibility = heroOp < 0.01 ? 'hidden' : 'visible';
-      const lift = (1 - heroOp) * 30;
-      const rx = -ptr.y * 6 + 2;
-      const ry = ptr.x * 8 - 4 + i * 2;
-      el.style.transform = `translate3d(0, ${lift.toFixed(1)}px, 0) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
-      if (heroOp > 0.02 && el.offsetParent) {
+    holding.style.opacity = heroOp.toFixed(3);
+    holding.style.visibility = heroOp < 0.01 ? 'hidden' : 'visible';
+    if (heroOp > 0.6 && !holding.classList.contains('is-drawn')) holding.classList.add('is-drawn');
+    const lift = (1 - heroOp) * 30;
+    holding.style.transform = `translate3d(0, ${lift.toFixed(1)}px, 0) rotateX(${(-ptr.y * 3 + 1).toFixed(2)}deg) rotateY(${(ptr.x * 4 - 1).toFixed(2)}deg)`;
+    if (heroOp > 0.02 && holding.offsetParent && holding.classList.contains('is-drawn')) {
+      plateEls.forEach((el) => {
+        const a = anchors[el.dataset.plate];
+        // mirrored, Region sits at the far side from the valley: only the terminal keeps its leader
+        if (!a || (el.dataset.plate === 'regions' && document.documentElement.dir === 'rtl')) return;
+        const p = world.project(a, proj);
+        if (!p.visible) return;
         const r = el.getBoundingClientRect();
-        const p = world.project(anchors[key], proj);
-        if (p.visible) {
-          const sx = r.left + r.width / 2;
-          const sy = r.bottom;
-          const my = sy + Math.max(30, (p.y - sy) * 0.55);
-          svg += `<path style="opacity:${(heroOp * 0.6).toFixed(2)}" d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${sx.toFixed(1)} ${my.toFixed(1)} L${p.x.toFixed(1)} ${p.y.toFixed(1)}"/><circle style="opacity:${heroOp.toFixed(2)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"/>`;
-        }
-      }
-    });
+        const sx = r.left + r.width / 2;
+        const sy = r.bottom;
+        const my = sy + Math.max(26, (p.y - sy) * 0.5);
+        svg += `<path style="opacity:${(heroOp * 0.6).toFixed(2)}" d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${sx.toFixed(1)} ${my.toFixed(1)} L${p.x.toFixed(1)} ${p.y.toFixed(1)}"/><circle style="opacity:${heroOp.toFixed(2)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"/>`;
+      });
+    }
     leaders.innerHTML = svg;
   });
 
   // Cursor coordinates read off the chart
   addEventListener('pointermove', (e) => {
-    const over = e.target.closest?.('.plate, .planner-sheet, .nav, .hero-copy, .hplate, .footer, .lang-pop, .rail, .info-card, .callout');
+    const over = e.target.closest?.('.plate, .planner-sheet, .nav, .hero-copy, .hleaf, .hold-hub, .hold-gk, .footer, .lang-pop, .rail, .info-card, .callout');
     if (over || !introDone) { coord.classList.remove('is-on'); return; }
     const ll = world.pick(e.clientX, e.clientY);
     if (!ll) { coord.classList.remove('is-on'); return; }

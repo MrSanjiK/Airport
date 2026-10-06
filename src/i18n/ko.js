@@ -401,7 +401,8 @@ export default {
     "tagKorzinka": "Korzinka 슈퍼마켓",
     "tagHoreca": "레스토랑과 카페",
     "tagRegion": "11개 지역",
-    "tvlineAbout": "TV Line은 우즈베키스탄 실내 TV 광고의 개척자입니다: 2010년부터 1,000건 이상의 캠페인."
+    "tvlineAbout": "TV Line은 우즈베키스탄 실내 TV 광고의 개척자입니다: 2010년부터 1,000건 이상의 캠페인.",
+    "holdingK": "광고 지주회사"
   },
   "flytv": {
     "title": "공항 전역 200대 모니터",

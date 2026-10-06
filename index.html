@@ -102,19 +102,57 @@
         <nav class="dock" id="dock" aria-label="Yo'nalishlar"></nav>
       </div>
 
-      <aside class="plates" aria-label="Media Port">
-        <figure class="hplate" data-plate="airport">
-          <figcaption class="hplate-head"><b>TAS</b> <span data-i18n="hero.cardAirport">40 LED ekran</span> <span class="dim" data-i18n="hero.cardAirportSub">150 ko'rsatuv / kun</span></figcaption>
-          <img src="/plates/photo-airport.png" alt="" width="640" height="587" decoding="async" />
-        </figure>
-        <figure class="hplate" data-plate="korzinka">
-          <figcaption class="hplate-head"><b>KORZINKA</b> <span data-i18n="hero.cardKorzinka">300+ obyekt</span> <span class="dim" data-i18n="hero.cardKorzinkaSub">900 000 chek / kun</span></figcaption>
-          <img src="/plates/photo-korzinka.png" alt="" width="640" height="573" decoding="async" />
-        </figure>
-        <figure class="hplate" data-plate="horeca">
-          <figcaption class="hplate-head"><b>HORECA</b> <span data-i18n="hero.cardHoreca">75+ restoran</span> <span class="dim" data-i18n="hero.cardHorecaSub">1000+ monitor</span></figcaption>
-          <img src="/plates/photo-horeca.png" alt="" width="640" height="551" decoding="async" />
-        </figure>
+      <aside class="plates" aria-label="Orient Advertising">
+        <div class="holding" id="holding">
+          <svg class="hold-wires" id="holdWires" aria-hidden="true"></svg>
+          <div class="hold-hub">
+            <i class="hold-dot" aria-hidden="true"></i>
+            <b class="hold-name">Orient Advertising</b>
+            <span class="hold-k"><span data-i18n="dir.holdingK">Reklama xoldingi</span> · <span data-i18n="dir.label">6 yo'nalish</span></span>
+          </div>
+          <div class="hold-groups">
+            <div class="hold-group" data-group="airport">
+              <p class="hold-gk"><svg class="hold-aero" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.7 5.6 5.8 2.2-5.8 2-1.7 7.2-1.7-7.2-5.8-2 5.8-2.2z"/></svg><span data-i18n="mega.airport.title">Toshkent xalqaro aeroporti</span><b>TAS</b></p>
+              <div class="hold-leaves">
+            <figure class="hleaf" data-plate="airport" style="--brand:#163b67">
+              <span class="hl-logo hl-logo--airport"><span class="logo" data-logo></span></span>
+              <figcaption class="hl-stat"><b data-i18n="hero.cardAirport">40 LED ekran</b><span data-i18n="hero.cardAirportSub">150 ko'rsatuv / kun</span></figcaption>
+              <span class="hl-photo"><img src="/plates/photo-airport.png" alt="Media Port" decoding="async" /></span>
+            </figure>
+            <figure class="hleaf" data-plate="flytv" style="--brand:#e40045">
+              <span class="hl-logo hl-logo--flytv"><img class="lg-day" src="/img/brand/flytv.png" alt="Fly TV" decoding="async" /><img class="lg-night" src="/img/brand/flytv-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <figcaption class="hl-stat"><b data-i18n="mega.flytv.a">200 monitor</b><span data-i18n="mega.flytv.c">96 ko'rsatuv / kun</span></figcaption>
+              <span class="hl-photo"><img src="/img/tv-gates.webp" alt="Fly TV" decoding="async" /></span>
+            </figure>
+            <figure class="hleaf" data-plate="mediagate" style="--brand:#153b66">
+              <span class="hl-logo hl-logo--mediagate"><img class="lg-day" src="/img/brand/mediagate.png" alt="Media Gate" decoding="async" /><img class="lg-night" src="/img/brand/mediagate-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <figcaption class="hl-stat"><b data-i18n="mega.mediagate.a">10 lightbox · 10 zona</b><span data-i18n="mega.mediagate.b">35 m² yuza</span></figcaption>
+              <span class="hl-photo"><img src="/img/lb-pillars.webp" alt="Media Gate" decoding="async" /></span>
+            </figure>
+              </div>
+            </div>
+            <div class="hold-group" data-group="tvline">
+              <p class="hold-gk hold-gk--tvl"><img class="hold-tvl lg-day" src="/img/brand/tvline.png" alt="TV Line" decoding="async" /><img class="hold-tvl lg-night" src="/img/brand/tvline-d.png" alt="" aria-hidden="true" decoding="async" /><b>TV Line</b><span data-i18n="mega.tvline.stat">2010-yildan beri</span></p>
+              <div class="hold-leaves">
+            <figure class="hleaf" data-plate="korzinka" style="--brand:#e2001b">
+              <span class="hl-logo hl-logo--korzinka"><img src="/img/brand/korzinka.png" alt="Korzinka" decoding="async" /></span>
+              <figcaption class="hl-stat"><b data-i18n="hero.cardKorzinka">300+ obyekt</b><span data-i18n="hero.cardKorzinkaSub">900 000 chek / kun</span></figcaption>
+              <span class="hl-photo"><img src="/plates/photo-korzinka.png" alt="TV Line · Korzinka" decoding="async" /></span>
+            </figure>
+            <figure class="hleaf" data-plate="horeca" style="--brand:#e11783">
+              <span class="hl-logo hl-logo--horeca"><span class="hl-word">HoReCa</span></span>
+              <figcaption class="hl-stat"><b data-i18n="hero.cardHoreca">75+ restoran</b><span data-i18n="hero.cardHorecaSub">1000+ monitor</span></figcaption>
+              <span class="hl-photo"><img src="/plates/photo-horeca.png" alt="TV Line · HoReCa" decoding="async" /></span>
+            </figure>
+            <figure class="hleaf" data-plate="regions" style="--brand:#ad4482">
+              <span class="hl-logo hl-logo--regions"><img class="lg-day" src="/img/brand/region-script.png" alt="Region" decoding="async" /><img class="lg-night" src="/img/brand/region-script-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <figcaption class="hl-stat"><b data-i18n="mega.regions.title">11 hudud</b><span data-i18n="mega.regions.stat">300 000 tashrif / kun</span></figcaption>
+              <span class="hl-photo"><img src="/img/rg-cafe-screens.webp" alt="TV Line · Region" decoding="async" /></span>
+            </figure>
+              </div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       <div class="legend" aria-label="Aeroport tashriflari">

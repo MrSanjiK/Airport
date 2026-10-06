@@ -401,7 +401,8 @@ export default {
     "tagKorzinka": "In Korzinka supermarkets",
     "tagHoreca": "In restaurants and cafés",
     "tagRegion": "Across 11 regions",
-    "tvlineAbout": "TV Line founded indoor TV advertising in Uzbekistan: since 2010, more than 1,000 campaigns."
+    "tvlineAbout": "TV Line founded indoor TV advertising in Uzbekistan: since 2010, more than 1,000 campaigns.",
+    "holdingK": "Advertising holding"
   },
   "flytv": {
     "title": "200 monitors across the airport",

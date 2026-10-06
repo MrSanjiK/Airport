@@ -409,7 +409,8 @@ export default {
     "tagKorzinka": "Korzinka supermarketlarida",
     "tagHoreca": "Restoran va kafelarda",
     "tagRegion": "11 hududda",
-    "tvlineAbout": "TV Line — O'zbekistonda indoor TV yo'nalishining asoschisi: 2010-yildan beri, 1000 dan ortiq reklama kampaniyasi."
+    "tvlineAbout": "TV Line — O'zbekistonda indoor TV yo'nalishining asoschisi: 2010-yildan beri, 1000 dan ortiq reklama kampaniyasi.",
+    "holdingK": "Reklama xoldingi"
   },
   "flytv": {
     "title": "200 monitor butun aeroport bo'ylab",

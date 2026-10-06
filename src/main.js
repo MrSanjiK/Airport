@@ -210,7 +210,7 @@ async function boot() {
       world.setGoal({
         tx: lerp(a.tx, b.tx, k), ty: lerp(a.ty, b.ty, k), tz: lerp(a.tz, b.tz, k),
         dist: Math.exp(lerp(Math.log(a.dist), Math.log(b.dist), kd)),
-        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, k * k * (3 - 2 * k)), shift: 0, shiftY: 0,
+        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, k * k * (3 - 2 * k)), shift: 0, shiftY: lerp(0, b.shiftY || 0, k),
       });
     },
   }, 0);
