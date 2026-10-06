@@ -31,6 +31,13 @@ os.makedirs(OUT, exist_ok=True)
 CITIES = json.load(open('public/data/places.json'))['cities']
 KOR = json.load(open('public/data/places.json'))['korzinka']
 VENUES = json.load(open('scripts/data/venues.json'))
+SITES = json.load(open('scripts/data/sites.json'))
+K2 = json.load(open('scripts/data/korzinka_2gis.json')) if os.path.exists('scripts/data/korzinka_2gis.json') else []
+V2 = json.load(open('scripts/data/venues_2gis.json')) if os.path.exists('scripts/data/venues_2gis.json') else {}
+HD = json.load(open('scripts/data/horeca_deck.json')) if os.path.exists('scripts/data/horeca_deck.json') else []
+PLACES_HORECA = json.load(open('public/data/places.json'))['horeca']
+# a 2GIS hit is kept only if its rubric is food (it otherwise returns ateliers, kiosks and hotels of the same name)
+FOOD = re.compile(r'кафе|ресторан|плов|таомлар|быстрого питания|фуд|food|столов|чайхан|кофейн|бар\b|торгово-развлекательн', re.I)
 RADIUS = {'andijon': 4.5, 'fargona': 4.5, 'namangan': 4.5, 'margilon': 3.5, 'asaka': 3.0, 'qoqon': 4.0,
           'samarqand': 5.5, 'buxoro': 5.0, 'jizzax': 3.5, 'qarshi': 4.5}
 YKEY = os.environ.get('YANDEX_KEY')
@@ -145,14 +152,13 @@ ROAD = {'motorway': 0, 'trunk': 0, 'primary': 0, 'motorway_link': 0, 'trunk_link
         'secondary': 1, 'secondary_link': 1, 'tertiary': 1, 'tertiary_link': 1,
         'unclassified': 2, 'residential': 2, 'living_street': 2, 'pedestrian': 2, 'service': 3}
 
-for key, (lon0, lat0) in CITIES.items():
-    if key not in RADIUS or (ONLY and key not in ONLY):
+for key, (lon0, lat0, R) in SITES.items():
+    if ONLY and key not in ONLY:
         continue
     src = f'{CACHE}/{key}.json'
     if not os.path.exists(src):
         print('missing', key)
         continue
-    R = RADIUS[key]
     kx = 111.32 * math.cos(math.radians(lat0))
     km = lambda lon, lat: ((lon - lon0) * kx, (lat - lat0) * 110.57)
     q = lambda lon, lat: [round((lon - lon0) * 1e5), round((lat - lat0) * 1e5)]
@@ -261,7 +267,41 @@ for key, (lon0, lat0) in CITIES.items():
 
     venues = []
     used = set()
+    inside = lambda p: math.hypot(*km(*p)) < R
+
+    def add(name, nr, a, ar, kind, place, how, h=''):
+        b = building_at(place) if how not in ('street', 'landmark') else None
+        venues.append({'n': name, 'nr': nr, 'a': a, 'ar': ar, 'k': kind, 'p': q(*place), 'how': how, 'h': h, 'b': blds.index(b) if b else -1})
+        return venues[-1]
+
+    def branch(name):
+        part = name.split(',', 1)[1].strip() if ',' in name else re.sub(r'^(Korzinka|Корзинка)\s*[—-]?\s*', '', name).strip()
+        part = re.sub(r'\b(супермаркет|магазин|гипермаркет)\b', '', part, flags=re.I).strip(' ,—-')
+        return part
+
+    # 1. every Korzinka 2GIS knows inside the site: exact, with its branch name
+    k2here = [k for k in K2 if inside(k['p'])]
+    for k in k2here:
+        br = branch(k['name'])
+        mah = 'Mahalla' in k['name'] or 'Махалля' in k['name']
+        label = ('Korzinka Mahalla' if mah else 'Korzinka') + (f' · {br}' if br and br.lower() not in ('mahalla', 'махалля') else '')
+        add(label, '', k['a'], '', 'korzinka', tuple(k['p']), '2gis')
+    have2gis = bool(k2here)
+    deckK = [v for v in VENUES.get(key, []) if v.get('kind') == 'korzinka']
+    # the deck's own branch names and Russian addresses enrich the 2GIS stores they describe
+    for v in deckK:
+        st = street_part(v.get('a', ''))
+        best, score = None, 0.0
+        for x in venues:
+            sc = max(sim(re.sub(r'^Корзинка\s*—\s*', '', v.get('nr', '')), x['n']), sim(st, x['a']) if st else 0)
+            if sc > score:
+                best, score = x, sc
+        if best and score > 0.78:
+            best['nr'], best['ar'] = v.get('nr', ''), v.get('a', '')
+            v['_done'] = True
     for v in VENUES.get(key, []):
+        if v.get('_done') or (have2gis and v.get('kind') == 'korzinka'):
+            continue
         name, addr = v['n'], v.get('a', '')
         place, how, street_name = None, None, None
         cand = [] if v.get('kind') == 'korzinka' else [(max(sim(name, n) for n in p['names']), p) for p in pois]
@@ -319,12 +359,36 @@ for key, (lon0, lat0) in CITIES.items():
                     break
         b = building_at(place) if how != 'street' else None
         venues.append({'n': name, 'nr': v.get('nr', ''), 'a': v.get('au', ''), 'ar': addr, 'k': v.get('kind', 'cafe'),
-                       'p': q(*place), 'how': how, 'b': blds.index(b) if b else -1})
-    # Korzinka stores mapped in OSM inside the city but not named in the deck
+                       'p': q(*place), 'how': how, 'h': '', 'b': blds.index(b) if b else -1})
+    # Tashkent's HoReCa network: the deck's 60 venues by 2GIS (exact) or by their landmark (≈), and the restaurants
+    # matched in OSM before
+    if key == 'toshkent' or key == 'chirchiq':
+        for d in HD:
+            if (d.get('town') == 'chirchiq') != (key == 'chirchiq'):
+                continue
+            hit = V2.get(f"horeca|{d['n']}|{d['mark']}")
+            if hit and not FOOD.search(hit['name']):
+                hit = None
+            # a street in the deck's address must agree with the hit's street
+            if hit and re.search(r'ул\.|улица|проспект', d['mark']) and sim(street_part(d['mark']), hit['a']) < 0.6:
+                hit = None
+            # the deck prints names in capitals: title-case word by word (str.title would give "Jo'Ja")
+            nm = ' '.join(w[:1].upper() + w[1:].lower() for w in d['n'].split()) if d['n'].isupper() else d['n']
+            if hit and inside(hit['p']):
+                add(nm, '', hit['a'], d['mark'], 'cafe', tuple(hit['p']), '2gis')
+            elif d.get('p') and inside(d['p']):
+                add(nm, '', '', d['mark'], 'cafe', tuple(d['p']), 'landmark')
+        for h in PLACES_HORECA:
+            if not inside(h['p']) or key != 'toshkent':
+                continue
+            if any(math.hypot((x['p'][0] - q(*h['p'])[0]) * kx / 1e5 * 1000, (x['p'][1] - q(*h['p'])[1]) * 110.57 / 1e5 * 1000) < 60 for x in venues):
+                continue
+            add(h['n'], '', h.get('a', ''), '', 'cafe', tuple(h['p']), 'osm', h.get('h', ''))
+    # Korzinka stores mapped in OSM inside the site that 2GIS does not list
     for k in KOR:
         if id(k) in used or math.hypot(*km(*k['p'])) > R:
             continue
-        if any(abs(v['p'][0] - q(*k['p'])[0]) < 40 and abs(v['p'][1] - q(*k['p'])[1]) < 40 for v in venues):
+        if any(abs(v['p'][0] - q(*k['p'])[0]) < 70 and abs(v['p'][1] - q(*k['p'])[1]) < 70 for v in venues):
             continue
         b = building_at(tuple(k['p']))
         venues.append({'n': 'Korzinka' + (f" · {k['b']}" if k.get('b') else ''), 'nr': '', 'a': k.get('a', ''), 'ar': '', 'k': 'korzinka',
@@ -336,10 +400,12 @@ for key, (lon0, lat0) in CITIES.items():
         d = math.hypot(*km(*b['c']))
         if any(math.hypot((b['c'][0] - x) * kx, (b['c'][1] - y) * 110.57) < 0.35 for x, y in vpts):
             return True
+        if key == 'toshkent':
+            return b['area'] >= 35
         return b['area'] >= (35 if d < 1.1 else 110 if d < 1.9 else 260)
     keepset = [b for b in blds if keep(b)]
     keepset.sort(key=lambda b: math.hypot(*km(*b['c'])))
-    keepset = keepset[:16000]
+    keepset = keepset[:22000 if key == 'toshkent' else 16000]
     index = {id(b): i for i, b in enumerate(keepset)}
     for v in venues:
         v['b'] = index.get(id(blds[v['b']]), -1) if v['b'] >= 0 else -1

@@ -1,0 +1,2362 @@
+[
+{
+"id": "70000001115190144",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Namozgox, 107",
+"full": "Buxoro, ko'cha Namozgox, 107",
+"p": [
+64.405743,
+39.751345
+]
+},
+{
+"id": "70000001084304792",
+"name": "Korzinka, Раймаг кольцо",
+"a": "",
+"full": "",
+"p": [
+64.412991,
+39.7832
+]
+},
+{
+"id": "70000001082745296",
+"name": "Korzinka, 5-микрорайон",
+"a": "",
+"full": "",
+"p": [
+64.41695,
+39.74838
+]
+},
+{
+"id": "70000001114628957",
+"name": "Korzinka, Chinar mall",
+"a": "",
+"full": "",
+"p": [
+64.42843,
+39.740793
+]
+},
+{
+"id": "70000001115202403",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Islom Karimov, 213",
+"full": "Buxoro, ko'cha Islom Karimov, 213",
+"p": [
+64.430362,
+39.785733
+]
+},
+{
+"id": "70000001115001383",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Sanoatchilar, 3",
+"full": "Buxoro, ko'cha Sanoatchilar, 3",
+"p": [
+64.43716,
+39.755401
+]
+},
+{
+"id": "70000001082443622",
+"name": "Korzinka, Шарк-2",
+"a": "ko'cha Bahouddin Naqshband, 149",
+"full": "Buxoro, ko'cha Bahouddin Naqshband, 149",
+"p": [
+64.440713,
+39.772368
+]
+},
+{
+"id": "70000001116203979",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+66.912769,
+39.634924
+]
+},
+{
+"id": "70000001113557343",
+"name": "Korzinka, супермаркет",
+"a": "kichik tuman Sattepo, 148Б",
+"full": "Centrium hall, 148Б, kichik tuman Sattepo Samarqand , O'zbekiston",
+"p": [
+66.918708,
+39.637273
+]
+},
+{
+"id": "70000001077855273",
+"name": "Korzinka, Атлас",
+"a": "ko'cha Buyuk Ipak Yo'li, 131Б",
+"full": "Атлас, торгово-развлекательный центр, 131Б, ko'cha Buyuk Ipak Yo'li Samarqand , O'zbekiston",
+"p": [
+66.924089,
+39.645822
+]
+},
+{
+"id": "70000001076990025",
+"name": "Korzinka, Анжир",
+"a": "",
+"full": "",
+"p": [
+66.926083,
+39.674374
+]
+},
+{
+"id": "70000001077171866",
+"name": "Korzinka Diskont, Самарканд",
+"a": "ko'cha Rudaki, 54",
+"full": "54, ko'cha Rudaki Samarqand , O'zbekiston",
+"p": [
+66.930537,
+39.68264
+]
+},
+{
+"id": "70000001079872840",
+"name": "Korzinka, Мотрид",
+"a": "",
+"full": "",
+"p": [
+66.931967,
+39.717563
+]
+},
+{
+"id": "70000001077389578",
+"name": "Korzinka, Гагарина",
+"a": "ko'cha Gagarin, 86",
+"full": "86, ko'cha Gagarin Samarqand , O'zbekiston",
+"p": [
+66.935875,
+39.658405
+]
+},
+{
+"id": "70000001105292808",
+"name": "Korzinka, супермаркет",
+"a": "Farhadskiy ko'cha, 57а",
+"full": "Festival Mall, savdo markazi, 57а, Farhadskiy ko'cha Samarqand , O'zbekiston",
+"p": [
+66.936051,
+39.670519
+]
+},
+{
+"id": "70000001115098722",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+66.941333,
+39.647849
+]
+},
+{
+"id": "70000001077743521",
+"name": "Korzinka, Динамо",
+"a": "ko'cha Mir Said Baraka, 2",
+"full": "M.Baraka, savdo-ko'ngilochar markazi, 2, ko'cha Mir Said Baraka Samarqand , O'zbekiston",
+"p": [
+66.944052,
+39.658112
+]
+},
+{
+"id": "70000001102848507",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+66.957267,
+39.653108
+]
+},
+{
+"id": "70000001110745763",
+"name": "Korzinka Mahalla-Yusuf Sakkokiy-2, магазин",
+"a": "",
+"full": "",
+"p": [
+69.150789,
+41.290923
+]
+},
+{
+"id": "70000001110466853",
+"name": "Korzinka Mahalla-Yusuf Sakkokiy, магазин",
+"a": "Yusuf Sakkokiy, 6",
+"full": "Toshkent, Yusuf Sakkokiy, 6",
+"p": [
+69.152943,
+41.289521
+]
+},
+{
+"id": "70000001057551263",
+"name": "Korzinka, Алгоритм",
+"a": "Uchtepa 31-chi квартал, 11/1",
+"full": "Toshkent, Uchtepa 31-chi квартал, 11/1",
+"p": [
+69.153818,
+41.263698
+]
+},
+{
+"id": "70000001110272984",
+"name": "Korzinka Mahalla-Foziltepa, магазин",
+"a": "Izza 5-chi o'tish yo'li, 7а",
+"full": "Toshkent, Izza 5-chi o'tish yo'li, 7а",
+"p": [
+69.155324,
+41.281349
+]
+},
+{
+"id": "70000001078831448",
+"name": "Korzinka, Бисьёр",
+"a": "turar-joy massivi Al-Xorazmiy 1-chi, 4/1",
+"full": "Toshkent, turar-joy massivi Al-Xorazmiy 1-chi, 4/1",
+"p": [
+69.157035,
+41.259031
+]
+},
+{
+"id": "70000001115666617",
+"name": "Korzinka Mahalla, магазин",
+"a": "Uchtepa 30-chi квартал, 6а/3",
+"full": "Toshkent, Uchtepa 30-chi квартал, 6а/3",
+"p": [
+69.158064,
+41.264589
+]
+},
+{
+"id": "70000001038622104",
+"name": "Korzinka, Бешкайрагач",
+"a": "ko'cha Ko'kcha-Darvoza, 628",
+"full": "Toshkent, ko'cha Ko'kcha-Darvoza, 628",
+"p": [
+69.161702,
+41.307742
+]
+},
+{
+"id": "70000001083334744",
+"name": "Korzinka Mahalla, Ибн Сино",
+"a": "",
+"full": "",
+"p": [
+69.164272,
+41.334337
+]
+},
+{
+"id": "70000001102551214",
+"name": "Korzinka Mahalla, Шарк Тонги",
+"a": "Zargarlik, 30а",
+"full": "Toshkent, Zargarlik, 30а",
+"p": [
+69.164717,
+41.262092
+]
+},
+{
+"id": "70000001114052249",
+"name": "Korzinka Mahalla, магазин",
+"a": "ko'cha Farobiy, 452/1",
+"full": "Toshkent, ko'cha Farobiy, 452/1",
+"p": [
+69.166079,
+41.347801
+]
+},
+{
+"id": "70000001113491787",
+"name": "Korzinka Mahalla — Nurobod, магазин",
+"a": "Foziltepa, 4а",
+"full": "Toshkent, Foziltepa, 4а",
+"p": [
+69.169577,
+41.281905
+]
+},
+{
+"id": "70000001037770102",
+"name": "Korzinka, Учтепа",
+"a": "Foziltepa, 93",
+"full": "Toshkent, Foziltepa, 93",
+"p": [
+69.170433,
+41.292798
+]
+},
+{
+"id": "70000001057559003",
+"name": "Korzinka, Депо",
+"a": "Katta Qa'ni, 3а",
+"full": "Toshkent, Katta Qa'ni, 3а",
+"p": [
+69.170911,
+41.27063
+]
+},
+{
+"id": "70000001103225933",
+"name": "Korzinka, Ibn Sino Mall",
+"a": "",
+"full": "",
+"p": [
+69.171867,
+41.33993
+]
+},
+{
+"id": "70000001074552882",
+"name": "Korzinka, Эркин",
+"a": "Kamoliddin Behzod, 81",
+"full": "Erkin (Zangiota tumani, Toshkentlik viloyat), Kamoliddin Behzod, 81",
+"p": [
+69.172588,
+41.229928
+]
+},
+{
+"id": "70000001077855369",
+"name": "Korzinka, Журжони",
+"a": "Farhadskiy ko'cha, 20/1",
+"full": "Toshkent, Farhadskiy ko'cha, 20/1",
+"p": [
+69.174889,
+41.298149
+]
+},
+{
+"id": "70000001050904597",
+"name": "Korzinka, Джарарык",
+"a": "Jarariq mavzesi, 7/2",
+"full": "Toshkent, Jarariq mavzesi, 7/2",
+"p": [
+69.175256,
+41.336001
+]
+},
+{
+"id": "70000001111498084",
+"name": "Korzinka Mahalla — Birlik, магазин",
+"a": "",
+"full": "",
+"p": [
+69.175978,
+41.292056
+]
+},
+{
+"id": "70000001057558960",
+"name": "Korzinka, Глобус",
+"a": "Zargarlik, 10а",
+"full": "Toshkent, Zargarlik, 10а",
+"p": [
+69.176029,
+41.27225
+]
+},
+{
+"id": "70000001064635895",
+"name": "Korzinka, Чиланзар 26",
+"a": "Uchtepa 26-chi квартал, 24а/2",
+"full": "Toshkent, Uchtepa 26-chi квартал, 24а/2",
+"p": [
+69.176594,
+41.277645
+]
+},
+{
+"id": "70000001113814841",
+"name": "Korzinka, супермаркет",
+"a": "Uchtepa 23-chi квартал, 51/3",
+"full": "Toshkent, Uchtepa 23-chi квартал, 51/3",
+"p": [
+69.177236,
+41.285703
+]
+},
+{
+"id": "70000001114807087",
+"name": "Korzinka Mahalla, магазин",
+"a": "ko'cha Farobiy, 448Б",
+"full": "Toshkent, ko'cha Farobiy, 448Б",
+"p": [
+69.177279,
+41.349468
+]
+},
+{
+"id": "70000001114110903",
+"name": "Korzinka Mahalla — Katta Jarariq, магазин",
+"a": "",
+"full": "",
+"p": [
+69.177886,
+41.339067
+]
+},
+{
+"id": "70000001118134221",
+"name": "Korzinka, Новый ТашМИ",
+"a": "ko'cha Farobiy, 448а",
+"full": "Toshkent, ko'cha Farobiy, 448а",
+"p": [
+69.177971,
+41.349411
+]
+},
+{
+"id": "70000001062543852",
+"name": "Korzinka, Штаб",
+"a": "ko'cha Beshqayrag'och, 102",
+"full": "Toshkent, ko'cha Beshqayrag'och, 102",
+"p": [
+69.17922,
+41.322064
+]
+},
+{
+"id": "70000001115646375",
+"name": "Korzinka Mahalla, магазин",
+"a": "Zangiota 1-chi o'tish yo'li, 4/1",
+"full": "Toshkent, Zangiota 1-chi o'tish yo'li, 4/1",
+"p": [
+69.18331,
+41.330332
+]
+},
+{
+"id": "70000001111497690",
+"name": "Korzinka Mahalla-Kichik Xirmontepa, магазин",
+"a": "Chilonzor 19-chi kvartal, 28",
+"full": "Toshkent, Chilonzor 19-chi kvartal, 28",
+"p": [
+69.185151,
+41.270413
+]
+},
+{
+"id": "70000001042297769",
+"name": "Korzinka, Оазис",
+"a": "ko'cha Lutfi, 21а",
+"full": "Toshkent, ko'cha Lutfi, 21а",
+"p": [
+69.185158,
+41.285237
+]
+},
+{
+"id": "70000001068898960",
+"name": "Korzinka, Заргарлик",
+"a": "Uchtepa 26-chi квартал, 9а",
+"full": "Toshkent, Uchtepa 26-chi квартал, 9а",
+"p": [
+69.186215,
+41.275168
+]
+},
+{
+"id": "70000001110466695",
+"name": "Korzinka Mahalla-Ko‘kcha-Oqtepa, магазин",
+"a": "Zakovat ko'chasi, 487/А",
+"full": "Toshkent, Zakovat ko'chasi, 487/А",
+"p": [
+69.186343,
+41.314171
+]
+},
+{
+"id": "70000001080424066",
+"name": "Korzinka Mahalla, Бустон",
+"a": "Zafarobod ko'chasi, 12/1 стр",
+"full": "Toshkent, Zafarobod ko'chasi, 12/1 стр",
+"p": [
+69.190692,
+41.337664
+]
+},
+{
+"id": "70000001112743307",
+"name": "Korzinka Mahalla-Bog‘zor, магазин",
+"a": "",
+"full": "",
+"p": [
+69.192103,
+41.189098
+]
+},
+{
+"id": "70000001117553105",
+"name": "Korzinka Mahalla, магазин",
+"a": "",
+"full": "",
+"p": [
+69.19308,
+41.30815
+]
+},
+{
+"id": "70000001103865359",
+"name": "Korzinka, Chilonzor-17",
+"a": "Chilonzor 17-chi квартал, 40/2",
+"full": "Toshkent, Chilonzor 17-chi квартал, 40/2",
+"p": [
+69.193457,
+41.272101
+]
+},
+{
+"id": "70000001113695129",
+"name": "Korzinka Mahalla, магазин",
+"a": "8-chi qurilish uchastkasi ko'chasi, 8а",
+"full": "Toshkent, 8-chi qurilish uchastkasi ko'chasi, 8а",
+"p": [
+69.193735,
+41.20749
+]
+},
+{
+"id": "70000001104278750",
+"name": "Korzinka, Scopus Mall",
+"a": "Kichik halqa yo'l, 25",
+"full": "Toshkent, Kichik halqa yo'l, 25",
+"p": [
+69.194117,
+41.283166
+]
+},
+{
+"id": "70000001094395608",
+"name": "Korzinka Mahalla, Янги Хайот",
+"a": "8-chi qurilish uchastkasi ko'chasi, 38",
+"full": "Toshkent, 8-chi qurilish uchastkasi ko'chasi, 38",
+"p": [
+69.19452,
+41.214023
+]
+},
+{
+"id": "70000001062418091",
+"name": "Korzinka, Ипакчи",
+"a": "General Uzoqov ko'chasi, 65/1",
+"full": "Toshkent, General Uzoqov ko'chasi, 65/1",
+"p": [
+69.195682,
+41.329611
+]
+},
+{
+"id": "70000001056600556",
+"name": "Korzinka, Кохинур",
+"a": "Chilonzor 10-chi квартал, 21а/2",
+"full": "Toshkent, Chilonzor 10-chi квартал, 21а/2",
+"p": [
+69.195929,
+41.280646
+]
+},
+{
+"id": "70000001112551320",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.196415,
+41.21896
+]
+},
+{
+"id": "70000001114021591",
+"name": "Korzinka Mahalla-Universitet, магазин",
+"a": "Mirza G'olib ko'chasi, 20",
+"full": "Toshkent, Mirza G'olib ko'chasi, 20",
+"p": [
+69.198449,
+41.350946
+]
+},
+{
+"id": "70000001113811580",
+"name": "Korzinka Mahalla Yangihayot-2, магазин",
+"a": "8-chi qurilish uchastkasi ko'chasi, 8/1",
+"full": "Toshkent, 8-chi qurilish uchastkasi ko'chasi, 8/1",
+"p": [
+69.19897,
+41.217365
+]
+},
+{
+"id": "70000001110154713",
+"name": "Korzinka Mahalla-Qatortol, магазин",
+"a": "",
+"full": "",
+"p": [
+69.199387,
+41.289871
+]
+},
+{
+"id": "70000001105828240",
+"name": "Korzinka, Катартал Атлас",
+"a": "Qatortol ko'chasi, 28",
+"full": "Toshkent, Qatortol ko'chasi, 28",
+"p": [
+69.201015,
+41.281155
+]
+},
+{
+"id": "70000001116849589",
+"name": "Korzinka Mahalla, магазин",
+"a": "Shokirariq ko'chasi, 141а",
+"full": "Toshkent, Shokirariq ko'chasi, 141а",
+"p": [
+69.201731,
+41.214872
+]
+},
+{
+"id": "70000001112551313",
+"name": "Korzinka, супермаркет",
+"a": "Sergeli mavzesi-5a mikrorayoni, 30а",
+"full": "Toshkent, Sergeli mavzesi-5a mikrorayoni, 30а",
+"p": [
+69.20201,
+41.2239
+]
+},
+{
+"id": "70000001068417436",
+"name": "Korzinka, Чиланзар-8",
+"a": "Chilonzor 8-chi квартал, 57",
+"full": "Toshkent, Chilonzor 8-chi квартал, 57",
+"p": [
+69.202742,
+41.289013
+]
+},
+{
+"id": "70000001111498131",
+"name": "Korzinka Mahalla — Bo‘ston-2, магазин",
+"a": "Al-Xorazmiy ko'chasi, 1а",
+"full": "Toshkent, Al-Xorazmiy ko'chasi, 1а",
+"p": [
+69.202825,
+41.342755
+]
+},
+{
+"id": "70000001080066168",
+"name": "Korzinka, Корзинка Махалля — Замондош",
+"a": "Qoraqamish 2-chi ko'cha, 2",
+"full": "Toshkent, Qoraqamish 2-chi ko'cha, 2",
+"p": [
+69.20429,
+41.363705
+]
+},
+{
+"id": "70000001059087393",
+"name": "Korzinka, Янги хает",
+"a": "Shokirariq, 268",
+"full": "Toshkent, Shokirariq, 268",
+"p": [
+69.204727,
+41.212153
+]
+},
+{
+"id": "70000001080994660",
+"name": "Korzinka, Сергели-5",
+"a": "Xonobodtepa prospekt, 57",
+"full": "Toshkent, Xonobodtepa prospekt, 57",
+"p": [
+69.205617,
+41.230295
+]
+},
+{
+"id": "70000001047580266",
+"name": "Korzinka, Беруни",
+"a": "ko'cha Farobiy, 28/6",
+"full": "Toshkent, ko'cha Farobiy, 28/6",
+"p": [
+69.206312,
+41.346266
+]
+},
+{
+"id": "70000001118134268",
+"name": "Korzinka Mahalla, магазин",
+"a": "Chilonzor C kvartal, 48",
+"full": "Toshkent, Chilonzor C kvartal, 48",
+"p": [
+69.206482,
+41.282961
+]
+},
+{
+"id": "70000001061698207",
+"name": "Korzinka, Golden Life",
+"a": "ko'cha Mirza Tursunzoda, 14",
+"full": "Toshkent, ko'cha Mirza Tursunzoda, 14",
+"p": [
+69.207699,
+41.22304
+]
+},
+{
+"id": "70000001106091881",
+"name": "Korzinka Mahalla-Habibiy, магазин",
+"a": "Sergeli mavzesi-5 ko'chasi, 50/1",
+"full": "Toshkent, Sergeli mavzesi-5 ko'chasi, 50/1",
+"p": [
+69.207915,
+41.227238
+]
+},
+{
+"id": "70000001110466494",
+"name": "Korzinka Mahalla-Madadkor, магазин",
+"a": "Sergeli mavzesi-7, 29/4",
+"full": "Toshkent, Sergeli mavzesi-7, 29/4",
+"p": [
+69.209924,
+41.221296
+]
+},
+{
+"id": "70000001103818409",
+"name": "Korzinka, Oqtepa Chilonzor",
+"a": "maydon Oqtepa, 28",
+"full": "Toshkent, maydon Oqtepa, 28",
+"p": [
+69.210547,
+41.299364
+]
+},
+{
+"id": "70000001063536106",
+"name": "Korzinka, Домбрабад",
+"a": "Chilonzor ko'cha, 88",
+"full": "Toshkent, Chilonzor ko'cha, 88",
+"p": [
+69.211289,
+41.271108
+]
+},
+{
+"id": "70000001037430426",
+"name": "Korzinka, Спутник",
+"a": "Qo'rg'ontepa, 11",
+"full": "Toshkent, Qo'rg'ontepa, 11",
+"p": [
+69.211323,
+41.199542
+]
+},
+{
+"id": "70000001037569691",
+"name": "Korzinka, Бунёдкор",
+"a": "Chilonzor 6-chi квартал, 60Б",
+"full": "Toshkent, Chilonzor 6-chi квартал, 60Б",
+"p": [
+69.212204,
+41.28301
+]
+},
+{
+"id": "70000001110000947",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Yangi Sergeli, 7/26",
+"full": "Toshkent, ko'cha Yangi Sergeli, 7/26",
+"p": [
+69.213366,
+41.236311
+]
+},
+{
+"id": "70000001115126457",
+"name": "Korzinka, супермаркет",
+"a": "Chilonzor 5-chi квартал, 50в",
+"full": "Toshkent, Chilonzor 5-chi квартал, 50в",
+"p": [
+69.213475,
+41.293083
+]
+},
+{
+"id": "70000001103797744",
+"name": "Korzinka Mahalla-Zarbdor, магазин",
+"a": "Do'stlik mavzesi-1, 1а",
+"full": "Toshkent, Do'stlik mavzesi-1, 1а",
+"p": [
+69.213549,
+41.194238
+]
+},
+{
+"id": "70000001117179955",
+"name": "Korzinka Mahalla, магазин",
+"a": "ko'cha Universitet, 12Б",
+"full": "Toshkent, ko'cha Universitet, 12Б",
+"p": [
+69.213875,
+41.349341
+]
+},
+{
+"id": "70000001112462083",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Yangi Sergeli, 53/1",
+"full": "Toshkent, ko'cha Yangi Sergeli, 53/1",
+"p": [
+69.214067,
+41.241592
+]
+},
+{
+"id": "70000001081174959",
+"name": "Korzinka Mahalla, Галаба",
+"a": "Qoraqamish 2/4-chi kvartal, 55",
+"full": "Toshkent, Qoraqamish 2/4-chi kvartal, 55",
+"p": [
+69.214226,
+41.370272
+]
+},
+{
+"id": "70000001063831232",
+"name": "Korzinka, станция Сергели-4",
+"a": "Ibrat mahalla, 71",
+"full": "Toshkent, Ibrat mahalla, 71",
+"p": [
+69.214867,
+41.211372
+]
+},
+{
+"id": "70000001103865412",
+"name": "Korzinka Mahalla-Chimboy, магазин",
+"a": "",
+"full": "",
+"p": [
+69.21969,
+41.353601
+]
+},
+{
+"id": "70000001063830963",
+"name": "Korzinka, Сергели-8",
+"a": "ko'cha Yangi Sergeli, 8/1",
+"full": "Toshkent, ko'cha Yangi Sergeli, 8/1",
+"p": [
+69.220985,
+41.223937
+]
+},
+{
+"id": "70000001110024703",
+"name": "Korzinka, Охунбобоев",
+"a": "Keles avtomobil yo'li, 166",
+"full": "Toshkent, Keles avtomobil yo'li, 166",
+"p": [
+69.221292,
+41.378474
+]
+},
+{
+"id": "70000001063158860",
+"name": "Korzinka, Гунча",
+"a": "Beruniy-1 turar-joy massivi, 1/1",
+"full": "Toshkent, Beruniy-1 turar-joy massivi, 1/1",
+"p": [
+69.223174,
+41.330593
+]
+},
+{
+"id": "70000001069507314",
+"name": "Korzinka, Чигатой",
+"a": "prospekt Nurafshon, 7",
+"full": "Toshkent, prospekt Nurafshon, 7",
+"p": [
+69.223482,
+41.337915
+]
+},
+{
+"id": "70000001074547885",
+"name": "Korzinka, Новза",
+"a": "Bunyodkor prospekt, 1а",
+"full": "Toshkent, Bunyodkor prospekt, 1а",
+"p": [
+69.223754,
+41.291398
+]
+},
+{
+"id": "70000001037082628",
+"name": "Korzinka, Vega",
+"a": "ko'cha Shota Rustaveli, 150",
+"full": "Toshkent, ko'cha Shota Rustaveli, 150",
+"p": [
+69.223778,
+41.259806
+]
+},
+{
+"id": "70000001110059051",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Muqimiy, 22а",
+"full": "Toshkent, ko'cha Muqimiy, 22а",
+"p": [
+69.224548,
+41.291776
+]
+},
+{
+"id": "70000001115345519",
+"name": "Korzinka Mahalla, магазин",
+"a": "Qoraqamish 2/1-chi kvartal, 42а",
+"full": "Toshkent, Qoraqamish 2/1-chi kvartal, 42а",
+"p": [
+69.225474,
+41.358343
+]
+},
+{
+"id": "70000001061111101",
+"name": "Korzinka, Каракамыш 1/3",
+"a": "Qoraqamish 1/3-chi kvartal, 35а",
+"full": "Toshkent, Qoraqamish 1/3-chi kvartal, 35а",
+"p": [
+69.226243,
+41.359455
+]
+},
+{
+"id": "70000001113706927",
+"name": "Korzinka Mahalla — Yakkasaroy, магазин",
+"a": "Yakkasaroy ko'chasi, 7",
+"full": "Toshkent, Yakkasaroy ko'chasi, 7",
+"p": [
+69.226249,
+41.266656
+]
+},
+{
+"id": "70000001113695261",
+"name": "Korzinka Mahalla, магазин",
+"a": "Yakkasaroy ko'chasi, 7",
+"full": "Toshkent, Yakkasaroy ko'chasi, 7",
+"p": [
+69.226409,
+41.267989
+]
+},
+{
+"id": "70000001105141442",
+"name": "Korzinka Махалля, Замандош-2",
+"a": "Sag'bon, 289",
+"full": "Toshkent, Sag'bon, 289",
+"p": [
+69.227349,
+41.348274
+]
+},
+{
+"id": "70000001080560839",
+"name": "Корзинка Махалля — Аль-Фергани, магазин",
+"a": "",
+"full": "",
+"p": [
+69.227476,
+41.204394
+]
+},
+{
+"id": "70000001037953708",
+"name": "Korzinka, Сергели",
+"a": "Lutfkor, 2",
+"full": "Toshkent, Lutfkor, 2",
+"p": [
+69.228107,
+41.21339
+]
+},
+{
+"id": "70000001111027058",
+"name": "Korzinka, супермаркет",
+"a": "prospekt Beruniy, 3а",
+"full": "Toshkent, prospekt Beruniy, 3а",
+"p": [
+69.228414,
+41.326604
+]
+},
+{
+"id": "70000001105765094",
+"name": "Korzinka, Самарканд Дарвоза",
+"a": "ko'cha Qoratosh, 5а",
+"full": "Toshkent, ko'cha Qoratosh, 5а",
+"p": [
+69.231285,
+41.315988
+]
+},
+{
+"id": "70000001103226160",
+"name": "Korzinka Mahalla, Чиниобад",
+"a": "Sag'bon 30-chi berk ko`chasi, 8а",
+"full": "Toshkent, Sag'bon 30-chi berk ko`chasi, 8а",
+"p": [
+69.231609,
+41.344943
+]
+},
+{
+"id": "70000001036963026",
+"name": "Korzinka, Караташ",
+"a": "massivi Qoratosh, 8/1",
+"full": "Toshkent, massivi Qoratosh, 8/1",
+"p": [
+69.232988,
+41.316288
+]
+},
+{
+"id": "70000001114645032",
+"name": "Korzinka, супермаркет",
+"a": "Sag'bon berk ko`chasi, 30а",
+"full": "Toshkent, Sag'bon berk ko`chasi, 30а",
+"p": [
+69.235516,
+41.330179
+]
+},
+{
+"id": "70000001113680692",
+"name": "Korzinka, супермаркет",
+"a": "Qushbegi mikrorayoni, 108/1 стр",
+"full": "Toshkent, Qushbegi mikrorayoni, 108/1 стр",
+"p": [
+69.235994,
+41.264722
+]
+},
+{
+"id": "70000001117050698",
+"name": "Korzinka, супермаркет",
+"a": "Qushbegi mikrorayoni, 108/1 стр",
+"full": "Toshkent, Qushbegi mikrorayoni, 108/1 стр",
+"p": [
+69.235994,
+41.264722
+]
+},
+{
+"id": "70000001055629235",
+"name": "Korzinka, Карасарай",
+"a": "Guruch-Ariq, 91/1",
+"full": "Toshkent, Guruch-Ariq, 91/1",
+"p": [
+69.236406,
+41.348489
+]
+},
+{
+"id": "70000001037162209",
+"name": "Korzinka, Камолон",
+"a": "ko'cha Yangi Kamolon, 4",
+"full": "Toshkent, ko'cha Yangi Kamolon, 4",
+"p": [
+69.238435,
+41.309149
+]
+},
+{
+"id": "70000001103226047",
+"name": "Korzinka Mahalla, Ислом Ата",
+"a": "Qoraqamish 1/2-chi kvartal, 10а/8",
+"full": "Toshkent, Qoraqamish 1/2-chi kvartal, 10а/8",
+"p": [
+69.239025,
+41.359968
+]
+},
+{
+"id": "70000001068417276",
+"name": "Korzinka, Алмазар",
+"a": "Fayzibaland, 78/1",
+"full": "Toshkent, Fayzibaland, 78/1",
+"p": [
+69.239193,
+41.348935
+]
+},
+{
+"id": "70000001110668512",
+"name": "Korzinka Mahalla-So`g`diyona, магазин",
+"a": "Obi Hayot ko'chasi, 26",
+"full": "Toshkent, Obi Hayot ko'chasi, 26",
+"p": [
+69.239348,
+41.218064
+]
+},
+{
+"id": "70000001038079818",
+"name": "Korzinka, Ракат",
+"a": "Rak'at mavzesi, 9",
+"full": "Toshkent, Rak'at mavzesi, 9",
+"p": [
+69.242956,
+41.288046
+]
+},
+{
+"id": "70000001105292463",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.243023,
+41.332462
+]
+},
+{
+"id": "70000001093438337",
+"name": "Korzinka Mahalla-Katta Olmazor, магазин",
+"a": "ko'cha Islom Karimov, 8а/1",
+"full": "Toshkent, ko'cha Islom Karimov, 8а/1",
+"p": [
+69.244479,
+41.311248
+]
+},
+{
+"id": "70000001063169917",
+"name": "Korzinka, Башлык",
+"a": "Qushbegi ko'cha, 32Б",
+"full": "Toshkent, Qushbegi ko'cha, 32Б",
+"p": [
+69.246383,
+41.269321
+]
+},
+{
+"id": "70000001118114858",
+"name": "Korzinka, Navoi 28A",
+"a": "prospekt Alisher Navoiy, 28в",
+"full": "Toshkent, prospekt Alisher Navoiy, 28в",
+"p": [
+69.248242,
+41.322441
+]
+},
+{
+"id": "70000001036448226",
+"name": "Korzinka, Next",
+"a": "ko'cha Bobur, 6",
+"full": "Toshkent, ko'cha Bobur, 6",
+"p": [
+69.249513,
+41.297975
+]
+},
+{
+"id": "70000001080424128",
+"name": "Korzinka Mahalla, Янги Себзар",
+"a": "massivi Sebzor, 4Б/1",
+"full": "Toshkent, massivi Sebzor, 4Б/1",
+"p": [
+69.249685,
+41.33134
+]
+},
+{
+"id": "70000001103225955",
+"name": "Korzinka, Парк Tashkent City",
+"a": "Botir Zokirov ko'cha, 2а",
+"full": "Toshkent, Botir Zokirov ko'cha, 2а",
+"p": [
+69.250901,
+41.318765
+]
+},
+{
+"id": "70000001104860791",
+"name": "Korzinka Mahalla-Xadra, магазин",
+"a": "Xadra mavzesi, 25",
+"full": "Toshkent, Xadra mavzesi, 25",
+"p": [
+69.251067,
+41.32614
+]
+},
+{
+"id": "70000001112571098",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.251144,
+41.243572
+]
+},
+{
+"id": "70000001103299510",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.251169,
+41.16799
+]
+},
+{
+"id": "70000001036984138",
+"name": "Korzinka, Себзар",
+"a": "massivi Sebzor, 52",
+"full": "Toshkent, massivi Sebzor, 52",
+"p": [
+69.254706,
+41.33652
+]
+},
+{
+"id": "70000001036982964",
+"name": "Korzinka, Абай",
+"a": "ko'cha Abay, 13",
+"full": "Toshkent, ko'cha Abay, 13",
+"p": [
+69.254771,
+41.325783
+]
+},
+{
+"id": "70000001081175093",
+"name": "Korzinka Mahalla, Конституция",
+"a": "Yusuf Xos Hojib ko'chasi, 73",
+"full": "Toshkent, Yusuf Xos Hojib ko'chasi, 73",
+"p": [
+69.256332,
+41.295879
+]
+},
+{
+"id": "70000001110274405",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.257193,
+41.3473
+]
+},
+{
+"id": "70000001116832259",
+"name": "Korzinka Mahalla-Bobur, магазин",
+"a": "",
+"full": "",
+"p": [
+69.259209,
+41.27714
+]
+},
+{
+"id": "70000001089609882",
+"name": "Korzinka Mahalla, Юнус Раджабий",
+"a": "Yunus Rajabiy ko'chasi, 60/1",
+"full": "Toshkent, Yunus Rajabiy ko'chasi, 60/1",
+"p": [
+69.260931,
+41.304595
+]
+},
+{
+"id": "70000001114965755",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.262103,
+41.215309
+]
+},
+{
+"id": "70000001037359738",
+"name": "Korzinka, Аэропорт",
+"a": "Kichik halqa yo'l, 87в/1",
+"full": "Toshkent, Kichik halqa yo'l, 87в/1",
+"p": [
+69.262658,
+41.269909
+]
+},
+{
+"id": "70000001081175189",
+"name": "Korzinka Mahalla, Шайхонтохур",
+"a": "",
+"full": "",
+"p": [
+69.26322,
+41.326104
+]
+},
+{
+"id": "70000001036906618",
+"name": "Korzinka, Туркменский",
+"a": "Yusuf Xos Hojib ko'chasi, 1",
+"full": "Toshkent, Yusuf Xos Hojib ko'chasi, 1",
+"p": [
+69.263435,
+41.30101
+]
+},
+{
+"id": "70000001110466583",
+"name": "Korzinka Mahalla-Damariq, магазин",
+"a": "Abdulla Qahhor, 49",
+"full": "Toshkent, Abdulla Qahhor, 49",
+"p": [
+69.264149,
+41.277678
+]
+},
+{
+"id": "70000001067345775",
+"name": "Korzinka, Лабзак",
+"a": "ko'cha Labzak, 92",
+"full": "Toshkent, ko'cha Labzak, 92",
+"p": [
+69.264927,
+41.334769
+]
+},
+{
+"id": "70000001082443812",
+"name": "Korzinka Mahalla, Туркистон-2",
+"a": "Yunusobod 6-chi kvartal, 46",
+"full": "Toshkent, Yunusobod 6-chi kvartal, 46",
+"p": [
+69.26585,
+41.369366
+]
+},
+{
+"id": "70000001114644554",
+"name": "Korzinka, супермаркет",
+"a": "Quruvchi mavzesi, 14 дом",
+"full": "Toshkent, Quruvchi mavzesi, 14 дом",
+"p": [
+69.266004,
+41.214372
+]
+},
+{
+"id": "70000001104474033",
+"name": "Korzinka Mahalla-Baynalmilal, магазин",
+"a": "Nukus ko'cha, 89",
+"full": "Toshkent, Nukus ko'cha, 89",
+"p": [
+69.267726,
+41.284864
+]
+},
+{
+"id": "70000001105291700",
+"name": "Korzinka Mahalla-Yangiariq, магазин",
+"a": "Usta shirin, 82а",
+"full": "Toshkent, Usta shirin, 82а",
+"p": [
+69.267841,
+41.346586
+]
+},
+{
+"id": "70000001036580519",
+"name": "Корзинка Махалля — Шараф Рашидов, магазин",
+"a": "ko'cha Yoqub Kolas, 3а",
+"full": "Toshkent, ko'cha Yoqub Kolas, 3а",
+"p": [
+69.268386,
+41.304856
+]
+},
+{
+"id": "70000001061130641",
+"name": "Korzinka, София",
+"a": "Adham Rahmat ko'chasi, 14а",
+"full": "Toshkent, Adham Rahmat ko'chasi, 14а",
+"p": [
+69.268589,
+41.341311
+]
+},
+{
+"id": "70000001037504222",
+"name": "Korzinka",
+"a": "Kichik halqa yo'l, 120",
+"full": "Toshkent, Kichik halqa yo'l, 120",
+"p": [
+69.271862,
+41.277752
+]
+},
+{
+"id": "70000001038033600",
+"name": "Korzinka, Юнусабад (Зенит)",
+"a": "Yunusobod 7-chi kvartal, 58а",
+"full": "Toshkent, Yunusobod 7-chi kvartal, 58а",
+"p": [
+69.272929,
+41.373175
+]
+},
+{
+"id": "70000001036729289",
+"name": "Korzinka, Mercato",
+"a": "Kichik halqa yo'l, 57",
+"full": "Toshkent, Kichik halqa yo'l, 57",
+"p": [
+69.27316,
+41.338104
+]
+},
+{
+"id": "70000001081175150",
+"name": "Korzinka Mahalla, Туркистон",
+"a": "ko'cha Mayqo'rg'on, 8",
+"full": "Toshkent, ko'cha Mayqo'rg'on, 8",
+"p": [
+69.274304,
+41.363743
+]
+},
+{
+"id": "70000001060092545",
+"name": "Korzinka, Ц-5",
+"a": "prospekt Sharof Rashidov, 71",
+"full": "Toshkent, prospekt Sharof Rashidov, 71",
+"p": [
+69.274486,
+41.326234
+]
+},
+{
+"id": "70000001097610645",
+"name": "Korzinka, Юнусабад-4",
+"a": "",
+"full": "",
+"p": [
+69.274653,
+41.364255
+]
+},
+{
+"id": "70000001063193512",
+"name": "Korzinka, Ойбек",
+"a": "Fidokor, 30",
+"full": "Toshkent, Fidokor, 30",
+"p": [
+69.275218,
+41.295695
+]
+},
+{
+"id": "70000001036914802",
+"name": "Korzinka, Shedevr",
+"a": "prospekt Alisher Navoiy, 11в",
+"full": "Toshkent, prospekt Alisher Navoiy, 11в",
+"p": [
+69.275904,
+41.318285
+]
+},
+{
+"id": "70000001118113777",
+"name": "Korzinka Mahalla — Xonobodtepa, магазин",
+"a": "Xonobod ko'chasi, 102",
+"full": "Toshkent, Xonobod ko'chasi, 102",
+"p": [
+69.27635,
+41.218773
+]
+},
+{
+"id": "70000001118127801",
+"name": "Korzinka Mahalla, магазин",
+"a": "Yunusobod 8-chi kvartal, 20а",
+"full": "Toshkent, Yunusobod 8-chi kvartal, 20а",
+"p": [
+69.27976,
+41.370777
+]
+},
+{
+"id": "70000001081175035",
+"name": "Korzinka Mahalla, Хусниобод",
+"a": "Yunusobod 2-chi kvartal, 39а",
+"full": "Toshkent, Yunusobod 2-chi kvartal, 39а",
+"p": [
+69.280032,
+41.360018
+]
+},
+{
+"id": "70000001054103010",
+"name": "Korzinka, Сетор",
+"a": "Yunusobod 9-chi kvartal, 30а/1",
+"full": "Toshkent, Yunusobod 9-chi kvartal, 30а/1",
+"p": [
+69.280509,
+41.376044
+]
+},
+{
+"id": "70000001065448051",
+"name": "Korzinka, Ц-6",
+"a": "Osiyo ko'cha, 85а/1",
+"full": "Toshkent, Osiyo ko'cha, 85а/1",
+"p": [
+69.28074,
+41.328211
+]
+},
+{
+"id": "70000001104526706",
+"name": "Korzinka Mahalla-Qahramon, магазин",
+"a": "Yunusobod 10-chi kvartal, 19",
+"full": "Toshkent, Yunusobod 10-chi kvartal, 19",
+"p": [
+69.284527,
+41.383079
+]
+},
+{
+"id": "70000001036883064",
+"name": "Korzinka, Алайский",
+"a": "prospekt Amir Temur, 40 к Д",
+"full": "Toshkent, prospekt Amir Temur, 40 к Д",
+"p": [
+69.284532,
+41.319127
+]
+},
+{
+"id": "70000001116925511",
+"name": "Корзинка — Савр, супермаркет",
+"a": "Savr 1-chi o'tish yo'li, 7",
+"full": "Toshkent, Savr 1-chi o'tish yo'li, 7",
+"p": [
+69.285653,
+41.272939
+]
+},
+{
+"id": "70000001036531394",
+"name": "Korzinka, Азимова",
+"a": "Sodiq Azimov ko'chasi, 81",
+"full": "Toshkent, Sodiq Azimov ko'chasi, 81",
+"p": [
+69.286813,
+41.302135
+]
+},
+{
+"id": "70000001037129533",
+"name": "Korzinka, Сарыкулька",
+"a": "Sariko'l ko'cha, 14 жилой",
+"full": "Toshkent, Sariko'l ko'cha, 14 жилой",
+"p": [
+69.28737,
+41.277283
+]
+},
+{
+"id": "70000001103928640",
+"name": "Korzinka, Yunusobod-12",
+"a": "",
+"full": "",
+"p": [
+69.288116,
+41.374581
+]
+},
+{
+"id": "70000001066593801",
+"name": "Korzinka, Шахристан",
+"a": "prospekt Amir Temur, 112",
+"full": "Toshkent, prospekt Amir Temur, 112",
+"p": [
+69.28827,
+41.35096
+]
+},
+{
+"id": "70000001113680453",
+"name": "Korzinka, супермаркет",
+"a": "prospekt Amir Temur, 1а/2",
+"full": "Toshkent, prospekt Amir Temur, 1а/2",
+"p": [
+69.288592,
+41.358835
+]
+},
+{
+"id": "70000001114020661",
+"name": "Korzinka Mahalla Husniobod-2, магазин",
+"a": "prospekt Amir Temur, 1а/2",
+"full": "Toshkent, prospekt Amir Temur, 1а/2",
+"p": [
+69.288592,
+41.358835
+]
+},
+{
+"id": "70000001104793606",
+"name": "Korzinka, Mega Planet",
+"a": "Yunusobod 11-chi kvartal, 2Б",
+"full": "Toshkent, Yunusobod 11-chi kvartal, 2Б",
+"p": [
+69.290865,
+41.367419
+]
+},
+{
+"id": "70000001060091654",
+"name": "Korzinka, Аморе мио",
+"a": "Sodiq Azimov ko'chasi, 51",
+"full": "Toshkent, Sodiq Azimov ko'chasi, 51",
+"p": [
+69.291718,
+41.306737
+]
+},
+{
+"id": "70000001060846223",
+"name": "Korzinka Mahalla, Нур",
+"a": "Sodiq Azimov ko'chasi, 49",
+"full": "Toshkent, Sodiq Azimov ko'chasi, 49",
+"p": [
+69.292402,
+41.309968
+]
+},
+{
+"id": "70000001084431662",
+"name": "Korzinka, Badamzar",
+"a": "ko'cha Chingiz Aytmatov, 71а",
+"full": "Toshkent, ko'cha Chingiz Aytmatov, 71а",
+"p": [
+69.29282,
+41.338091
+]
+},
+{
+"id": "70000001088151896",
+"name": "Korzinka, Kazy Mahalla",
+"a": "Firdavsiy, 26 стр",
+"full": "Toshkent, Firdavsiy, 26 стр",
+"p": [
+69.29476,
+41.332023
+]
+},
+{
+"id": "70000001104529173",
+"name": "Korzinka Mahalla-Sariko`l, магазин",
+"a": "Abdurauf Fitrat, 33/1",
+"full": "Toshkent, Abdurauf Fitrat, 33/1",
+"p": [
+69.295119,
+41.267669
+]
+},
+{
+"id": "70000001037480008",
+"name": "Korzinka, Ахмад. Дониш",
+"a": "Yunusobod 14-chi kvartal, 62",
+"full": "Toshkent, Yunusobod 14-chi kvartal, 62",
+"p": [
+69.295823,
+41.37442
+]
+},
+{
+"id": "70000001089146059",
+"name": "Korzinka, Alfraganus",
+"a": "Qoshko'prik, 30",
+"full": "Toshkent, Qoshko'prik, 30",
+"p": [
+69.296902,
+41.290544
+]
+},
+{
+"id": "70000001093438218",
+"name": "Korzinka Mahalla-Darxon, магазин",
+"a": "prospekt Mustaqillik, 86а",
+"full": "Toshkent, prospekt Mustaqillik, 86а",
+"p": [
+69.298845,
+41.31917
+]
+},
+{
+"id": "70000001104469400",
+"name": "Korzinka, Bog`ishamol",
+"a": "ko'cha Bog'ishamol, 90",
+"full": "Toshkent, ko'cha Bog'ishamol, 90",
+"p": [
+69.299014,
+41.340862
+]
+},
+{
+"id": "70000001089609798",
+"name": "Korzinka Mahalla, Асака",
+"a": "Asaka, 17",
+"full": "Toshkent, Asaka, 17",
+"p": [
+69.300274,
+41.316663
+]
+},
+{
+"id": "70000001115335294",
+"name": "Korzinka Mahalla, магазин",
+"a": "Yunusobod 13-chi kvartal, 80",
+"full": "Toshkent, Yunusobod 13-chi kvartal, 80",
+"p": [
+69.300841,
+41.371673
+]
+},
+{
+"id": "70000001116731704",
+"name": "Korzinka, супермаркет",
+"a": "Hamal, 29/1",
+"full": "Toshkent, Hamal, 29/1",
+"p": [
+69.301981,
+41.281256
+]
+},
+{
+"id": "70000001059249869",
+"name": "Korzinka, Самара",
+"a": "ko'cha Yangi Yunusobod, 7а",
+"full": "Toshkent, ko'cha Yangi Yunusobod, 7а",
+"p": [
+69.304914,
+41.367504
+]
+},
+{
+"id": "70000001113644892",
+"name": "Korzinka, супермаркет",
+"a": "Katta Darxon, 13",
+"full": "Toshkent, Katta Darxon, 13",
+"p": [
+69.309021,
+41.331425
+]
+},
+{
+"id": "70000001114606183",
+"name": "Korzinka Mahalla, магазин",
+"a": "magistral Chimkent, 78",
+"full": "magistral Chimkent, 78",
+"p": [
+69.309104,
+41.41108
+]
+},
+{
+"id": "70000001104335869",
+"name": "Korzinka, супермаркет",
+"a": "ko'cha Yangishahar, 67",
+"full": "Toshkent, ko'cha Yangishahar, 67",
+"p": [
+69.309337,
+41.357198
+]
+},
+{
+"id": "70000001038090403",
+"name": "Korzinka, Куйлюк",
+"a": "ko'cha Munis, 91а",
+"full": "Toshkent, ko'cha Munis, 91а",
+"p": [
+69.310435,
+41.244772
+]
+},
+{
+"id": "70000001037663585",
+"name": "Korzinka, Сайрам",
+"a": "ko'cha Yunusota, 15",
+"full": "Toshkent, ko'cha Yunusota, 15",
+"p": [
+69.311633,
+41.372736
+]
+},
+{
+"id": "70000001104294028",
+"name": "Korzinka Mahalla, Марифат",
+"a": "",
+"full": "",
+"p": [
+69.312815,
+41.289748
+]
+},
+{
+"id": "70000001059934568",
+"name": "Korzinka, Машхадий",
+"a": "Mirzo Ulug'bek prospekt, 10",
+"full": "Toshkent, Mirzo Ulug'bek prospekt, 10",
+"p": [
+69.314082,
+41.312105
+]
+},
+{
+"id": "70000001083800807",
+"name": "Korzinka Mahalla, Бегубор",
+"a": "Yunusobod 18-chi kvartal, 54",
+"full": "Toshkent, Yunusobod 18-chi kvartal, 54",
+"p": [
+69.318283,
+41.371087
+]
+},
+{
+"id": "70000001038081702",
+"name": "Korzinka, Файзабад",
+"a": "ko'cha Yangi Qo'yliq, 2А",
+"full": "Toshkent, ko'cha Yangi Qo'yliq, 2А",
+"p": [
+69.319766,
+41.25643
+]
+},
+{
+"id": "70000001056997998",
+"name": "Korzinka, Зиёлилар",
+"a": "Sayram, 4",
+"full": "Toshkent, Sayram, 4",
+"p": [
+69.323411,
+41.335786
+]
+},
+{
+"id": "70000001084431516",
+"name": "Korzinka, Buz Bazaar",
+"a": "Sayram, 1 стр",
+"full": "Toshkent, Sayram, 1 стр",
+"p": [
+69.324823,
+41.32734
+]
+},
+{
+"id": "70000001110466415",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.326576,
+41.270568
+]
+},
+{
+"id": "70000001117180028",
+"name": "Korzinka Mahalla, магазин",
+"a": "Maxtumquli, 99г",
+"full": "Toshkent, Maxtumquli, 99г",
+"p": [
+69.326861,
+41.305613
+]
+},
+{
+"id": "70000001105292243",
+"name": "Korzinka, Compass Mall",
+"a": "Katta halqa yo'l, 17",
+"full": "Toshkent, Katta halqa yo'l, 17",
+"p": [
+69.327945,
+41.239125
+]
+},
+{
+"id": "70000001037129998",
+"name": "Korzinka, Риезий",
+"a": "Oltintepa ko'chasi, 7",
+"full": "Toshkent, Oltintepa ko'chasi, 7",
+"p": [
+69.3281,
+41.311082
+]
+},
+{
+"id": "70000001116561750",
+"name": "Korzinka Mahalla, Кадрият",
+"a": "To'rtko'l 2-chi tor ko'chasi, 17а",
+"full": "Toshkent, To'rtko'l 2-chi tor ko'chasi, 17а",
+"p": [
+69.32962,
+41.295278
+]
+},
+{
+"id": "70000001047527861",
+"name": "Korzinka, Олтинтепа",
+"a": "Riyoziy mavzesi, 3а/1",
+"full": "Toshkent, Riyoziy mavzesi, 3а/1",
+"p": [
+69.330296,
+41.312842
+]
+},
+{
+"id": "70000001046876077",
+"name": "Korzinka, Куйлюк центр",
+"a": "Farg'ona avtomobil yo'li, 5Б/1",
+"full": "Toshkent, Farg'ona avtomobil yo'li, 5Б/1",
+"p": [
+69.334179,
+41.240506
+]
+},
+{
+"id": "70000001054103059",
+"name": "Korzinka, САМПИ",
+"a": "ko'cha Bog'ishamol, 260а",
+"full": "Toshkent, ko'cha Bog'ishamol, 260а",
+"p": [
+69.334252,
+41.355473
+]
+},
+{
+"id": "70000001093566686",
+"name": "Korzinka, IT Park",
+"a": "Tepamasjid, 13/1 стр",
+"full": "Toshkent, Tepamasjid, 13/1 стр",
+"p": [
+69.334551,
+41.341657
+]
+},
+{
+"id": "70000001110466305",
+"name": "Korzinka Aviasozlar-2, супермаркет",
+"a": "ko'cha Qorasu, 7/2 стр",
+"full": "Toshkent, ko'cha Qorasu, 7/2 стр",
+"p": [
+69.337345,
+41.287207
+]
+},
+{
+"id": "70000001036897928",
+"name": "Korzinka, Aviator",
+"a": "Parkent, 180/1",
+"full": "Toshkent, Parkent, 180/1",
+"p": [
+69.338291,
+41.306622
+]
+},
+{
+"id": "70000001103928568",
+"name": "Korzinka Mahalla, Хосиятли",
+"a": "Izzat, 24",
+"full": "Toshkent, Izzat, 24",
+"p": [
+69.341215,
+41.27899
+]
+},
+{
+"id": "70000001117313571",
+"name": "Корзинка-Лимонария, супермаркет",
+"a": "Temur Malik ko'chasi, 3",
+"full": "Salar (Qibray tumani, Toshkentlik viloyat), Temur Malik ko'chasi, 3",
+"p": [
+69.341534,
+41.357982
+]
+},
+{
+"id": "70000001046786037",
+"name": "Korzinka, Эльбек",
+"a": "ko'cha Qorasu, 36",
+"full": "Toshkent, ko'cha Qorasu, 36",
+"p": [
+69.342351,
+41.299577
+]
+},
+{
+"id": "70000001037038388",
+"name": "Korzinka, Салом",
+"a": "Буюк Ипак Йули, 158а",
+"full": "Toshkent, Буюк Ипак Йули, 158а",
+"p": [
+69.343426,
+41.327671
+]
+},
+{
+"id": "70000001040816059",
+"name": "Korzinka, Авиасозлар",
+"a": "ko'cha Aviasozlar, 9/1",
+"full": "Toshkent, ko'cha Aviasozlar, 9/1",
+"p": [
+69.344895,
+41.288701
+]
+},
+{
+"id": "70000001094394799",
+"name": "Korzinka Mahalla, магазин",
+"a": "",
+"full": "",
+"p": [
+69.346094,
+41.346419
+]
+},
+{
+"id": "70000001094395659",
+"name": "Korzinka Mahalla, Хабиб Абдуллаев",
+"a": "Mirzo Ulug'bek prospekt, 91а",
+"full": "Toshkent, Mirzo Ulug'bek prospekt, 91а",
+"p": [
+69.346379,
+41.34625
+]
+},
+{
+"id": "70000001116201494",
+"name": "Korzinka Mahalla, магазин",
+"a": "Aviasozlar 4-chi kvartal ko'chasi, 46 стр",
+"full": "Toshkent, Aviasozlar 4-chi kvartal ko'chasi, 46 стр",
+"p": [
+69.347251,
+41.295483
+]
+},
+{
+"id": "70000001110993530",
+"name": "Korzinka Mahalla, магазин",
+"a": "Aviasozlar 2-chi квартал, 62",
+"full": "Toshkent, Aviasozlar 2-chi квартал, 62",
+"p": [
+69.349152,
+41.283215
+]
+},
+{
+"id": "70000001064761759",
+"name": "Korzinka, Янгиабад",
+"a": "Shoximardon ko'chasi, 84",
+"full": "Toshkent, Shoximardon ko'chasi, 84",
+"p": [
+69.350033,
+41.273874
+]
+},
+{
+"id": "70000001105292863",
+"name": "Korzinka Mahalla-Behizor, магазин",
+"a": "Katta Yangiobod, 1/1",
+"full": "Toshkent, Katta Yangiobod, 1/1",
+"p": [
+69.353522,
+41.264931
+]
+},
+{
+"id": "70000001114021110",
+"name": "Korzinka Mahalla-Iltifot, магазин",
+"a": "",
+"full": "",
+"p": [
+69.354218,
+41.28092
+]
+},
+{
+"id": "70000001110274524",
+"name": "Korzinka Mahalla-Qibray Ahillik, магазин",
+"a": "Universitet ko'chasi, 163/1",
+"full": "Salar (Qibray tumani, Toshkentlik viloyat), Universitet ko'chasi, 163/1",
+"p": [
+69.354952,
+41.382716
+]
+},
+{
+"id": "70000001115576553",
+"name": "Korzinka Mahalla, магазин",
+"a": "58 harbiy shaharchasi, 33",
+"full": "Toshkent, 58 harbiy shaharchasi, 33",
+"p": [
+69.355294,
+41.28006
+]
+},
+{
+"id": "70000001075163178",
+"name": "Korzinka, Тузель",
+"a": "Tuzel 2-chi kvartal, 13Б/1",
+"full": "Toshkent, Tuzel 2-chi kvartal, 13Б/1",
+"p": [
+69.358603,
+41.291054
+]
+},
+{
+"id": "70000001061769761",
+"name": "Korzinka, Луначарский",
+"a": "Буюк Ипак Йули, 299/1",
+"full": "Toshkent, Буюк Ипак Йули, 299/1",
+"p": [
+69.359319,
+41.341347
+]
+},
+{
+"id": "70000001118214772",
+"name": "Korzinka, Олмос",
+"a": "",
+"full": "",
+"p": [
+69.363056,
+41.276506
+]
+},
+{
+"id": "70000001037336565",
+"name": "Korzinka, Карасу",
+"a": "Карасу 2-й массив ko'chasi, 23",
+"full": "Toshkent, Карасу 2-й массив ko'chasi, 23",
+"p": [
+69.36356,
+41.332099
+]
+},
+{
+"id": "70000001105765265",
+"name": "Korzinka Mahalla, Камолот",
+"a": "ko'cha Feruza, 24",
+"full": "Toshkent, ko'cha Feruza, 24",
+"p": [
+69.366805,
+41.35841
+]
+},
+{
+"id": "70000001113550883",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.369551,
+41.27305
+]
+},
+{
+"id": "70000001065299105",
+"name": "Korzinka, Карасу Плаза",
+"a": "Карасу 1-й массив ko'chasi, 25 стр",
+"full": "Toshkent, Карасу 1-й массив ko'chasi, 25 стр",
+"p": [
+69.371089,
+41.334532
+]
+},
+{
+"id": "70000001114021808",
+"name": "Korzinka Mahalla-Iyk Ota, магазин",
+"a": "Taraqqiyot ko'chasi, 2а",
+"full": "Toshkent, Taraqqiyot ko'chasi, 2а",
+"p": [
+69.372987,
+41.246385
+]
+},
+{
+"id": "70000001048528159",
+"name": "Korzinka, Бектемир",
+"a": "Husayn Boyqaro, 37а/2",
+"full": "Toshkent, Husayn Boyqaro, 37а/2",
+"p": [
+69.37539,
+41.255472
+]
+},
+{
+"id": "70000001080561156",
+"name": "Корзинка Махалля — Мажнунтол, магазин",
+"a": "Barxayot, 141",
+"full": "Toshkent, Barxayot, 141",
+"p": [
+69.376196,
+41.246258
+]
+},
+{
+"id": "70000001113814451",
+"name": "Korzinka, супермаркет",
+"a": "TTZ 2-chi turar-joy massivi, 24",
+"full": "Toshkent, TTZ 2-chi turar-joy massivi, 24",
+"p": [
+69.378148,
+41.35578
+]
+},
+{
+"id": "70000001103797791",
+"name": "Korzinka Mahalla-Rohat, магазин",
+"a": "Vodnik Mavzesi, 6а",
+"full": "Toshkent, Vodnik Mavzesi, 6а",
+"p": [
+69.37944,
+41.252547
+]
+},
+{
+"id": "70000001111797752",
+"name": "Korzinka Mahalla-Ahmad Yugnakiy, магазин",
+"a": "Ahmad Yugnakiy turar-joy massivi, 24а",
+"full": "Toshkent, Ahmad Yugnakiy turar-joy massivi, 24а",
+"p": [
+69.383545,
+41.346467
+]
+},
+{
+"id": "70000001037618846",
+"name": "Korzinka, ТТЗ",
+"a": "ko'cha Yuzrabot, 1",
+"full": "Toshkent, ko'cha Yuzrabot, 1",
+"p": [
+69.386186,
+41.359353
+]
+},
+{
+"id": "70000001065447913",
+"name": "Korzinka, Югнакий",
+"a": "Ahmad Yugnaki, 4/3",
+"full": "Toshkent, Ahmad Yugnaki, 4/3",
+"p": [
+69.389754,
+41.348842
+]
+},
+{
+"id": "70000001110059053",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.452328,
+41.40317
+]
+},
+{
+"id": "70000001063860473",
+"name": "Korzinka, Чирчик",
+"a": "Алишера Навои ko'chasi, 22/3",
+"full": "Chirchiq (Чирчик город областного подчинения, Toshkentlik viloyat), Алишера Навои ko'chasi, 22/3",
+"p": [
+69.547478,
+41.437565
+]
+},
+{
+"id": "70000001115335156",
+"name": "Korzinka, Чирчик",
+"a": "",
+"full": "",
+"p": [
+69.549697,
+41.461241
+]
+},
+{
+"id": "70000001104793519",
+"name": "Korzinka, Chirchiq O`rmon",
+"a": "A.Temur ko'chasi, 69",
+"full": "Chirchiq (Чирчик город областного подчинения, Toshkentlik viloyat), A.Temur ko'chasi, 69",
+"p": [
+69.569188,
+41.466926
+]
+},
+{
+"id": "70000001079175492",
+"name": "Korzinka, Чирчик парк",
+"a": "Алишера Навои ko'chasi, 447",
+"full": "Chirchiq (Чирчик город областного подчинения, Toshkentlik viloyat), Алишера Навои ko'chasi, 447",
+"p": [
+69.592136,
+41.478523
+]
+},
+{
+"id": "70000001089137458",
+"name": "Korzinka, Бостонлык",
+"a": "",
+"full": "",
+"p": [
+69.758648,
+41.552137
+]
+},
+{
+"id": "70000001113897769",
+"name": "Korzinka, супермаркет",
+"a": "",
+"full": "",
+"p": [
+69.88724,
+41.603305
+]
+},
+{
+"id": "70000001075323271",
+"name": "Korzinka, Чарвак",
+"a": "",
+"full": "",
+"p": [
+69.941259,
+41.627982
+]
+}
+]

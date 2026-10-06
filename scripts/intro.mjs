@@ -10,7 +10,7 @@ page.on('request', (r) => { if (r.url().includes('dem-')) setTimeout(() => r.con
 page.on('pageerror', (e) => console.log('pageerror:', e.message));
 page.on('console', (m) => { if (m.type() === 'error') console.log('console error:', m.text().slice(0, 200)); });
 const t0 = Date.now();
-await page.goto('http://127.0.0.1:5173/?lang=uz', { waitUntil: 'domcontentloaded' });
+await page.goto('' + (process.env.BASE || 'http://127.0.0.1:5173') + '/?lang=uz', { waitUntil: 'domcontentloaded' });
 const times = list ? list.split(',').map(Number) : [1200, 2600, 4000, 5200, 6400, 7400, 8600, 11000, 13000, 15000];
 for (const ms of times) {
   const wait = ms - (Date.now() - t0);

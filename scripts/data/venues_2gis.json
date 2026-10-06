@@ -1,0 +1,476 @@
+{
+"andijon|Mehmon": null,
+"andijon|Uz Turk 2": null,
+"andijon|O'zbegim · Makro M32": null,
+"andijon|Makro M20": null,
+"andijon|Makro M16": null,
+"andijon|Stimorol": null,
+"andijon|Mega polis": null,
+"andijon|Gumbaz 1": null,
+"andijon|O'zbegim Food Court": null,
+"andijon|O'zbegim · Sulton Ahmet": null,
+"asaka|Gumbaz": null,
+"asaka|Iris": null,
+"asaka|Sulton Saroy": null,
+"asaka|Obu Rohat": null,
+"asaka|Yulduz": null,
+"asaka|Makro M22": null,
+"fargona|Rayhon": null,
+"fargona|O'zbegim milliy taomlari": null,
+"fargona|Istiqlol": null,
+"fargona|KWIK": null,
+"fargona|Oybek osh markazi 1": null,
+"fargona|Oybek osh markazi 2": null,
+"fargona|Sulton Ahmet": null,
+"fargona|Oxu": null,
+"margilon|Marg'ilon kabob": null,
+"margilon|Yakko Marg'ilon": null,
+"margilon|Kish Mish": null,
+"qoqon|Oilaviy": null,
+"qoqon|My cafe": null,
+"qoqon|Mini Food": null,
+"qoqon|Benazir": null,
+"qoqon|Bahor": null,
+"qoqon|Benazir 1": null,
+"qoqon|Benazir 2": null,
+"qoqon|Benazir 3": null,
+"qoqon|Makro M24": null,
+"qoqon|Yoshlik": null,
+"horeca|VOLIDAM|Мечеть «Илон ота»": {
+"id": "70000001112659636",
+"name": "Volidam atelier, ателье",
+"a": "Yunusobod 4-chi kvartal, 66",
+"full": "Toshkent, Yunusobod 4-chi kvartal, 66",
+"p": [
+69.27588,
+41.363252
+]
+},
+"horeca|NEXT FOOD COURT|ТРЦ Next": {
+"id": "70000001036448140",
+"name": "Next, торгово-развлекательный комплекс",
+"a": "ko'cha Bobur, 6",
+"full": "Toshkent, ko'cha Bobur, 6",
+"p": [
+69.249364,
+41.297943
+]
+},
+"horeca|MARVARID MILLIY TAOMLAR|Гостиница «THE ELEMENTS»": {
+"id": "70000001086882941",
+"name": "Marvarid, киоск по продаже лепешек",
+"a": "prospekt Amir Temur, 41/7",
+"full": "Toshkent, prospekt Amir Temur, 41/7",
+"p": [
+69.289725,
+41.360983
+]
+},
+"horeca|RAYHON MILLIY TAOMLAR|Спортивный комплекс «JAR»": null,
+"horeca|ANOR MILLIY TAOMLAR|«Госпитальный» рынок": {
+"id": "70000001037129559",
+"name": "Anor, кафе",
+"a": "ko'cha Mirobod, 35",
+"full": "Toshkent, ko'cha Mirobod, 35",
+"p": [
+69.271222,
+41.293378
+]
+},
+"horeca|MEGA PLANET FOOD COURT|ТРЦ «Mega Planet»": {
+"id": "70000001037217975",
+"name": "Mega planet, торгово-развлекательный центр",
+"a": "Yunusobod 11-chi kvartal, 2Б",
+"full": "Toshkent, Yunusobod 11-chi kvartal, 2Б",
+"p": [
+69.291045,
+41.367235
+]
+},
+"horeca|KÖFTECI ISMAIL|Городская больница № 1": null,
+"horeca|SAPFIR MILLIY TAOMLAR|Автосалон «Юнусабад»": null,
+"horeca|SARDOBA MILLIY TAOMLAR|Мечеть «Бадамзар»": {
+"id": "70000001037823300",
+"name": "Sardoba, кафе",
+"a": "ko'cha Chingiz Aytmatov, 52/2",
+"full": "Toshkent, ko'cha Chingiz Aytmatov, 52/2",
+"p": [
+69.292819,
+41.33498
+]
+},
+"horeca|RAYHON MILLIY TAOMLAR|Mediapark Караташ": {
+"id": "70000001040314201",
+"name": "Rayhon, кафе",
+"a": "ko'cha Asatulla Xojaev, 2",
+"full": "Toshkent, ko'cha Asatulla Xojaev, 2",
+"p": [
+69.236132,
+41.31371
+]
+},
+"horeca|TOSHKENT RESTAURANT|Пересечение ул. Себзар и Нурафшон": null,
+"horeca|UGOLOK|Сквер им. Амира Темура": {
+"id": "70000001036991287",
+"name": "Ugolok, kafe",
+"a": "Sayilgoh ko'chasi, 35/1",
+"full": "Toshkent, Sayilgoh ko'chasi, 35/1",
+"p": [
+69.278577,
+41.312863
+]
+},
+"horeca|SOY MILLIY TAOMLAR|Дворец Дружбы Народов": {
+"id": "70000001037162178",
+"name": "Soy, ресторан",
+"a": "ko'cha Yangi Kamolon, 4",
+"full": "Toshkent, ko'cha Yangi Kamolon, 4",
+"p": [
+69.238654,
+41.309432
+]
+},
+"horeca|RAYHON MILLIY TAOMLAR|Посольство Республики Казахстан": {
+"id": "70000001037015058",
+"name": "Rayhon, кафе",
+"a": "ko'cha Zulfiyaxonim, 244",
+"full": "Toshkent, ko'cha Zulfiyaxonim, 244",
+"p": [
+69.258852,
+41.330225
+]
+},
+"horeca|RAYHON MILLIY TAOMLAR|Бывш. «Детский мир»": {
+"id": "70000001045370105",
+"name": "Rayhon, кафе",
+"a": "Buyuk ipak yo'li mavzesi, 1",
+"full": "Toshkent, Buyuk ipak yo'li mavzesi, 1",
+"p": [
+69.287268,
+41.312883
+]
+},
+"horeca|AXMAD OLTIN JO'JA|Алгоритм": {
+"id": "70000001036831869",
+"name": "Axmad Oltin Jo`Ja, кафе",
+"a": "Guliston ko'chasi, 35",
+"full": "Toshkent, Guliston ko'chasi, 35",
+"p": [
+69.154288,
+41.26257
+]
+},
+"horeca|PLOV CITY|Банкетный зал «Фарход»": {
+"id": "70000001080336811",
+"name": "Plov city, центр плова",
+"a": "Farhadskiy ko'cha, 3а",
+"full": "Toshkent, Farhadskiy ko'cha, 3а",
+"p": [
+69.182117,
+41.289468
+]
+},
+"horeca|RAYHON MILLIY TAOMLAR|Катартал": {
+"id": "70000001038226142",
+"name": "Rayhon, кафе",
+"a": "Chilonzor C kvartal, 1в",
+"full": "Toshkent, Chilonzor C kvartal, 1в",
+"p": [
+69.205615,
+41.285915
+]
+},
+"horeca|BARAKAH|Стадион Бунёдкор": {
+"id": "70000001068486649",
+"name": "Barakah, семейный ресторан",
+"a": "Chilonzor 6-chi квартал, 51",
+"full": "Toshkent, Chilonzor 6-chi квартал, 51",
+"p": [
+69.209437,
+41.284377
+]
+},
+"horeca|TANSIQ MILLIY TAOMLAR|Мечеть «Илон ота»": {
+"id": "70000001078540503",
+"name": "Tansiq, кафе",
+"a": "Chigil, 2",
+"full": "Toshkent, Chigil, 2",
+"p": [
+69.335101,
+41.29585
+]
+},
+"horeca|XON ATLAS|бывш. Магазин «Чимган»": {
+"id": "70000001037699276",
+"name": "Xon Atlas, миллий таомлар",
+"a": "Bo'z mavzesi-2, 17/1",
+"full": "Toshkent, Bo'z mavzesi-2, 17/1",
+"p": [
+69.352361,
+41.350194
+]
+},
+"horeca|OSHPAOLOV|Гостиница «Сайёхат»": {
+"id": "70000001104414476",
+"name": "Oshpalov, точка быстрого питания",
+"a": "",
+"full": "",
+"p": [
+69.334466,
+41.327163
+]
+},
+"horeca|PLOV CITY|Перекресток Шастри": {
+"id": "70000001047149403",
+"name": "Plov city, центр плова",
+"a": "Mirzo Ulug'bek prospekt, 60",
+"full": "Toshkent, Mirzo Ulug'bek prospekt, 60",
+"p": [
+69.315106,
+41.31556
+]
+},
+"horeca|IKKI PANJA|Рынок «МАЛИКА»": null,
+"horeca|OSH CITY|Чайхана «Sultan Said»": {
+"id": "70000001114269479",
+"name": "Osh city, ресторан",
+"a": "",
+"full": "",
+"p": [
+69.227808,
+41.347547
+]
+},
+"horeca|MADINA FOOD|Дубовая": {
+"id": "70000001078549743",
+"name": "Madina, ателье",
+"a": "Chigil, 17",
+"full": "Toshkent, Chigil, 17",
+"p": [
+69.334893,
+41.296032
+]
+},
+"horeca|BOG'I ZILOL MILLIY TAOMLAR|ТЦ «Farg'ona»": null,
+"horeca|AXA OSH|ул. Шерози, 37": null,
+"horeca|Zo’R Osh|Ташкентская область, Чирчик": null,
+"horeca|Le Taom|ул. Паркент, 180/1": null,
+"horeca|RAYHON MILLIY TAOMLAR|ТЦ «Ярмарка — Сергели»": {
+"id": "70000001038102007",
+"name": "Rayhon, кафе",
+"a": "ko'cha Yangi Sergeli, 17Б",
+"full": "Toshkent, ko'cha Yangi Sergeli, 17Б",
+"p": [
+69.22883,
+41.214287
+]
+},
+"horeca|SHOHONA MILLIY TAOMLAR|«Паркентский» рынок": {
+"id": "70000001036545893",
+"name": "Shohona, миллий таомлар",
+"a": "Mirzo Ulug'bek prospekt, 1",
+"full": "Toshkent, Mirzo Ulug'bek prospekt, 1",
+"p": [
+69.310729,
+41.308879
+]
+},
+"horeca|ANOR KELES|Алмазарский район, улица Келес Йули": {
+"id": "70000001037129559",
+"name": "Anor, кафе",
+"a": "ko'cha Mirobod, 35",
+"full": "Toshkent, ko'cha Mirobod, 35",
+"p": [
+69.271222,
+41.293378
+]
+},
+"horeca|TANDOOR MILLIY TAOMLAR|Узбум": {
+"id": "70000001037018607",
+"name": "Tandoor, кафе",
+"a": "Farg'ona avtomobil yo'li, 15/21",
+"full": "Toshkent, Farg'ona avtomobil yo'li, 15/21",
+"p": [
+69.301628,
+41.289563
+]
+},
+"horeca|NOMDOR|ул. Шахрисабз, 21A/1": {
+"id": "70000001065470962",
+"name": "Nomdor, кафе",
+"a": "Shaxrisabz ko'cha, 21а/1",
+"full": "Toshkent, Shaxrisabz ko'cha, 21а/1",
+"p": [
+69.280691,
+41.30439
+]
+},
+"horeca|QALDIRG'OCH OILAVIY RESTORAN|Ташкент, ул. Кукча Дарвоза, 349А": {
+"id": "70000001038608522",
+"name": "Oilaviy, продовольственный магазин",
+"a": "Taqachi ko'chasi, 61",
+"full": "Toshkent, Taqachi ko'chasi, 61",
+"p": [
+69.15664,
+41.31705
+]
+},
+"horeca|ISHTIXON ZIG’IR OSH|Ташкент, ул. Кушбеги, 14А": null,
+"horeca|SAMOSH 1|Ташкент, ул. Паркент, 74, 2 этаж": {
+"id": "70000001036616547",
+"name": "SamOsh, центр плова",
+"a": "Parkent, 74 Блок 13",
+"full": "Toshkent, Parkent, 74 Блок 13",
+"p": [
+69.321741,
+41.314855
+]
+},
+"horeca|SAMOSH 2|Сергелийский район, ул. Кумарык, 59": {
+"id": "70000001036616547",
+"name": "SamOsh, центр плова",
+"a": "Parkent, 74 Блок 13",
+"full": "Toshkent, Parkent, 74 Блок 13",
+"p": [
+69.321741,
+41.314855
+]
+},
+"horeca|MILLIIY TAOMLAR|Ташкент, ул. Мирзо Улугбека, 19": null,
+"horeca|ADRAS MILLIIY TAOMLAR|Ташкент, ул. Мирабад, 41/6": {
+"id": "70000001105257664",
+"name": "Adras Milliy, ресторан национальной кухни",
+"a": "ko'cha Mirobod, 41/6",
+"full": "Toshkent, ko'cha Mirobod, 41/6",
+"p": [
+69.272919,
+41.292601
+]
+},
+"horeca|FAYZ CHINOR|Ибн Сино": {
+"id": "70000001055988233",
+"name": "Fayz, миллий таомлар",
+"a": "turar-joy massivi Ibn Sino-1, 8Б",
+"full": "Toshkent, turar-joy massivi Ibn Sino-1, 8Б",
+"p": [
+69.164116,
+41.333932
+]
+},
+"horeca|O'ZBEGIM|Истирахат": {
+"id": "70000001080101739",
+"name": "O`zbegim, ресторан узбекской кухни",
+"a": "Mahatma Gandi, 14",
+"full": "Toshkent, Mahatma Gandi, 14",
+"p": [
+69.294212,
+41.314199
+]
+},
+"horeca|BEK OSIYO|Ресторан «Yakkasaroy»": {
+"id": "70000001036946607",
+"name": "Bek Osiyo, ресторан",
+"a": "Abdulla Qahhor, 47/2",
+"full": "Toshkent, Abdulla Qahhor, 47/2",
+"p": [
+69.262313,
+41.278577
+]
+},
+"horeca|AHMAD OLMOS JO'JA|Кукча Дарвоза": null,
+"horeca|QALDRIG’OCH MILLIY TAOMLAR|Малая кольцевая дорога, 26B": null,
+"horeca|DUNYO|Куш Беги": {
+"id": "70000001036989712",
+"name": "Dunyo, семейный ресторан",
+"a": "Qushbegi ko'cha, 8/4",
+"full": "Toshkent, Qushbegi ko'cha, 8/4",
+"p": [
+69.245846,
+41.273379
+]
+},
+"horeca|TANDIR MILLIY TAOMLAR|Рисовый базар": {
+"id": "70000001038409924",
+"name": "Tandir, миллий таомлар",
+"a": "Abdurauf Fitrat, 5а/1",
+"full": "Toshkent, Abdurauf Fitrat, 5а/1",
+"p": [
+69.308956,
+41.272296
+]
+},
+"horeca|ЛАБИ ХАУЗ|Городской родильный комплекс № 8": null,
+"horeca|DARYO|ул. Беруни, 35А": {
+"id": "70000001077914809",
+"name": "Daryo, ресторан",
+"a": "Farobiy o'tish yo'li, 96а",
+"full": "Toshkent, Farobiy o'tish yo'li, 96а",
+"p": [
+69.21587,
+41.334539
+]
+},
+"horeca|FAYZ SERGELI|Сергели, ул. Давлатабад 15.": {
+"id": "70000001038143866",
+"name": "Fayz, киоск по продаже лепешек",
+"a": "Eski Otchopar, 14 киоск",
+"full": "Toshkent, Eski Otchopar, 14 киоск",
+"p": [
+69.312694,
+41.267982
+]
+},
+"horeca|SAMOSH|«Паркентский» рынок": {
+"id": "70000001036616547",
+"name": "SamOsh, центр плова",
+"a": "Parkent, 74 Блок 13",
+"full": "Toshkent, Parkent, 74 Блок 13",
+"p": [
+69.321741,
+41.314855
+]
+},
+"horeca|FAYZ MILLIY TAOMLAR|Ханабад": null,
+"horeca|AL-FAJR|Дворец Дружбы Народов": null,
+"horeca|KING PLOV|ул. Джурджани, 5": {
+"id": "70000001114216244",
+"name": "King plov, центр плова",
+"a": "prospekt Beruniy, 41а",
+"full": "Toshkent, prospekt Beruniy, 41а",
+"p": [
+69.204781,
+41.345399
+]
+},
+"horeca|NURAFSHON OSH|Ташкент, ул. Шерози, 41": null,
+"horeca|Marhabo|Ташкент, ул. Юнусата, 6Б": {
+"id": "70000001110770335",
+"name": "Marhabo Hotel, ​гостиница",
+"a": "Urikzor ko'cha, 102",
+"full": "Toshkent, Urikzor ko'cha, 102",
+"p": [
+69.242839,
+41.292639
+]
+},
+"horeca|CHOY POY|улица Фазылтепа, 23": {
+"id": "70000001067911941",
+"name": "Choy Poy, ресторан",
+"a": "Foziltepa, 18Б",
+"full": "Toshkent, Foziltepa, 18Б",
+"p": [
+69.173189,
+41.29404
+]
+},
+"horeca|DARYO|улица. Амира Темура, 2А/1": {
+"id": "70000001111493094",
+"name": "Daryo, ресторан",
+"a": "prospekt Amir Temur, 2а/1",
+"full": "Toshkent, prospekt Amir Temur, 2а/1",
+"p": [
+69.283512,
+41.330782
+]
+}
+}

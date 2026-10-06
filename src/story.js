@@ -1,14 +1,14 @@
 import { POSES, TAS, PLATE } from './scene/world.js';
-import { t, onLang, num } from './i18n/index.js';
+import { SITES, GROUPS } from './scene/city.js';
+import { t, onLang, num, place, lang } from './i18n/index.js';
 import { REGIONS, LED_ZONES, LED_FACTS } from './data/inventory.js';
 import { profile } from './sections.js';
-import { formatDMS } from './scene/geo.js';
+import { formatDMS, toLonLat } from './scene/geo.js';
 
 const CHAPTERS = ['hero', 'airport', 'korzinka', 'horeca', 'regions', 'plan'];
 const ALL = [...CHAPTERS, 'explore'];
 const TRI = '<svg class="wp-tri" viewBox="0 0 15 13" aria-hidden="true"><path d="M7.5 1.2L13.8 11.8H1.2z"/></svg>';
 const DOT = '<svg class="wp-tri wp-pin" viewBox="0 0 15 13" aria-hidden="true"><circle cx="7.5" cy="6.5" r="4.4"/></svg>';
-const CITY_R = { andijon: 4.5, fargona: 4.5, namangan: 4.5, margilon: 3.5, asaka: 3.0, qoqon: 4.0, samarqand: 5.5, buxoro: 5.0, jizzax: 3.5, qarshi: 4.5 };
 const AERO = '<svg class="wp-aero" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 4.5l1.6 5.4 5.4 2.1-5.4 1.9L12 19.5l-1.6-5.6L5 12l5.4-2.1z"/></svg>';
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const escH = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -214,7 +214,11 @@ export function initStory(world, { places, nav, bus }) {
   let exploreCity = null;
   let shownCity = null;
   // a city with a model is viewed close enough to read its streets; the rest from a regional height
-  const cityPose = (key, shift = 0) => ({ t: places.cities[key], dist: CITY_R[key] ? CITY_R[key] * 2.2 : 240, az: -8, el: CITY_R[key] ? 44 : 50, shift });
+  const cityPose = (key, shift = 0) => {
+    const s0 = SITES[key];
+    if (s0) return { t: [s0[0], s0[1]], dist: Math.max(6, s0[2] * 2.2), az: -8, el: 46, shift };
+    return { t: places.cities[key] || places.cities.toshkent, dist: GROUPS[key] ? 150 : 240, az: 0, el: 50, shift };
+  };
   bus.addEventListener('regionfocus', (e) => {
     regionKey = e.detail || null;
     focus = regionKey && places.cities[regionKey] ? world.goalFromPose(cityPose(regionKey, POSES.regions.shift)) : null;
@@ -229,7 +233,9 @@ export function initStory(world, { places, nav, bus }) {
     const cy = (Math.min(...lat) + Math.max(...lat)) / 2;
     const ext = Math.max((Math.max(...lon) - Math.min(...lon)) * 85, (Math.max(...lat) - Math.min(...lat)) * 110.6);
     const room = shift ? 0.5 : 0.85;
-    return { t: [cx, cy], dist: Math.max(3.2, (ext * 1.35) / room), az: -8, el: 46, shift };
+    // on a phone the bottom sheet takes the lower half: the town is framed in the upper part
+    const phone = innerWidth < 700;
+    return { t: [cx, cy], dist: Math.max(3.2, (ext * 1.35) / (phone ? 0.62 : room)), az: -8, el: 46, shift, shiftY: phone ? 0.22 : 0 };
   };
   // venue labels for a city model, built the first time it is shown
   const venueLabels = new Map();
@@ -240,12 +246,13 @@ export function initStory(world, { places, nav, bus }) {
       const l = addLabel({
         cls: `wp--venue wp--${v.k}`,
         world: v.w,
-        html: () => `${DOT}<span class="wp-box"><span class="wp-name">${escH(v.n)}</span><span class="wp-sub">${escH(KIND[v.k] || t('card.kindCafe'))}${v.how === 'street' ? ' · ≈' : ''}</span></span>`,
+        html: () => `${DOT}<span class="wp-box"><span class="wp-name">${escH(lang().code === 'ru' && v.nr ? v.nr : place(v.n))}</span><span class="wp-sub">${escH(KIND[v.k] || t('card.kindCafe'))}${v.how === 'street' ? ' · ≈' : ''}</span></span>`,
         weights: {},
         onClick: () => bus.dispatchEvent(new CustomEvent('venuecard', { detail: { key: c.key, i: v.i } })),
         key: `v-${c.key}-${v.i}`,
       });
       l.cityKey = c.key;
+      l.kind = v.k;
       l.prio = 95 - (v.how === 'street' ? 10 : 0);
       return l;
     }));
@@ -273,7 +280,7 @@ export function initStory(world, { places, nav, bus }) {
       const g = {
         tx: lerp(a.pose.tx, b.pose.tx, k), ty: lerp(a.pose.ty, b.pose.ty, k), tz: lerp(a.pose.tz, b.pose.tz, k),
         dist: Math.exp(lerp(Math.log(a.pose.dist), Math.log(b.pose.dist), k)),
-        az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k),
+        az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k), shiftY: 0,
       };
       // a city picked in the Regions plate pulls the chart down onto it while that chapter holds the screen
       const fw = focus ? weights.regions : 0;
@@ -335,6 +342,8 @@ export function initStory(world, { places, nav, bus }) {
     const as = 1 + heroS * w.hero + (PLATE.scale - 1) * w.airport;
     // on the plate the volumes are drawn at half the hero symbol's height exaggeration, so the plan reads
     world.airport.group.scale.set(as, as * (1 - 0.45 * w.airport), as);
+    // the terminal stands on the levelled Tashkent plate when that model is up
+    world.airport.group.position.y = world.city.flatY(world.airport.group.position.x, world.airport.group.position.z, world.hubWorld.y);
     world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0);
     if (world.roads) world.roads.city = 1 - clamp((w.hero + w.airport) * 1.4);
     world.airport.setHot(w.airport);
@@ -350,7 +359,13 @@ export function initStory(world, { places, nav, bus }) {
     // the network is read from its venues and cities, not drawn as a route
     world.route.opacity = 0;
     // which city model is up: the explorer's pick, else the Regions plate's pick while that chapter holds the screen
-    const wantCity = exploring ? exploreCity : w.regions > 0.4 ? regionKey : null;
+    // in the explorer a model also comes up by itself wherever the camera comes down near a place with venues
+    let autoSite = null;
+    if (exploring && !exploreCity && dist < 45) {
+      const [tl, ta] = toLonLat(world.cur.tx, world.cur.tz);
+      autoSite = world.city.siteAt(tl, ta);
+    }
+    const wantCity = exploring ? exploreCity || autoSite : w.regions > 0.4 ? regionKey : w.horeca > 0.4 ? 'toshkent' : null;
     if (wantCity !== shownCity) { shownCity = wantCity; world.city.show(world.city.has(wantCity) ? wantCity : null); }
     if (cityNow && !venueLabels.has(cityNow.key)) addVenueLabels(cityNow);
     // once a city's venues are known, frame them all rather than the city centre
@@ -368,7 +383,8 @@ export function initStory(world, { places, nav, bus }) {
 
     // panels the map labels must never run under: chapter plates, the airport frame, the open card, the bars
     const blockers = [];
-    document.querySelectorAll('.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hplate, .planner-sheet').forEach((el) => {
+    // (in the explorer the chapters are faded out: only its own bar, the card and the nav count)
+    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hplate, .planner-sheet').forEach((el) => {
       if (el.style.visibility === 'hidden' || el.offsetParent === null) return;
       const r = el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > innerHeight || r.width < 2) return;
@@ -386,7 +402,11 @@ export function initStory(world, { places, nav, bus }) {
       target = introDone ? clamp(target * 2) : 0;
       if (l.far) target *= l.el.classList.contains('wp--cluster') ? farK : clamp(farK + 0.35);
       // a city's own venues show only while its model is up; its waypoint and store cluster step aside
-      if (l.cityKey) target = introDone && cityNow && cityNow.key === l.cityKey ? clamp(world.city.k * 1.4 - 0.2) : 0;
+      if (l.cityKey) {
+        target = introDone && cityNow && cityNow.key === l.cityKey ? clamp(world.city.k * 1.4 - 0.2) : 0;
+        // the HoReCa chapter shows its restaurants; the stores wait for the explorer
+        if (target && !exploring && w.horeca > 0.4 && l.kind !== 'cafe') target = 0;
+      }
       else if (cityNow && world.city.k > 0.3 && (l.key === cityNow.key || l.cluster || l.key === 'tas')) target = 0;
       const p = world.project(typeof l.w === 'function' ? l.w() : l.w, l.proj);
       if (!p.visible) target = 0;

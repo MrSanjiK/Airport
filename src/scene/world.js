@@ -40,8 +40,11 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   scene.background = bg;
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 8000);
 
-  const heights = await loadHeights(quality.dem, (p) => onProgress?.(0.15 + p * 0.72));
+  const heights = await loadHeights(quality.dem, (p) => onProgress?.(0.15 + p * 0.72), quality.demRequest);
+  const breathe = () => new Promise((r) => setTimeout(r, 0));
+  await breathe();
   const overlays = buildOverlays(data.vectors, quality.overlay);
+  await breathe();
   onProgress?.(0.9);
   const terrain = createTerrain(heights, overlays, quality.seg);
   scene.add(terrain.mesh);
@@ -65,16 +68,18 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   const hor = createIcons(data.places.horeca.map((h) => h.p), sample, 1);
   scene.add(kor.points, hor.points);
 
+  await breathe();
   const airport = createAirport(data.places.airportPlan, data.airportDetail, hubWorld);
   scene.add(airport.group);
   const city = createCityLayer({ scene, sample: heights.sample, terrain });
+  await breathe();
   const lines = createDrapedLines(data.vectors, sample);
   scene.add(lines.group);
   const roads = data.roads ? createRoads(data.roads, sample) : null;
   if (roads) scene.add(roads.group);
 
   // Camera state with damping
-  const cur = { tx: 0, ty: 0, tz: 0, dist: 0, az: 0, el: 0, shift: 0 };
+  const cur = { tx: 0, ty: 0, tz: 0, dist: 0, az: 0, el: 0, shift: 0, shiftY: 0 };
   const goal = { ...cur };
   const poseToState = (p, o = goal) => {
     const [x, z] = toXZ(p.t[0], p.t[1]);
@@ -85,6 +90,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     o.az = p.az;
     o.el = p.el;
     o.shift = matchMedia('(max-width: 960px)').matches ? 0 : p.shift || 0;
+    o.shiftY = p.shiftY || 0;
     return o;
   };
   poseToState(POSES.intro, cur);
@@ -104,7 +110,8 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     const w = canvas.clientWidth || innerWidth;
     const h = canvas.clientHeight || innerHeight;
     const rtl = document.documentElement.dir === 'rtl' ? -1 : 1;
-    if (Math.abs(cur.shift) > 0.001) camera.setViewOffset(w, h, -cur.shift * rtl * w, 0, w, h);
+    // shift moves the subject sideways (clear of a plate), shiftY upward (clear of a phone's bottom sheet)
+    if (Math.abs(cur.shift) > 0.001 || Math.abs(cur.shiftY) > 0.001) camera.setViewOffset(w, h, -cur.shift * rtl * w, cur.shiftY * h, w, h);
     else camera.clearViewOffset();
     camera.near = Math.max(0.02, cur.dist * 0.004);
     camera.far = cur.dist * 8 + 1500;
@@ -228,6 +235,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     cur.az += (goal.az + pointer.sx * 2.2 * state.parallax - cur.az) * k;
     cur.el += (goal.el - pointer.sy * 1.4 * state.parallax - cur.el) * k;
     cur.shift += (goal.shift - cur.shift) * k;
+    cur.shiftY += ((goal.shiftY || 0) - cur.shiftY) * k;
     applyCamera();
 
     const u = terrain.uniforms;
@@ -238,7 +246,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     bg.setRGB(0.929 + (0.039 - 0.929) * state.night, 0.949 + (0.09 - 0.949) * state.night, 0.965 + (0.161 - 0.965) * state.night);
     route.update(state.night, renderer);
     airport.setNight(state.night);
-    city.update(state.night, renderer, dt);
+    city.update(state.night, renderer, dt, cur.dist);
     lines.update(state.night, renderer);
     if (roads) { roads.opacity = lines.opacity; roads.update(state.night, renderer, cur.dist); }
 
@@ -261,8 +269,11 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },
     jump() { Object.assign(cur, goal); applyCamera(); },
-    // compile every shader and upload every texture before the first visible frame
-    prewarm() { renderer.compile(scene, camera); renderer.render(scene, camera); },
+    // compile every shader and upload every texture before the first visible frame, off the main thread where the
+    // driver allows it (KHR_parallel_shader_compile), so the loader's pen never stalls
+    async prewarm() {
+      try { await renderer.compileAsync(scene, camera); } catch (e) { renderer.compile(scene, camera); }
+    },
     project, pick,
     onFrame(fn) { listeners.add(fn); return () => listeners.delete(fn); },
     start() { loop(); },

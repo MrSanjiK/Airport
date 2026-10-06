@@ -57,6 +57,15 @@ function linkWidths() {
 }
 
 async function boot() {
+  // the heavy files are requested at once, before anything else waits on them
+  const q = quality();
+  q.demRequest = fetch(`/data/dem-${q.dem}.z`);
+  const early = {
+    vectors: fetch('/data/vectors.json').then((r) => r.json()),
+    places: fetch('/data/places.json').then((r) => r.json()),
+    roads: fetch('/data/roads.json').then((r) => r.json()).catch(() => null),
+    airport: fetch('/data/airport-detail.json').then((r) => r.json()).catch(() => null),
+  };
   mountLogos();
   await setLang(initialLang(), { persist: false });
   progress(0.05);
@@ -66,14 +75,10 @@ async function boot() {
     onTheme: (next) => world && gsap.to(world.state, { night: next === 'night' ? 1 : 0, duration: reduced ? 0 : 1.4, ease: 'power2.inOut' }),
   });
 
-  const vectors = await fetch('/data/vectors.json').then((r) => r.json());
+  const vectors = await early.vectors;
   ld = createLoader(loader, vectors);
   progress(0.06);
-  const [places, roads, airportDetail] = await Promise.all([
-    fetch('/data/places.json').then((r) => r.json()),
-    fetch('/data/roads.json').then((r) => r.json()).catch(() => null),
-    fetch('/data/airport-detail.json').then((r) => r.json()).catch(() => null),
-  ]);
+  const [places, roads, airportDetail] = await Promise.all([early.places, early.roads, early.airport]);
   progress(0.14);
 
   initSections({ bus, places });
@@ -139,7 +144,7 @@ async function boot() {
   }
 
   try {
-    world = await createWorld(document.getElementById('gl'), { data: { places, vectors, roads, airportDetail }, onProgress: progress, quality: quality() });
+    world = await createWorld(document.getElementById('gl'), { data: { places, vectors, roads, airportDetail }, onProgress: progress, quality: q });
   } catch (err) {
     console.error(err);
     const fb = document.getElementById('fallbackMap');
@@ -185,7 +190,7 @@ async function boot() {
   document.documentElement.classList.add('is-intro');
   // every shader compiled and every texture uploaded while the page still covers the chart, so the first
   // uncovered frames and the first frames of the flight never hitch
-  world.prewarm();
+  await world.prewarm();
   await ld.complete(gsap);
 
   const a = world.goalFromPose(POSES.intro);
@@ -205,7 +210,7 @@ async function boot() {
       world.setGoal({
         tx: lerp(a.tx, b.tx, k), ty: lerp(a.ty, b.ty, k), tz: lerp(a.tz, b.tz, k),
         dist: Math.exp(lerp(Math.log(a.dist), Math.log(b.dist), kd)),
-        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, k * k * (3 - 2 * k)), shift: 0,
+        az: a.az + ((((b.az - a.az) % 360) + 540) % 360 - 180) * k, el: lerp(a.el, b.el, k * k * (3 - 2 * k)), shift: 0, shiftY: 0,
       });
     },
   }, 0);

@@ -80,6 +80,7 @@ export function createLoader(el, vectors) {
     <path class="ld-head" d="${main}" pathLength="1000"/>
     <circle class="ld-ring" cx="${hx}" cy="${hz}" r="0"/>
     <circle class="ld-halo" r="${(26 * kmPerPx).toFixed(2)}" fill="url(#ldHalo)"/>
+    <path class="ld-trail ld-trail--a" pathLength="1000"/><path class="ld-trail ld-trail--b" pathLength="1000"/>
     <g class="ld-plane">${PLANE}</g>`;
   const box = el.querySelector('.loader-stage');
   box.prepend(svg);
@@ -92,19 +93,20 @@ export function createLoader(el, vectors) {
   const halo = svg.querySelector('.ld-halo');
   const total = mainEl.getTotalLength();
   const pct = el.querySelector('.loader-pct');
+
   const read = el.querySelector('.loader-read');
 
   // the read-out sits in the country's open interior when it fits there, otherwise under the country
   const toPx = (x, z) => [((x - vb[0]) / vb[2]) * innerWidth, ((z - vb[1]) / vb[3]) * innerHeight];
   const inner = (CORE_R * 2 * 0.8) / kmPerPx;
-  const font = Math.min(104, inner / 2.4);
-  if (font >= 46) {
+  const font = Math.min(84, inner / 2.6);
+  if (font >= 44) {
     const [px, py] = toPx(...toXZ(CORE[0], CORE[1]));
     read.style.setProperty('--ld-size', `${font.toFixed(0)}px`);
     read.style.transform = `translate(${px}px, ${py}px) translate(-50%, -50%)`;
   } else {
     const [, bottom] = toPx(0, toXZ(64, 37.1)[1]);
-    read.style.setProperty('--ld-size', '64px');
+    read.style.setProperty('--ld-size', '56px');
     read.style.transform = `translate(${innerWidth / 2}px, ${Math.min(innerHeight - 110, bottom + 40)}px) translate(-50%, 0)`;
   }
 
@@ -116,9 +118,6 @@ export function createLoader(el, vectors) {
   const MIN_DRAW = 3.6;
   const lenPx = innerWidth < 700 ? 44 : 60;
   const s = (lenPx / 42) * kmPerPx;
-  const body = 42 * s;
-  let heading = null;
-  let turn = 0;
   const draw = () => {
     const now = performance.now();
     const dt = Math.min(0.05, (now - last) / 1000);
@@ -133,25 +132,13 @@ export function createLoader(el, vectors) {
     const seg = (len) => { const b = p * 1000; const a = Math.max(0, b - len); return `0 ${a.toFixed(2)} ${(b - a).toFixed(2)} 3000`; };
     headEl.style.strokeDasharray = seg(26);
     glowEl.style.strokeDasharray = seg(70);
-    // the airliner rides the border itself: its tail on the drawing head, its nose a fuselage-length further
-    // along the line it is about to draw, so the glow streams straight out of the tail
+    // only the glow travels the border; the airliner waits for the end
     const L = Math.max(0.5, p * total);
     const head = mainEl.getPointAtLength(L);
-    const nose = mainEl.getPointAtLength((L + body) % total);
-    const ang = Math.atan2(nose.y - head.y, nose.x - head.x);
-    if (heading === null) heading = ang;
-    let d = ang - heading;
-    d = Math.atan2(Math.sin(d), Math.cos(d));
-    heading += d * Math.min(1, dt * 9);
-    turn += (d * 3 - turn) * Math.min(1, dt * 6);
-    const cx = head.x + Math.cos(heading) * body * 0.5;
-    const cy = head.y + Math.sin(heading) * body * 0.5;
-    // banking: the wings foreshorten into a turn
-    const bank = 1 - Math.min(0.22, Math.abs(turn) * 0.5);
-    plane.setAttribute('transform', `translate(${cx.toFixed(2)} ${cy.toFixed(2)}) rotate(${((heading * 180) / Math.PI).toFixed(2)}) scale(${s.toFixed(4)} ${(s * bank).toFixed(4)})`);
     halo.setAttribute('cx', head.x.toFixed(2));
     halo.setAttribute('cy', head.y.toFixed(2));
     pct.textContent = `${Math.round(p * 100)}`;
+
     raf = requestAnimationFrame(draw);
   };
   draw();
@@ -165,6 +152,50 @@ export function createLoader(el, vectors) {
       return new Promise((resolve) => {
         const tl = gsap.timeline({ paused: true, onComplete: () => { cancelAnimationFrame(raf); el.classList.add('is-done'); } });
         tl.add(() => el.classList.add('is-closed'), 0.15);
+        // the airliner's moment: it lifts off Tashkent, banks out over the country and comes up at the viewer, past the
+        // edge of the screen, its contrails drawing behind it while the chart opens beneath
+        const P0 = [hx, hz];
+        const P1 = [hx - wv * 0.1, hz - hv * 0.16];
+        const P2 = [vb[0] + wv * 0.62, vb[1] - hv * 0.08];
+        const P3 = [vb[0] + wv * 0.4, vb[1] - hv * 0.75];
+        const bez = (t) => {
+          const u = 1 - t;
+          return [0, 1].map((i) => u * u * u * P0[i] + 3 * u * u * t * P1[i] + 3 * u * t * t * P2[i] + t * t * t * P3[i]);
+        };
+        const trailA = svg.querySelector('.ld-trail--a');
+        const trailB = svg.querySelector('.ld-trail--b');
+        const flight = { k: 0 };
+        let path = '';
+        tl.add(() => plane.classList.add('is-flying'), 0.25);
+        tl.to(flight, {
+          k: 1, duration: 2.4, ease: 'power1.in',
+          onUpdate: () => {
+            const k = flight.k;
+            const [x, y] = bez(k);
+            const [x2, y2] = bez(Math.min(1, k + 0.01));
+            const ang = Math.atan2(y2 - y, x2 - x);
+            // altitude: the aircraft grows as it climbs toward the viewer, and banks into the turn early on
+            const grow = 1.7 + 13 * Math.pow(k, 2.2);
+            const bank = 1 - 0.3 * Math.sin(Math.min(1, k * 2.2) * Math.PI);
+            plane.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${((ang * 180) / Math.PI).toFixed(2)}) scale(${(s * grow).toFixed(4)} ${(s * grow * bank).toFixed(4)})`);
+            plane.style.setProperty('--alt', (k * 18).toFixed(1));
+            // two contrails from the engines, a little behind the wing
+            const n = 28;
+            const off = (s * grow) * 5.8;
+            const line = (sign) => Array.from({ length: n + 1 }, (_, i) => {
+              const t = (k * i) / n;
+              const [px, py] = bez(t);
+              const [qx, qy] = bez(Math.min(1, t + 0.01));
+              const a = Math.atan2(qy - py, qx - px) + Math.PI / 2;
+              const w = off * (t / Math.max(k, 0.001));
+              return `${i ? 'L' : 'M'}${(px + Math.cos(a) * w * sign).toFixed(2)} ${(py + Math.sin(a) * w * sign).toFixed(2)}`;
+            }).join('');
+            path = line(1);
+            trailA.setAttribute('d', path);
+            trailB.setAttribute('d', line(-1));
+          },
+        }, 0.25);
+        tl.to([trailA, trailB], { opacity: 0, duration: 0.9, ease: 'power1.out' }, 1.7);
         tl.to(read, { opacity: 0, y: -10, duration: 0.5, ease: 'power2.out' }, 0.2);
         tl.to(svg.querySelector('.ld-fill'), { attr: { r: fillR }, duration: 1.45, ease: 'power2.inOut' }, 0.3);
         tl.fromTo(svg.querySelector('.ld-ring'), { attr: { r: 0 }, opacity: 0.9 }, { attr: { r: fillR }, opacity: 0, duration: 1.45, ease: 'power2.inOut' }, 0.3);

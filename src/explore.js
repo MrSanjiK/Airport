@@ -54,7 +54,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
   const items = [];
   items.push({ type: 'tas', w: world.hubWorld.clone().setY(world.hubWorld.y + 0.2), ll: [69.2812, 41.2579], dist: 46 });
   Object.entries(places.cities).forEach(([k, p]) => {
-    if (!rowByKey[k]) return;
+    if (!rowByKey[k] && k !== 'toshkent') return;
     items.push({ type: 'city', key: k, w: world.worldAt(p[0], p[1], 0.3), ll: p, dist: 60 });
   });
   places.horeca.forEach((h) => items.push({ type: 'horeca', name: h.n, a: h.a, h: h.h, w: world.worldAt(h.p[0], h.p[1], 0.3), ll: h.p, dist: 7 }));
@@ -82,7 +82,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     if (it.type === 'city') return t(`cities.${it.key}`);
     if (it.type === 'horeca') return it.name;
     if (it.type === 'town') return it.name;
-    if (it.type === 'venue') return lang().code === 'ru' && it.v.nr ? it.v.nr : it.v.n;
+    if (it.type === 'venue') return lang().code === 'ru' && it.v.nr ? it.v.nr : place(it.v.n);
     return `Korzinka${it.b ? ` · ${it.b}` : ''}`;
   };
   const tipHTML = (it) => {
@@ -150,6 +150,9 @@ export function initExplore(world, { bus, places, lenis, story }) {
     if (it.type === 'tas') {
       body = `<p>${esc(t('airport.lead'))}</p><dl>${row(t('airport.statYear'), num(AIRPORT.visitsYear))}${row('LED', `${LED_FACTS.count} · ${LED_FACTS.playsDay} ${t('units.plays')}`)}${row('IATA / ICAO', 'TAS / UZTT')}</dl>${routeHTML([69.2687, 41.2634])}`;
       section = 'airport';
+    } else if (it.type === 'city' && !rowByKey[it.key]) {
+      body = `<dl>${row(t('card.stores'), num(korByTown[t(`cities.${it.key}`)] || korByTown.Toshkent || 0))}${row(t('horeca.venues'), `${HORECA.venues}+`)}</dl>`;
+      section = 'horeca';
     } else if (it.type === 'city') {
       const r = rowByKey[it.key];
       const k = korByTown[t(`cities.${it.key}`)] || korByTown[{ fargona: "Farg'ona", qoqon: "Qo'qon" }[it.key]] || 0;
@@ -187,10 +190,12 @@ export function initExplore(world, { bus, places, lenis, story }) {
         </div>
       </div>`;
   };
-  const openCard = (it) => {
+  const openCard = (it, { peek = false } = {}) => {
     selected = it;
     card.innerHTML = cardHTML(it);
     card.classList.add('is-on');
+    card.classList.toggle('is-peek', peek && innerWidth < 700);
+    card.querySelector('.ic-body h3').addEventListener('click', () => card.classList.remove('is-peek'));
     card.querySelector('.ic-close').addEventListener('click', closeCard);
     card.querySelector('[data-zoom]').addEventListener('click', () => flyTo(it, Math.max(2.5, world.goal.dist * 0.35)));
     card.querySelector('[data-plan]')?.addEventListener('click', (e) => {
@@ -244,7 +249,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
   // north-up view of the whole country, filling the screen
   function overview() {
     const [x, z] = toXZ(64.55, 41.25);
-    Object.assign(world.goal, { tx: x, tz: z, ty: groundY(x, z), az: 0, el: 62, shift: 0, dist: fitDist() });
+    Object.assign(world.goal, { tx: x, tz: z, ty: groundY(x, z), az: 0, el: 62, shift: 0, shiftY: 0, dist: fitDist() });
   }
   const constrain = () => {
     const g = world.goal;
@@ -288,7 +293,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     const [x, z] = toXZ(it.ll[0], it.ll[1]);
     enter(true);
     const g = world.goal;
-    Object.assign(g, { tx: x, tz: z, dist: dist ?? it.dist, el: clamp(g.el, 45, 70), az: clamp(((g.az + 540) % 360) - 180, -30, 30), shift: 0 });
+    Object.assign(g, { tx: x, tz: z, dist: dist ?? it.dist, el: clamp(g.el, 45, 70), az: clamp(((g.az + 540) % 360) - 180, -30, 30), shift: 0, shiftY: innerWidth < 700 ? 0.22 : 0 });
     constrain();
     if (it.type === 'city') {
       bus.dispatchEvent(new CustomEvent('region', { detail: it.key }));
@@ -314,7 +319,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     else it = { type: 'town', name: d.name, ll: d.ll, dist: d.dist, w: world.worldAt(d.ll[0], d.ll[1], 0.4) };
     if (!it) return;
     flyTo(it);
-    openCard(it);
+    openCard(it, { peek: it.type === 'city' });
   });
 
   // ── Pointer: hover, click, orbit ──

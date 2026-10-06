@@ -666,5 +666,1515 @@
    "city": "Карши",
    "cityUz": "Qarshi"
   }
+ ],
+ "chirchiq": [
+  {
+   "n": "Korzinka · Chirchik",
+   "au": "",
+   "nr": "Корзинка — Чирчик",
+   "a": "проспект А.Навоий, 22.",
+   "kind": "korzinka",
+   "city": "Чирчик",
+   "cityUz": "Chirchiq"
+  },
+  {
+   "n": "Korzinka · Chirchik park",
+   "au": "",
+   "nr": "Корзинка — Чирчик парк",
+   "a": "МФЙ (махалля) Бирлик, ул.А.Навои, дом 447",
+   "kind": "korzinka",
+   "city": "Чирчик",
+   "cityUz": "Chirchiq"
+  },
+  {
+   "n": "Korzinka · Chirchik Urmon",
+   "au": "",
+   "nr": "Корзинка — Чирчик Урмон",
+   "a": "улица Амира Темура, махалля Кимёгар",
+   "kind": "korzinka",
+   "city": "Чирчик",
+   "cityUz": "Chirchiq"
+  }
+ ],
+ "olmaliq": [
+  {
+   "n": "Korzinka · Almalik",
+   "au": "",
+   "nr": "Корзинка — Алмалык",
+   "a": "ул. Амира Тимура, 20.",
+   "kind": "korzinka",
+   "city": "Алмалык",
+   "cityUz": "Olmaliq"
+  },
+  {
+   "n": "Korzinka · Almalik-2",
+   "au": "",
+   "nr": "Корзинка — Алмалык-2",
+   "a": "Алмалык улица Эхтиром 5 дом",
+   "kind": "korzinka",
+   "city": "Алмалык",
+   "cityUz": "Olmaliq"
+  }
+ ],
+ "angren": [
+  {
+   "n": "Korzinka · Angren",
+   "au": "",
+   "nr": "Корзинка — Ангрен",
+   "a": "ул. Навоий, 1.",
+   "kind": "korzinka",
+   "city": "Ангрен",
+   "cityUz": "Angren"
+  },
+  {
+   "n": "Korzinka · Angren 5/1 kvartal",
+   "au": "",
+   "nr": "Корзинка — Ангрен 5/1 квартал",
+   "a": "МСГ «Боботог», 25.",
+   "kind": "korzinka",
+   "city": "Ангрен",
+   "cityUz": "Angren"
+  },
+  {
+   "n": "Korzinka · Axangaran Amir Temur, 61",
+   "au": "",
+   "nr": "Корзинка — Ахангаран Амир Темур, 61",
+   "a": "«Янгиабад», улица Амира Темура, 61",
+   "kind": "korzinka",
+   "city": "Ангрен",
+   "cityUz": "Angren"
+  }
+ ],
+ "yangiyol": [
+  {
+   "n": "Korzinka · Yangiyul",
+   "au": "",
+   "nr": "Корзинка — Янгиюль",
+   "a": "г. Янги йул, р-н Нурафшан, Навруз РМС, ул. Олимжона.",
+   "kind": "korzinka",
+   "city": "Янгиюль",
+   "cityUz": "Yangiyo'l"
+  }
+ ],
+ "bekobod": [
+  {
+   "n": "Korzinka · Bekabad-2",
+   "au": "",
+   "nr": "Корзинка — Бекабад-2",
+   "a": "г. Бекабад, Пахтакор МФЙ",
+   "kind": "korzinka",
+   "city": "Бекабад",
+   "cityUz": "Bekobod"
+  }
+ ],
+ "toshkent": [
+  {
+   "n": "Korzinka · Nazarbek",
+   "au": "",
+   "nr": "Корзинка — Назарбек",
+   "a": "Зангиотинский район, проспект Назарбека, 12.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Keles",
+   "au": "",
+   "nr": "Корзинка — Келес",
+   "a": "г.Келес, МФЙ «Окибат», ул. Келес йўли.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Turkmenskiy",
+   "au": "",
+   "nr": "Корзинка — Туркменский",
+   "a": "ул. Сайрам, дом 41",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Elbek",
+   "au": "",
+   "nr": "Корзинка — Эльбек",
+   "a": "Яшнабадский район, улица Карасу 36.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ziyolilar",
+   "au": "",
+   "nr": "Корзинка — Зиёлилар",
+   "a": "Г. Ташкент, Мирзо-Улугбекский район, пересечение улиц Зиёлилар и Сайрам.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kuylyuk",
+   "au": "",
+   "nr": "Корзинка — Куйлюк",
+   "a": "Массив Куйлюк-1, пересечение Ташкентской кольцевой дороги и ул. Мунис.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kuylyuk tsentr",
+   "au": "",
+   "nr": "Корзинка — Куйлюк центр",
+   "a": "Яшнабадский район, Ташкентская кольцевая автомобильная дорога.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bunyodkor",
+   "au": "",
+   "nr": "Корзинка — Бунёдкор",
+   "a": "Чиланзар 6 кв., пересечение проспекта Бунедкор и ул. Чупон ота.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kamolon",
+   "au": "",
+   "nr": "Корзинка — Камолон",
+   "a": "ул. Бунёдкор, 4А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sebzar",
+   "au": "",
+   "nr": "Корзинка — Себзар",
+   "a": "Ц-17/18, 52 дом.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangi Sebzor",
+   "au": "",
+   "nr": "Корзинка — Янги Себзор",
+   "a": "Алмазарский район, массив Себзар, 4Б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Beshkayragach",
+   "au": "",
+   "nr": "Корзинка — Бешкайрагач",
+   "a": "ул. Кукча Дарвоза, 628.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Salom",
+   "au": "",
+   "nr": "Корзинка — Салом",
+   "a": "ул. Буюк Ипак Йули, 158А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Next",
+   "au": "",
+   "nr": "Корзинка — Next",
+   "a": "Улица Бабура, 6",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Riyoziy",
+   "au": "",
+   "nr": "Корзинка — Риёзий",
+   "a": "Массив Риёзий, ул. Олтинтепа, 7.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Uchtepa",
+   "au": "",
+   "nr": "Корзинка — Учтепа",
+   "a": "ул. Фозилтепа, 93.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Katartal Atlas",
+   "au": "",
+   "nr": "Корзинка — Катартал Атлас",
+   "a": "г. Ташкент , Чиланзарский район , улица Катартал 28",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · OAZIS",
+   "au": "",
+   "nr": "Корзинка — OAZIS",
+   "a": "г. Ташкент Учтепа, пересечение улиц Фарход и Лутфий, дом 21А, ТЦ OAZIS.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sarikulka",
+   "au": "",
+   "nr": "Корзинка — Сарыкулька",
+   "a": "Мирабадский р-н, ул. Саракулька, 13, 13а.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sayram",
+   "au": "",
+   "nr": "Корзинка — Сайрам",
+   "a": "Юнус Абадский р-н, 19-квартал, ул. Юнус Ота 15.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Aeroport",
+   "au": "",
+   "nr": "Корзинка — Аэропорт",
+   "a": "ул. Кичик Халка Йули, 87А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Abay",
+   "au": "",
+   "nr": "Корзинка — Абай",
+   "a": "ул. Абая, 13.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Rakat",
+   "au": "",
+   "nr": "Корзинка — Ракат",
+   "a": "ул. Абдуллаева, 9.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karatash",
+   "au": "",
+   "nr": "Корзинка — Караташ",
+   "a": "ул. Караташ, 2.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Azimova",
+   "au": "",
+   "nr": "Корзинка — Азимова",
+   "a": "ул. Садык Азимова, 81.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Azimova, Nur",
+   "au": "",
+   "nr": "Корзинка — Азимова, Нур",
+   "a": "ул. улица Садыка Азимова, 35",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · TTZ",
+   "au": "",
+   "nr": "Корзинка — ТТЗ",
+   "a": "ул. Юзрабод, 1А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karasu",
+   "au": "",
+   "nr": "Корзинка — Карасу",
+   "a": "ул.Ш.Бурханова, 23.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karasu Plaza",
+   "au": "",
+   "nr": "Корзинка — Карасу Плаза",
+   "a": "Мирзо-Улугбекский район, Карасу 1, дом 28-Б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Oltintepa",
+   "au": "",
+   "nr": "Корзинка — Олтинтепа",
+   "a": "ул. Алтынтепа, 3А/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangi xaet",
+   "au": "",
+   "nr": "Корзинка — Янги хает",
+   "a": "Шокирарык, 268",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · TRK Vega Centre",
+   "au": "",
+   "nr": "Корзинка — ТРК Vega Centre",
+   "a": "Улица Шота Руставели, 150.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bektemir",
+   "au": "",
+   "nr": "Корзинка — Бектемир",
+   "a": "Бектемирский район, улица Хусейна Байкаро, дом 37А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Samara",
+   "au": "",
+   "nr": "Корзинка — Самара",
+   "a": "Юнусабадский район, улица Янги Юнусобод, дом 7А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Alayskiy",
+   "au": "",
+   "nr": "Корзинка — Алайский",
+   "a": "ул. Амира Темура, 40.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Djararik",
+   "au": "",
+   "nr": "Корзинка — Джарарык",
+   "a": "Шайхантахурский район, на пересечении улиц Джарарык и Якуба Зияева.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Mashxadiy",
+   "au": "",
+   "nr": "Корзинка — Машхадий",
+   "a": "Яшнабадский район, проспект Мирзо Улугбека, 10-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sputnik",
+   "au": "",
+   "nr": "Корзинка — Спутник",
+   "a": "Сергелийский р-н, массив Спутник-16, ул. Кургонтепа, 11.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · SAMPI",
+   "au": "",
+   "nr": "Корзинка — САМПИ",
+   "a": "Юнусабадский район, улица Богишамол, 260-А, ТРЦ САМПИ бозори",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ts-5",
+   "au": "",
+   "nr": "Корзинка — Ц-5",
+   "a": "Ц-5, ул. Шарафа Рашидова, 71",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Aviasozlar",
+   "au": "",
+   "nr": "Корзинка — Авиасозлар",
+   "a": "Пересечение улиц Авиасозлар и Бирлашган.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karasaray",
+   "au": "",
+   "nr": "Корзинка — Карасарай",
+   "a": "Алмазарский район, махалля Карасарай, дом 91-А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Amore mio",
+   "au": "",
+   "nr": "Корзинка — Аморе мио",
+   "a": "Садыка Азимова, 51",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Koxinur",
+   "au": "",
+   "nr": "Корзинка — Кохинур",
+   "a": "Чиланзарский район, десятый квартал.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Golden Life",
+   "au": "",
+   "nr": "Корзинка — Голден Лифе",
+   "a": "Улица Мирзы Турсунзаде, 14 цокольный этаж",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ziyolilar",
+   "au": "",
+   "nr": "Корзинка — Зиёлилар",
+   "a": "Мирзо-Улугбекский район, пересечение улиц Зиёлилар и Сайрам.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Lunacharskiy",
+   "au": "",
+   "nr": "Корзинка — Луначарский",
+   "a": "г. Ташкент Мирзо-Улугбекский район, улица Буюк Ипак йули, дом 299",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Algoritm",
+   "au": "",
+   "nr": "Корзинка — Алгоритм",
+   "a": "Учтепинский район, Алгоритм, 31 квартал.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ipakchi",
+   "au": "",
+   "nr": "Корзинка — Ипакчи",
+   "a": "Шайхантахурский район, улица Ипакчи",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Globus",
+   "au": "",
+   "nr": "Корзинка — Глобус",
+   "a": "Учтепинский район, улица Заргарлик 10A.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Shtab",
+   "au": "",
+   "nr": "Корзинка — Штаб",
+   "a": "Учтепинский район, улица Бешкайрагач, дом 102А",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Beruni",
+   "au": "",
+   "nr": "Корзинка — Беруни",
+   "a": "Алмазарский район, на пересечении улиц Фараби и Университетской.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Depo",
+   "au": "",
+   "nr": "Корзинка — Депо",
+   "a": "Учтепинский район, улица Катта Каъни, 3.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bashlik",
+   "au": "",
+   "nr": "Корзинка — Башлык",
+   "a": "Яккасарайский район, массив Башлык, ул.Кушбеги",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Guncha",
+   "au": "",
+   "nr": "Корзинка — Гунча",
+   "a": "Алмазарский район, массив Беруний, Б-1, дом 1Б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Shaxristan",
+   "au": "",
+   "nr": "Корзинка — Шахристан",
+   "a": "Юнусабадский район, проспект Амира Темура, 112-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Aviator",
+   "au": "",
+   "nr": "Корзинка — Авиатор",
+   "a": "Яшнабадский район,  Паркент, 180/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Jurjoni",
+   "au": "",
+   "nr": "Корзинка — Журжони",
+   "a": "Учтепинский р-н, махалля Журжони, ул.Ю.Саккокий",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bisyor",
+   "au": "",
+   "nr": "Корзинка — Бисьёр",
+   "a": "Чилонзарский район, массив Алгоритм, ул.Кувунчи, дом 3 Б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karakamish 2/5",
+   "au": "",
+   "nr": "Корзинка — Каракамыш 2/5",
+   "a": "Алмазарский район, махалля Шодиёна, улица Каракамыш-2, дом 17",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sergeli-5",
+   "au": "",
+   "nr": "Корзинка — Сергели-5",
+   "a": "Сергелийский район,  Тураб Тула, 57",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bodamzar",
+   "au": "",
+   "nr": "Корзинка — Бодамзар",
+   "a": "г, Ташкент, Юнусабадский район, ул. Чингиза Айтматова, 71А",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Buz Bazar",
+   "au": "",
+   "nr": "Корзинка — Буз Базар",
+   "a": "Мирзо Улугбекский район, ул. Сайрам, дом 41",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kazi maxallya",
+   "au": "",
+   "nr": "Корзинка — Казы махалля",
+   "a": "Юнусабадский район, ул Фирдавсий, 26",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Alfraganus",
+   "au": "",
+   "nr": "Корзинка — Алфраганус",
+   "a": "Мирабадский район,  Кушкуприк, 30",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Labzak",
+   "au": "",
+   "nr": "Корзинка — Лабзак",
+   "a": "Шайхантахурский район, улица Лабзак, 92-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Almazar",
+   "au": "",
+   "nr": "Корзинка — Алмазар",
+   "a": "Карасарай, переулок Калинин-Мавзук, дом 72 Ташкент, 10-й проезд Сагбан, 81",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chilanzar-8",
+   "au": "",
+   "nr": "Корзинка — Чиланзар-8",
+   "a": "Чиланзарский район, улица Чапаната, 57-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Zargarlik",
+   "au": "",
+   "nr": "Корзинка — Заргарлик",
+   "a": "Учтепинский район, махалля Ширин, 26 квартал , 9А",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chig‘atoy",
+   "au": "",
+   "nr": "Корзинка — Chig‘atoy",
+   "a": "махалля Чигатой Дарвоза, дом 7-а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Novza",
+   "au": "",
+   "nr": "Корзинка — Новза",
+   "a": "Чиланзарский р-н, ул,Мукимий, дом 1-а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Tuzel",
+   "au": "",
+   "nr": "Корзинка — Тузель",
+   "a": "Г. Ташкент, Яшнабадский район, массив Тузель-2, Янгиабадский базар",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Oybek",
+   "au": "",
+   "nr": "Корзинка — Ойбек",
+   "a": "Мирабадский район, улица Фидокор (бывшая улица Чехова), 30",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sofiya",
+   "au": "",
+   "nr": "Корзинка — София",
+   "a": "Юнусабадский район, улицы Адхама Рахмата, 12-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karakamish 1/3",
+   "au": "",
+   "nr": "Корзинка — Каракамыш 1/3",
+   "a": "Каракамыш 1/3, улица Сагбан, 35А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Dombrabad",
+   "au": "",
+   "nr": "Корзинка — Домбрабад",
+   "a": "Чиланзарский район, ул.Чиланзарская, дом 88",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sergeli-8",
+   "au": "",
+   "nr": "Корзинка — Сергели-8",
+   "a": "Сергелийский район, ул. Янги Сергели, 8-й квартал",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · stantsiya Sergeli - 4",
+   "au": "",
+   "nr": "Корзинка — станция Сергели - 4",
+   "a": "Янгихаетский район, махалля Ибрат, 71-й дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chilanzar - 26",
+   "au": "",
+   "nr": "Корзинка — Чиланзар - 26",
+   "a": "Учтепинский район, улица Лутфи, 26-й квартал",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangiabad",
+   "au": "",
+   "nr": "Корзинка — Янгиабад",
+   "a": "Яшнабадский район, улица Шахимардон, дом 84",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yugnakiy",
+   "au": "",
+   "nr": "Корзинка — Югнакий",
+   "a": "Мирзо Улугбекский район, массив Ахмад Югнакий",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · IT Park",
+   "au": "",
+   "nr": "Корзинка — IT Парк",
+   "a": "Мирзо-Улугбекский район,  Тепамасжид, 13/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Mega Planet",
+   "au": "",
+   "nr": "Корзинка — Мега Планет",
+   "a": "Юнусабадский район, улица Ахмада Дониша, 2б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Buston",
+   "au": "",
+   "nr": "Корзинка — Бустон",
+   "a": "Шайхантахурский район, ул. Зафарабад, 12/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Turkiston",
+   "au": "",
+   "nr": "Корзинка — Туркистон",
+   "a": "Юнусабадский район, улица Мойкурган, 2-4-6-8 дом",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Karasaray Darvoza",
+   "au": "",
+   "nr": "Корзинка — Карасарай Дарвоза",
+   "a": "Гуруч Арик, 91/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Al-Ferganiy",
+   "au": "",
+   "nr": "Корзинка — Аль-Ферганий",
+   "a": "Сергелийский район, массив Спутник-10, улица Смоленская",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Park in Mall",
+   "au": "",
+   "nr": "Корзинка — Park in Mall",
+   "a": "Шайхантахурский район, пересечение улиц Заргар и Батыра Закирова",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · High Town Mall",
+   "au": "",
+   "nr": "Корзинка — High Town Mall",
+   "a": "Юнусабадский район, улица Янгишахар, 67",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Majnuntol",
+   "au": "",
+   "nr": "Корзинка — Мажнунтол",
+   "a": "Бектемирский район, Ахангаранский проспект, дом 141",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ibn Sino Mall",
+   "au": "",
+   "nr": "Корзинка — Ibn Sino Mall",
+   "a": "Шайхантахурский район, МФЙ Шодлик, массив Ибн Сино-2, 18",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Compass Mall",
+   "au": "",
+   "nr": "Корзинка — Compass Mall",
+   "a": "Большая кольцевая дорога, 17",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Konstitutsiya",
+   "au": "",
+   "nr": "Корзинка — Конституция",
+   "a": "Яккасарайский район, улица Юсуф Хос Ходжиба, 73",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yunusabad-12",
+   "au": "",
+   "nr": "Корзинка — Юнусабад-12",
+   "a": "Юнусабадский район, проспект Амира Темура, 29",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Shark Tonggi",
+   "au": "",
+   "nr": "Корзинка — Шарк Тонгги",
+   "a": "Чиланзарский район,  Заргарлик, 30а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Galaba",
+   "au": "",
+   "nr": "Корзинка — Галаба",
+   "a": "Алмазарский район, массив Каракамыш 2/4, 55",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Oktepa Chilonzor",
+   "au": "",
+   "nr": "Корзинка — Октепа Чилонзор",
+   "a": "Чиланзарский район, Чиланзар 7-й квартал,",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yunus Rajabiy",
+   "au": "",
+   "nr": "Корзинка — Юнус Ражабий",
+   "a": "Яккасарайский район, Юнуса Раджаби, 60/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Xusniobod",
+   "au": "",
+   "nr": "Корзинка — Хусниобод",
+   "a": "Юнусабадский район, массив-2, дом 39а.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chilonzor 17",
+   "au": "",
+   "nr": "Корзинка — Чилонзор 17",
+   "a": "Чиланзар 17-й квартал, 40/2",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sharaf Rashidov",
+   "au": "",
+   "nr": "Корзинка — Шараф Рашидов",
+   "a": "ул. Яккачинор, 3А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Shayxontoxur",
+   "au": "",
+   "nr": "Корзинка — Шайхонтохур",
+   "a": "Шайхонтохурский район, Ц-13, микрорайон Лабзак, 28.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Skopus Mall",
+   "au": "",
+   "nr": "Корзинка — Скопус Малл",
+   "a": "Учтепинский р-н, улица Кичик халка, 25",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Nur",
+   "au": "",
+   "nr": "Корзинка — Нур",
+   "a": "ул. улица Садыка Азимова, 35",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bogishamol",
+   "au": "",
+   "nr": "Корзинка — Богишамол",
+   "a": "Юнусабадский район, Богишамол 90",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ts6",
+   "au": "",
+   "nr": "Корзинка — Ц6",
+   "a": "Юнусабадский район,  Осиё улица, 85а/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Turkiston-2",
+   "au": "",
+   "nr": "Корзинка — Туркистон-2",
+   "a": "Юнусабадский район, 6-ой квартал, 46",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Keles Yuli",
+   "au": "",
+   "nr": "Корзинка — Келес Йули",
+   "a": "Алмазарский район, улица Келес Йули, 166",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Ibn Sino",
+   "au": "",
+   "nr": "Корзинка — Ибн Сино",
+   "a": "Шайхонтахурский район, массив Ибн Сино 1, 8а.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Begubor",
+   "au": "",
+   "nr": "Корзинка — Бегубор",
+   "a": "Юнусабадский район, 18 квартал, 54",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Xosiatli",
+   "au": "",
+   "nr": "Корзинка — Хосиатли",
+   "a": "Яшнабадский район ,улица Иззат 26",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Feruza 4",
+   "au": "",
+   "nr": "Корзинка — Феруза 4",
+   "a": "Мирзо-Улугбекский район,  Улица Феруза, 24",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Asaka",
+   "au": "",
+   "nr": "Корзинка — Асака",
+   "a": "Мирзо-Улугбекский район, улица Асака, 17",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sergeli",
+   "au": "",
+   "nr": "Корзинка — Сергели",
+   "a": "ул. Лутфкор.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yunusabad",
+   "au": "",
+   "nr": "Корзинка — Юнусабад",
+   "a": "Юнусабад 7, ул. Кулоктепа.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Mercato",
+   "au": "",
+   "nr": "Корзинка — Mercato",
+   "a": "ул. Кичик Халка Йули, 57.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Shedevr",
+   "au": "",
+   "nr": "Корзинка — Shedevr",
+   "a": "ул. Навои, Ц4, 11Б.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · A. Donish",
+   "au": "",
+   "nr": "Корзинка — А. Дониш",
+   "a": "Юнус Абадский р-н, 14-й квартал, ул. А.Дониша, 62.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Marifat",
+   "au": "",
+   "nr": "Корзинка — Марифат",
+   "a": "Яшнабадский район, ул.Боку, 85",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Baynalminal",
+   "au": "",
+   "nr": "Корзинка — Байналминал",
+   "a": "район Миробод, улица Нукус, 89",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Sarikul",
+   "au": "",
+   "nr": "Корзинка — Сарикул",
+   "a": "Мирабадский район, улица Абдурауфа Фитрата, 33",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bexizor",
+   "au": "",
+   "nr": "Корзинка — Бехизор",
+   "a": "Яшнабадский район, Махаллинский сход граждан Бехизор",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Xadra",
+   "au": "",
+   "nr": "Корзинка — Хадра",
+   "a": "Шайхонтохурский район, Массив Хадра 25А.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Beltepa",
+   "au": "",
+   "nr": "Корзинка — Бельтепа",
+   "a": "Шайхантахурский район, пересечение улиц Бельтепа и Фаробий",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Zamondosh 2",
+   "au": "",
+   "nr": "Корзинка — Замондош 2",
+   "a": "Алмазарский район, Сагбон, 289",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangi Ravon",
+   "au": "",
+   "nr": "Корзинка — Янги Равон",
+   "a": "Янгихаётский район,  Шокирарык, 268",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangi Tashkent",
+   "au": "",
+   "nr": "Корзинка — Янги Ташкент",
+   "a": "Алмазарский район, улица Келес Йули, 20",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Xabib Abdullaev",
+   "au": "",
+   "nr": "Корзинка — Хабиб Абдуллаев",
+   "a": "Мирзо-Улугбекский район, улица Мирзо Улугбека , 91А",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yangi Xayot",
+   "au": "",
+   "nr": "Корзинка — Янги Хаёт",
+   "a": "Г. Ташкент , Янгихаётский Район , 8-й строительный участок ,39",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Islom Ata",
+   "au": "",
+   "nr": "Корзинка — Ислом Ата",
+   "a": "Алмазарский район, Ислом ота МСГ, ул.Олтинсой, дом 1/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chiniobad",
+   "au": "",
+   "nr": "Корзинка — Чиниобад",
+   "a": "Алмазарский район, ул.Сагбан 30 берк кучаси, дом 8-а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Zamondosh",
+   "au": "",
+   "nr": "Корзинка — Замондош",
+   "a": "Алмазарский район, ул.Шифонур, дом 16",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Zarbdor",
+   "au": "",
+   "nr": "Корзинка — Зарбдор",
+   "a": "г.Ташкент , Янгихаётский район, улица Дустлик, 1.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Roxat",
+   "au": "",
+   "nr": "Корзинка — Рохат",
+   "a": "Бектемирский район, Рохат МФИ, д. 6а.",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kuvat motors",
+   "au": "",
+   "nr": "Корзинка — Kуват моторс",
+   "a": "",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Xabibiy",
+   "au": "",
+   "nr": "Корзинка — Хабибий",
+   "a": "Сергелийский район, массив Сергели 5 , 50/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · «Buston»,",
+   "au": "",
+   "nr": "Корзинка — «Бустон»,",
+   "a": "улица Аль-Хорезми 60",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Nishon",
+   "au": "",
+   "nr": "Корзинка — Nishon",
+   "a": "Чиланзар, 21-й квартал",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Poselok Ulugbek",
+   "au": "",
+   "nr": "Корзинка — Поселок Улугбек",
+   "a": "Мирзо-Улугбекский район, городской поселок Улугбек",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Iyk-Ata",
+   "au": "",
+   "nr": "Корзинка — Ийк-Ата",
+   "a": "Бектемирский район, МСГ Ийк-Ата, улица Тараккиет, 1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Iltifot",
+   "au": "",
+   "nr": "Корзинка — Илтифот",
+   "a": "город Ташкент, Яшнабадский район, МСГ «Илтифот»",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Bexizor",
+   "au": "",
+   "nr": "Корзинка — Бехизор",
+   "a": "Яшнабадский район,Махаллинский сход граждан Бехизор",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Axmad Yugnaki",
+   "au": "",
+   "nr": "Корзинка — Ахмад Югнаки",
+   "a": "Мирзо-Улугбекский район, МСГ «Ахмада Югнаки», 24а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Birlik",
+   "au": "",
+   "nr": "Корзинка — Бирлик",
+   "a": "Учтепинский район, МСГ «Бирлик», 21-массив, 5б",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yusuf Sakkokiy-2",
+   "au": "",
+   "nr": "Корзинка — Юсуф Саккокий-2",
+   "a": "улица Юсуфа Саккокий, 116/15",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Islom Ata",
+   "au": "",
+   "nr": "Корзинка — Ислом Ата",
+   "a": "Ислом ота МСГ, ул.Олтинсой, дом 1/1",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Yusuf Sakkokiy",
+   "au": "",
+   "nr": "Корзинка — Юсуф Саккокий",
+   "a": "Учтепинский район, улица Юсуфа Саккокий, 116/7",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Chiltugan 5a",
+   "au": "",
+   "nr": "Корзинка — Чильтуган 5а",
+   "a": "Алмазарский район, ул. чилтогана, дом 5-а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Universitet",
+   "au": "",
+   "nr": "Корзинка — Университет",
+   "a": "Алмазарский район, улица Мирзо Голиб",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Kamolot",
+   "au": "",
+   "nr": "Корзинка — Камолот",
+   "a": "г.Ташкент , Мирзо-Улугбекский район, улица Феруза, 24",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  },
+  {
+   "n": "Korzinka · Beruniy 3A",
+   "au": "",
+   "nr": "Корзинка — Beruniy 3A",
+   "a": "улица Беруни, 3а",
+   "kind": "korzinka",
+   "city": "Ташкент",
+   "cityUz": "Toshkent"
+  }
+ ],
+ "zangiota": [
+  {
+   "n": "Korzinka · Eshonguzar",
+   "au": "",
+   "nr": "Корзинка — Эшонгузар",
+   "a": "Зангиатинский район, Эшонгузар КФЙ, ул. Мустакиллик",
+   "kind": "korzinka",
+   "city": "",
+   "cityUz": ""
+  },
+  {
+   "n": "Korzinka · Zangiota",
+   "au": "",
+   "nr": "Корзинка — Зангиота",
+   "a": "Зангиатинский район, махалля Гульбаг, ул. А.Темура 48",
+   "kind": "korzinka",
+   "city": "",
+   "cityUz": ""
+  },
+  {
+   "n": "Korzinka · Erkin",
+   "au": "",
+   "nr": "Корзинка — Эркин",
+   "a": "Зангиатинский район, махалля Эркин, ул. Камолиддина Бекзода, дом 81",
+   "kind": "korzinka",
+   "city": "",
+   "cityUz": ""
+  }
+ ],
+ "chorvoq": [
+  {
+   "n": "Korzinka · Charvak",
+   "au": "",
+   "nr": "Корзинка — Чарвак",
+   "a": "Бостанлыкский район, махалля Ходжикент",
+   "kind": "korzinka",
+   "city": "",
+   "cityUz": ""
+  },
+  {
+   "n": "Korzinka · Bostonlik",
+   "au": "",
+   "nr": "Корзинка — Бостонлык",
+   "a": "Бустанлыкский район, Думалок МФЙ, ул. Гунавша, 22",
+   "kind": "korzinka",
+   "city": "",
+   "cityUz": ""
+  }
  ]
 }

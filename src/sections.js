@@ -281,6 +281,25 @@ export function initSections({ bus, places }) {
         </button></li>`).join('')}</ol>
         <p class="rg-total tnum"><span>${esc(t('regions.total'))}</span><b>${tot.screens}</b> ${esc(t('map.screens'))} · <b>${tot.venues}</b> ${esc(t('map.venues'))} · <b>${num(tot.daily)}</b> ${esc(t('regions.visitors'))}</p>
         <div class="gallery" data-gallery>${['network-1', 'network-2', 'network-3'].map((n) => `<figure>${img(`rg/${n}`, t('card.networkPhoto'))}<figcaption>${esc(t('card.networkPhoto'))}</figcaption></figure>`).join('')}</div>`;
+    } else if (rgKey === 'toshkent') {
+      // Tashkent is the Korzinka and HoReCa networks' home rather than a regional row
+      const pv = placed.get('toshkent') || [];
+      const kz = pv.filter((v) => v.k === 'korzinka').length;
+      const hr = pv.filter((v) => v.k === 'cafe').length;
+      box.innerHTML = `
+        <figure class="rg-hero" data-gallery>${img('city-toshkent', t('cities.toshkent'))}
+          <figcaption class="rg-hero-cap"><span>${esc(t('regions.landmark'))}</span><b>${esc(t('cities.toshkent'))}<small>TAS</small></b></figcaption>
+          ${CITY_PHOTOS.toshkent ? credit(CITY_PHOTOS.toshkent) : ''}</figure>
+        <div class="rg-stats">
+          <div class="rg-stat"><b class="tnum">${kz || '—'}</b><span>Korzinka</span></div>
+          <div class="rg-stat"><b class="tnum">${hr || '—'}</b><span>HoReCa</span></div>
+          <div class="rg-stat"><b class="tnum">${pv.length || '—'}</b><span>${esc(t('regions.placed'))}</span></div>
+        </div>
+        ${pv.length ? `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.placed'))} <small>${pv.length}</small></h4>
+          <ol>${pv.map((v) => `<li><button type="button" data-venue="${v.i}"><b>${esc(lang().code === 'ru' && v.nr ? v.nr : place(v.n))}</b><span>${esc(KIND[v.k] || t('card.kindCafe'))} · ${esc(lang().code === 'ru' ? v.ar || v.a : v.a || place(v.ar))}${v.how === 'street' || v.how === 'landmark' ? ' ≈' : ''}</span></button></li>`).join('')}</ol>
+          <button type="button" class="rg-more">${esc(t(rgOpen ? 'regions.collapse' : 'regions.expand'))}</button></div>` : ''}`;
+      box.querySelector('.rg-more')?.addEventListener('click', () => { rgOpen = !rgOpen; renderCity(); });
+      box.querySelectorAll('[data-venue]').forEach((b) => b.addEventListener('click', () => bus.dispatchEvent(new CustomEvent('venuecard', { detail: { key: 'toshkent', i: +b.dataset.venue } }))));
     } else {
       const r = REGIONS.rows.find((x) => x.key === rgKey);
       const ph = CITY_PHOTOS[r.key];
@@ -304,7 +323,7 @@ export function initSections({ bus, places }) {
         </div></div>` : ''}
         ${placed.has(r.key) ? (() => {
           const pv = placed.get(r.key);
-          const nm = (v) => (lang().code === 'ru' && v.nr ? v.nr : v.n);
+          const nm = (v) => (lang().code === 'ru' && v.nr ? v.nr : place(v.n));
           const ad = (v) => (lang().code === 'ru' ? v.ar || v.a : v.a || place(v.ar));
           return `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.placed'))} <small>${pv.length}</small></h4>
           <ol>${pv.map((v) => `<li><button type="button" data-venue="${v.i}"><b>${esc(nm(v))}</b><span>${esc(KIND[v.k] || t('card.kindCafe'))} · ${esc(ad(v))}${v.how === 'street' ? ' ≈' : ''}</span></button></li>`).join('')}</ol>
@@ -333,6 +352,14 @@ export function initSections({ bus, places }) {
     box.classList.add('is-swap');
   };
   const pickCity = (key, { scroll = false } = {}) => {
+    // on a phone the plate covers the chart: the city opens full screen in the explorer instead, its card at the foot
+    if (key !== 'all' && matchMedia('(max-width: 960px)').matches) {
+      rgKey = key;
+      document.querySelectorAll('.rg-chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.key === key)));
+      renderCity();
+      bus.dispatchEvent(new CustomEvent('flyto', { detail: { type: 'city', key } }));
+      return;
+    }
     rgKey = key;
     rgOpen = false;
     document.querySelectorAll('.rg-chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.key === key)));
@@ -358,6 +385,7 @@ export function initSections({ bus, places }) {
         <p class="rg-pick-k">${esc(t('regions.pick'))}</p>
         <div class="rg-chips">
           <button type="button" class="rg-chip" data-key="all" aria-pressed="${rgKey === 'all'}">${esc(t('regions.all'))}</button>
+          <button type="button" class="rg-chip" data-key="toshkent" aria-pressed="${rgKey === 'toshkent'}">${esc(t('cities.toshkent'))}<small>TAS</small></button>
           ${REGIONS.rows.map((r) => `<button type="button" class="rg-chip" data-key="${r.key}" aria-pressed="${rgKey === r.key}">${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</button>`).join('')}
         </div>
       </div>

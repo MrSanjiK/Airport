@@ -3,6 +3,13 @@ import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { toXZ, EXAG } from './geo.js';
+import SITES from '../data/sites.json';
+
+// what a pick shows: a site on its own, or a group of sites (the Tashkent region's towns)
+export const GROUPS = {
+  nurafshon: ['chirchiq', 'olmaliq', 'angren', 'yangiyol', 'bekobod', 'chorvoq', 'gazalkent', 'qibray', 'zangiota'],
+};
+export { SITES };
 
 /* ───── City models for the regional network ─────
    public/data/city/<key>.json (scripts/data/cities.py): OSM streets, buildings, parks and water around the centre,
@@ -181,28 +188,57 @@ export function createCityLayer({ scene, sample, terrain }) {
   };
 
   return {
-    has: (key) => ['andijon', 'fargona', 'namangan', 'margilon', 'asaka', 'qoqon', 'samarqand', 'buxoro', 'jizzax', 'qarshi'].includes(key),
+    has: (key) => !!(key && (SITES[key] || GROUPS[key])),
     load,
-    // show a city (or none); the model and the levelled plate fade together
+    // the site whose area holds a point (lon, lat), for the explorer's automatic models
+    siteAt(lon, lat) {
+      let best = null;
+      let bd = Infinity;
+      for (const [k, [x, y, r]] of Object.entries(SITES)) {
+        const d = Math.hypot((lon - x) * 85, (lat - y) * 111);
+        if (d < r + 1.5 && d < bd) { best = k; bd = d; }
+      }
+      return best;
+    },
+    // show a site or group (or none); the models and the levelled plates fade together
     async show(key) {
       if (key === fade.key) return active;
       fade.key = key;
       if (!key) return null;
-      const c = await load(key);
-      if (fade.key !== key) return null;
-      active = c;
+      const keys = GROUPS[key] || [key];
+      const parts = (await Promise.all(keys.map(load))).filter(Boolean);
+      if (fade.key !== key || !parts.length) return null;
+      const venues = parts.flatMap((c) => c.venues.map((v) => ({ ...v, site: c.key })));
+      venues.forEach((v, i) => (v.i = i));
+      const lon = parts.reduce((a, c) => a + c.center[0], 0) / parts.length;
+      const lat = parts.reduce((a, c) => a + c.center[1], 0) / parts.length;
+      active = { key, parts, venues, center: [lon, lat] };
       const u = terrain.uniforms;
-      u.uFlat.value.set(c.x, c.z, c.r * 1.05, c.y0);
-      return c;
+      parts.slice(0, 8).forEach((c, i) => u.uFlat.value[i].set(c.x, c.z, c.r * 1.05, c.y0));
+      u.uFlatN.value = Math.min(8, parts.length);
+      return active;
     },
-    get active() { return fade.key && active && groups.get(fade.key) === active ? active : null; },
+    get active() { return fade.key && active && active.key === fade.key ? active : null; },
+    // height of the chart at (x, z) once the plates are levelled, for things standing on it (the airport)
+    flatY(x, z, y) {
+      if (!active || fade.k <= 0) return y;
+      let out = y;
+      for (const c of active.parts) {
+        const d = Math.hypot(x - c.x, z - c.z);
+        const r = c.r * 1.05;
+        const t = Math.min(1, Math.max(0, (d - r) / (r * 0.9)));
+        const f = (1 - t * t * (3 - 2 * t)) * fade.k;
+        out = out + (c.y0 - out) * f;
+      }
+      return out;
+    },
     get k() { return fade.k; },
-    update(night, renderer, dt) {
-      const want = fade.key && active && groups.get(fade.key) === active ? 1 : 0;
+    update(night, renderer, dt, dist = 10) {
+      const want = this.active ? 1 : 0;
       fade.k += (want - fade.k) * Math.min(1, dt * 3.2);
       if (fade.k < 0.002 && !want) fade.k = 0;
       terrain.uniforms.uFlatK.value = fade.k;
-      groups.forEach((g) => (g.group.visible = g === active && fade.k > 0.01));
+      groups.forEach((g) => (g.group.visible = !!active && active.parts.includes(g) && fade.k > 0.01));
       if (!active) return;
       const res = renderer.getDrawingBufferSize(new THREE.Vector2());
       const dpr = renderer.getPixelRatio();
@@ -215,7 +251,8 @@ export function createCityLayer({ scene, sample, terrain }) {
       [...roadMats, canalMat].forEach((m) => {
         m.resolution.copy(res);
         m.linewidth = m.userData.w * dpr;
-        m.opacity = m.userData.o * k;
+        // seen from a regional height a town's streets would knot into a blot: they thin out with distance
+        m.opacity = m.userData.o * k * Math.min(1, Math.max(0.12, (70 - dist) / 45));
       });
       roadMats.forEach((m) => m.color.setRGB(0.086 + (0.62 - 0.086) * night, 0.231 + (0.74 - 0.231) * night, 0.404 + (0.88 - 0.404) * night));
     },

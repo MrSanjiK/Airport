@@ -3,9 +3,9 @@ import { W, D, EXAG, BBOX } from './geo.js';
 
 // Loads the packed DEM (scripts/data/pack_dem.py: 1 m steps, row deltas, split byte planes, zlib) and returns
 // a CPU sampler plus a GPU half-float texture. Heights are stored as h + 200.
-export async function loadHeights(size, onProgress) {
+export async function loadHeights(size, onProgress, request) {
   const meta = size === 2048 ? { w: 2048, h: 1357 } : { w: 1024, h: 678 };
-  const res = await fetch(`/data/dem-${size}.z`);
+  const res = await (request || fetch(`/data/dem-${size}.z`));
   const total = +res.headers.get('content-length') || 0;
   const reader = res.body.getReader();
   const chunks = [];
@@ -23,7 +23,10 @@ export async function loadHeights(size, onProgress) {
   const f32 = new Float32Array(n);
   const half = new Uint16Array(n);
   let prevRow = 0;
+  // decoded in slices with a breath between them, so the loader keeps drawing while the relief unpacks
+  const breathe = () => new Promise((r) => setTimeout(r, 0));
   for (let y = 0; y < meta.h; y++) {
+    if (y % 96 === 95) await breathe();
     let v = 0;
     for (let x = 0; x < meta.w; x++) {
       const i = y * meta.w + x;
@@ -121,7 +124,8 @@ export function buildOverlays(vec, scale) {
 const vert = /* glsl */ `
   uniform sampler2D uH;
   uniform float uExag, uFlatK;
-  uniform vec4 uFlat;
+  uniform vec4 uFlat[8];
+  uniform float uFlatN;
   varying vec2 vUv;
   varying float vH;
   varying vec3 vWorld;
@@ -132,10 +136,16 @@ const vert = /* glsl */ `
     vH = h;
     vec3 p = position;
     p.y = max(h, -60.0) / 1000.0 * uExag;
-    // uFlat = (x, z, radius, height): the city in focus is levelled so its streets and buildings sit flat on the chart
-    float f = (1.0 - smoothstep(uFlat.z, uFlat.z * 1.9, distance(p.xz, uFlat.xy))) * uFlatK;
-    p.y = mix(p.y, uFlat.w, f);
-    vFlat = f;
+    // uFlat[i] = (x, z, radius, height): every town in focus is levelled so its streets and buildings sit flat on the chart
+    float fAll = 0.0;
+    for (int i = 0; i < 8; i++) {
+      if (float(i) >= uFlatN) break;
+      vec4 fl = uFlat[i];
+      float f = (1.0 - smoothstep(fl.z, fl.z * 1.9, distance(p.xz, fl.xy))) * uFlatK;
+      p.y = mix(p.y, fl.w, f);
+      fAll = max(fAll, f);
+    }
+    vFlat = fAll;
     vec4 wp = modelMatrix * vec4(p, 1.0);
     vWorld = wp.xyz;
     gl_Position = projectionMatrix * viewMatrix * wp;
@@ -243,7 +253,8 @@ export function createTerrain(heights, overlays, { segX, segZ }) {
     uTexel: { value: new THREE.Vector2(1 / heights.w, 1 / heights.h) },
     uSlope: { value: new THREE.Vector2((EXAG / 1000) / (2 * kmPerTexX), (EXAG / 1000) / (2 * kmPerTexZ)) },
     uExag: { value: EXAG },
-    uFlat: { value: new THREE.Vector4(0, 0, 1, 0) },
+    uFlat: { value: Array.from({ length: 8 }, () => new THREE.Vector4(0, 0, 1, 0)) },
+    uFlatN: { value: 0 },
     uFlatK: { value: 0 },
     uNight: { value: 0 },
     uCam: { value: new THREE.Vector3() },

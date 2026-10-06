@@ -220,20 +220,29 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 [data-theme='night'] .ld-halo { mix-blend-mode: screen; }
 .loader.is-closed .ld-halo { opacity: 0; transition: opacity 0.4s; }
 /* the airliner */
-.ld-plane { filter: drop-shadow(3px 6px 4px rgba(9, 24, 44, 0.32)); }
-[data-theme='night'] .ld-plane { filter: drop-shadow(3px 6px 5px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 6px rgba(255, 60, 70, 0.35)); }
-.ld-plane .pl-fus, .ld-plane .pl-wing, .ld-plane .pl-eng { stroke: rgba(22, 59, 103, 0.45); stroke-width: 0.35; }
+
+.ld-plane .pl-fus, .ld-plane .pl-wing, .ld-plane .pl-eng { stroke: rgba(22, 59, 103, 0.8); stroke-width: 0.45; }
 .ld-plane .pl-fin { stroke: var(--route); stroke-width: 1.3; stroke-linecap: round; }
 .ld-plane .pl-glass { fill: none; stroke: #15283f; stroke-width: 0.9; stroke-linecap: round; }
 .ld-plane .pl-port { fill: #ff3b3b; }
 .ld-plane .pl-star { fill: #2bdc6b; }
 .ld-plane .pl-strobe { fill: #fff; animation: strobe 1.1s steps(1) infinite; }
 @keyframes strobe { 0%, 86% { opacity: 0; } 87%, 100% { opacity: 1; } }
-.loader.is-closed .ld-plane { opacity: 0; transition: opacity 0.6s var(--ease-out); }
-.loader-read { position: absolute; top: 0; left: 0; display: grid; justify-items: center; gap: 6px; pointer-events: none; --ld-size: 96px; }
-.loader-num { margin: 0; font: 800 var(--ld-size)/0.9 var(--f-display); letter-spacing: -0.05em; color: var(--ink); font-variant-numeric: tabular-nums; display: flex; align-items: flex-start; }
-.loader-num small { font-size: 0.36em; margin-top: 0.2em; margin-inline-start: 4px; letter-spacing: 0; color: var(--ink-3); }
-.loader-text { margin: 0; font: 600 12px/1 var(--f-chart); letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-2); }
+.ld-plane { opacity: 0; }
+.ld-plane.is-flying { opacity: 1; filter: drop-shadow(calc(3px + var(--alt, 0) * 1.6px) calc(6px + var(--alt, 0) * 2.4px) calc(4px + var(--alt, 0) * 0.8px) rgba(9, 24, 44, 0.3)); transition: opacity 0.35s var(--ease-out); }
+[data-theme='night'] .ld-plane.is-flying { filter: drop-shadow(calc(3px + var(--alt, 0) * 1.6px) calc(6px + var(--alt, 0) * 2.4px) 6px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 8px rgba(255, 70, 80, 0.35)); }
+.ld-trail { fill: none; stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width: 1.6px; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+[data-theme='night'] .ld-trail { stroke: rgba(230, 238, 248, 0.45); }
+/* the read-out: the border itself is the progress bar; the figure sits in the country's open interior */
+.loader-read { position: absolute; top: 0; left: 0; display: grid; justify-items: center; gap: 10px; pointer-events: none; --ld-size: 84px; }
+.loader-num {
+  margin: 0; display: flex; align-items: flex-start; font: 800 var(--ld-size)/0.86 var(--f-display); letter-spacing: -0.055em; color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums; font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+.loader-num small { font-size: 0.3em; margin-top: 0.14em; margin-inline-start: 6px; letter-spacing: 0; color: var(--route); font-weight: 750; }
+.loader-text { margin: 0; display: inline-flex; align-items: center; gap: 9px; font: 650 11px/1 var(--f-chart); letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-2); }
+.ld-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--route); animation: ld-beacon 1.4s var(--ease-out) infinite; }
+@keyframes ld-beacon { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--route) 55%, transparent); } 100% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--route) 0%, transparent); } }
 
 /* ───────── Navigation: a floating frosted panel, like the OS's own ───────── */
 .nav {
@@ -427,10 +436,18 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 [dir='rtl'] .btn-primary-flight { transform: scaleX(-1); }
 
 .btn-link {
-  position: relative; display: inline-flex; align-items: center; height: 44px; padding-bottom: 2px;
-  font: 600 17px/1 var(--f-text); color: var(--ink); text-decoration: none;
+  position: relative; isolation: isolate; display: inline-flex; align-items: center; height: 44px; padding-bottom: 2px;
+  font: 650 17px/1 var(--f-text); color: var(--ink); text-decoration: none;
+  text-shadow: 0 0 1px var(--paper), 0 0 6px var(--paper), 0 0 14px var(--paper);
   background-image: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
   background-size: 8px 1.5px; background-repeat: repeat-x; background-position: 0 calc(100% - 9px);
+}
+.btn-link::before {
+  /* a feathered pane of the page's own paper behind the words: invisible as a shape, decisive for legibility */
+  content: ''; position: absolute; inset: -6px -18px -4px; z-index: -1; border-radius: 999px; pointer-events: none;
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent);
 }
 .btn-link::after {
   content: ''; position: absolute; inset-inline-start: 0; bottom: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--route);
@@ -906,6 +923,19 @@ body.is-pointing, html.is-explore body.is-pointing { cursor: pointer; }
 .map-ring::after { animation-delay: 0.8s; }
 .map-ring[data-type='city']::before, .map-ring[data-type='tas']::before { border-color: var(--ink); }
 @keyframes ping { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+@media (max-width: 700px) {
+  /* the card is a bottom sheet on a phone: the town stays visible above it */
+  .info-card { max-height: 48vh; overflow-y: auto; overscroll-behavior: contain; border-radius: 24px; }
+  .ic-photo { aspect-ratio: 21 / 9; }
+  .ic-body { gap: 8px; padding: 10px 10px 8px; }
+  .ic-body h3 { font-size: 18px; }
+  .ic-body dl > div { padding: 5px 0; }
+  /* a picked city opens as a peek: just the title bar, the town fills the screen above it; tap the title to open */
+  .info-card.is-peek .ic-photo, .info-card.is-peek .ic-body > :not(h3) { display: none; }
+  .info-card.is-peek .ic-body h3 { cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding-inline-end: 44px; }
+  .info-card.is-peek .ic-body h3::after { content: ''; width: 10px; height: 10px; border-top: 2px solid currentColor; border-left: 2px solid currentColor; rotate: 45deg; translate: 0 3px; opacity: 0.6; }
+  .info-card.is-peek .ic-close { top: 8px; }
+}
 @media (max-width: 960px) {
   .explore-fab { bottom: 16px; inset-inline-end: 16px; width: 48px; height: 48px; padding: 0; justify-content: center; }
   .explore-fab span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
