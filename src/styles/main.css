@@ -436,27 +436,31 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 [dir='rtl'] .btn-primary-flight { transform: scaleX(-1); }
 
 .btn-link {
-  position: relative; isolation: isolate; display: inline-flex; align-items: center; height: 44px; padding-bottom: 2px;
+  position: relative; isolation: isolate; display: inline-flex; align-items: center; height: 44px;
   font: 650 17px/1 var(--f-text); color: var(--ink); text-decoration: none;
   text-shadow: 0 0 1px var(--paper), 0 0 6px var(--paper), 0 0 14px var(--paper);
+}
+/* the dashed rule lives on the words themselves, so it paints above the paper pane and runs unbroken */
+.btn-link > span {
+  position: relative; display: inline-block; padding-bottom: 8px;
   background-image: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
-  background-size: 8px 1.5px; background-repeat: repeat-x; background-position: 0 calc(100% - 9px);
+  background-size: 8px 1.5px; background-repeat: repeat-x; background-position: 0 100%;
 }
 .btn-link::before {
   /* a feathered pane of the page's own paper behind the words: invisible as a shape, decisive for legibility */
   content: ''; position: absolute; inset: -6px -18px -4px; z-index: -1; border-radius: 999px; pointer-events: none;
   background: color-mix(in srgb, var(--paper) 78%, transparent);
   -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2);
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent);
+  -webkit-mask-image: radial-gradient(closest-side, #000 70%, transparent); mask-image: radial-gradient(closest-side, #000 70%, transparent);
 }
 .btn-link::after {
   content: ''; position: absolute; inset-inline-start: 0; bottom: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--route);
   opacity: 0; transform: translateX(0); transition: opacity 0.3s, transform 0.9s var(--ease-out);
 }
-.btn-link:hover { animation: dash 0.8s linear infinite; }
+.btn-link:hover > span { animation: dash 0.8s linear infinite; }
 .btn-link:hover::after { opacity: 1; transform: translateX(calc(var(--w, 120px) - 6px)); }
 [dir='rtl'] .btn-link:hover::after { transform: translateX(calc(-1 * var(--w, 120px) + 6px)); }
-@keyframes dash { to { background-position: 8px calc(100% - 9px); } }
+@keyframes dash { to { background-position: 8px 100%; } }
 
 .btn-quiet {
   display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px;
