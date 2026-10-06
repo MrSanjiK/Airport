@@ -42,7 +42,7 @@ export default {
     qoqon: "Kokand", margilon: "Margilan", asaka: "Asaka", jizzax: "Jizzakh", qarshi: "Karshi", navoiy: "Navoiy", guliston: "Gulistan",
     nurafshon: "Regione di Tashkent", chirchiq: "Chirchiq",
   },
-  card: { photoBy: "Foto", zoom: "Avvicina", add: "Aggiungi al piano media", added: "Aggiunto al piano", open: "Apri la sezione", close: "Chiudi", networkPhoto: "Foto della rete", hours: "Orari", address: "Indirizzo", stores: "Negozi Korzinka", town: "Città" },
+  card: { kindCafe: "Caffè · ristorante", route: "Indicazioni", approx: "Posizione per via", photoBy: "Foto", zoom: "Avvicina", add: "Aggiungi al piano media", added: "Aggiunto al piano", open: "Apri la sezione", close: "Chiudi", networkPhoto: "Foto della rete", hours: "Orari", address: "Indirizzo", stores: "Negozi Korzinka", town: "Città" },
   units: { bln: "mld UZS", mln: "mln UZS", perMonth: "/ mese", month3: "3 mesi", month6: "6 mesi", month12: "12 mesi", months: "mesi", sec: "s", min: "min", sum: "UZS", vat: "Prezzi IVA esclusa", screens: "schermi", plays: "passaggi / giorno", m2: "m²" },
   airport: {
     headline: "Aeroporto di Tashkent. 18.000.000 visite. Ora — tutto l'Uzbekistan.", headSub: "Schermi LED, 200 monitor e lightbox — più Korzinka, 75+ ristoranti, 11 regioni.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "La carta mostra i ristoranti della rete trovati su OpenStreetMap. L'elenco completo è qui sotto.",
   },
   regions: {
+    placed: "Punti posizionati sulla mappa",
     pick: "Scegli una città", all: "Tutta la rete", venueList: "Punti della rete", photos: "Foto dei punti", share: "quota della rete", showMap: "Mostra sulla mappa", valley: "Valle di Fergana · altri punti", onRequest: "Elenco dei punti e foto su richiesta.", stores: "Negozi Korzinka", landmark: "Città", expand: "Mostra altro", collapse: "Mostra meno", storesPhoto: "Negozi Korzinka",
     citiesTitle: "Città della rete",
     title: "11 regioni",
@@ -129,7 +130,7 @@ export default {
     planLabel: "Piano scelto",
   },
   footer: {
-    author: "Sito realizzato da", imagery: "Immagini satellitari: Sentinel-2 cloudless 2016 — EOX IT Services GmbH (CC BY 4.0), NASA Blue Marble e Black Marble.",
+    author: "Sito realizzato da",
     sourcesTitle: "Fonti", photos: "Foto delle città: autori di Wikimedia Commons (CC BY / CC BY-SA / CC0), citati su ogni foto.",
     about: "Media Port è la divisione media indoor della holding pubblicitaria Orient Advertising, creata per operare all'aeroporto internazionale di Tashkent. La holding conta oltre 100 specialisti.",
     slogan: "Osmon qadar hayratlanasiz",

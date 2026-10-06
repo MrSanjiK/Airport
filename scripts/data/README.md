@@ -9,5 +9,5 @@ Sources (fetched 2026-10-05):
 Korzinka/HoReCa points were enriched with branch, street, opening hours and nearest OSM town.
 To geocode the full deck address lists precisely, add a 2GIS Catalog API key and geocode the addresses from the PDFs.
 
-- Satellite imagery: `satellite.py` fetches Sentinel-2 cloudless 2016 (EOX, CC BY 4.0) and NASA Black Marble 2016 (public domain) as EPSG:4326 WMS images into `public/img/sat/` and writes `src/data/satellite.json`.
 - Airport detail: `airport_detail.py` turns the two Overpass results (`airport_q1/q2.overpassql`) into `public/data/airport-detail.json`.
+- City models: `city_q.py` fetches each network city from Overpass, `cities.py` builds `public/data/city/<key>.json` (streets, buildings, parks, water) and places the deck venues (`venues.json`, from the Region and Korzinka decks) by OSM name, house address, mapped Korzinka store or street, with Nominatim as a second opinion. Set `YANDEX_KEY` to geocode every venue that is not house-exact with the Yandex Geocoder API instead.

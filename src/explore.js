@@ -1,4 +1,5 @@
-import { t, num, onLang } from './i18n/index.js';
+import { t, num, onLang, place, lang } from './i18n/index.js';
+import { CITY_GALLERY } from './data/regions.js';
 import { CITY_PHOTOS } from './data/photo-credits.js';
 import { credit } from './ui/credit.js';
 import { REGIONS, KORZINKA, HORECA, LED_FACTS, AIRPORT } from './data/inventory.js';
@@ -81,6 +82,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     if (it.type === 'city') return t(`cities.${it.key}`);
     if (it.type === 'horeca') return it.name;
     if (it.type === 'town') return it.name;
+    if (it.type === 'venue') return lang().code === 'ru' && it.v.nr ? it.v.nr : it.v.n;
     return `Korzinka${it.b ? ` · ${it.b}` : ''}`;
   };
   const tipHTML = (it) => {
@@ -88,7 +90,8 @@ export function initExplore(world, { bus, places, lenis, story }) {
       tas: t('map.tas'),
       city: rowByKey[it.key] ? `${num(rowByKey[it.key].screens)} ${t('map.screens')} · ${num(rowByKey[it.key].venues)} ${t('map.venues')}` : '',
       horeca: it.a || t('map.horecaTip'),
-      korzinka: it.a || `${it.town}`,
+      korzinka: place(it.a) || `${it.town}`,
+      venue: it.type === 'venue' ? venueAddr(it.v) : '',
     }[it.type];
     return `<b>${esc(titleOf(it))}</b><span>${esc(sub)}</span><em>${t('map.flyHint')}</em>`;
   };
@@ -124,7 +127,19 @@ export function initExplore(world, { bus, places, lenis, story }) {
       if (n.includes('rayhon')) return { src: 'hr-rayhon', own: false };
       return { src: 'hr-terrace-tv', own: false };
     }
+    if (it.type === 'venue') {
+      if (it.v.k === 'korzinka') return { src: 'kz-storefront', own: false };
+      return { src: CITY_GALLERY[it.key] ? `rg/${it.key}-1` : 'rg-cafe-screens', own: false };
+    }
     return { src: 'kz-storefront', own: false };
+  };
+  const venueAddr = (v) => (lang().code === 'ru' ? v.ar || v.a : v.a || place(v.ar));
+  // directions in the two apps people in Uzbekistan actually use
+  const routeHTML = (ll) => {
+    const [lon, lat] = ll.map((x) => x.toFixed(6));
+    return `<div class="ic-route"><span>${esc(t('card.route'))}</span>
+      <a class="ic-map ic-map--y" href="https://yandex.uz/maps/?rtext=~${lat}%2C${lon}&rtt=auto" target="_blank" rel="noopener"><i>Я</i>Yandex Maps</a>
+      <a class="ic-map ic-map--g" href="https://www.google.com/maps/dir/?api=1&destination=${lat}%2C${lon}" target="_blank" rel="noopener"><i>G</i>Google Maps</a></div>`;
   };
   const row = (k, v) => (v ? `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>` : '');
   const cardHTML = (it) => {
@@ -133,22 +148,28 @@ export function initExplore(world, { bus, places, lenis, story }) {
     let section = '';
     let plan = '';
     if (it.type === 'tas') {
-      body = `<p>${esc(t('airport.lead'))}</p><dl>${row(t('airport.statYear'), num(AIRPORT.visitsYear))}${row('LED', `${LED_FACTS.count} · ${LED_FACTS.playsDay} ${t('units.plays')}`)}${row('IATA / ICAO', 'TAS / UZTT')}</dl>`;
+      body = `<p>${esc(t('airport.lead'))}</p><dl>${row(t('airport.statYear'), num(AIRPORT.visitsYear))}${row('LED', `${LED_FACTS.count} · ${LED_FACTS.playsDay} ${t('units.plays')}`)}${row('IATA / ICAO', 'TAS / UZTT')}</dl>${routeHTML([69.2687, 41.2634])}`;
       section = 'airport';
     } else if (it.type === 'city') {
       const r = rowByKey[it.key];
       const k = korByTown[t(`cities.${it.key}`)] || korByTown[{ fargona: "Farg'ona", qoqon: "Qo'qon" }[it.key]] || 0;
-      body = `<dl>${row(t('regions.thScreens'), num(r.screens))}${row(t('regions.thVenues'), num(r.venues))}${row(t('regions.thDaily'), num(r.daily))}${k ? row(t('card.stores'), num(k)) : ''}${row('', '')}</dl><p class="ic-coord">${formatDMS(it.ll[0], it.ll[1])}</p>`;
+      body = `<dl>${row(t('regions.thScreens'), num(r.screens))}${row(t('regions.thVenues'), num(r.venues))}${row(t('regions.thDaily'), num(r.daily))}${k ? row(t('card.stores'), num(k)) : ''}${row('', '')}</dl>`;
       section = 'regions';
       plan = 'regions';
     } else if (it.type === 'horeca') {
-      body = `<dl>${row(t('card.address'), it.a)}${row(t('card.hours'), hoursText(it.h))}${row(t('horeca.dwell'), HORECA.dwell)}${row(t('horeca.plays'), HORECA.playsDay)}</dl><p class="ic-coord">${formatDMS(it.ll[0], it.ll[1])} · OpenStreetMap</p>`;
+      body = `<dl>${row(t('card.address'), place(it.a))}${row(t('card.hours'), hoursText(it.h))}${row(t('horeca.dwell'), HORECA.dwell)}${row(t('horeca.plays'), HORECA.playsDay)}</dl>${routeHTML(it.ll)}`;
       section = 'horeca';
       plan = 'horeca';
     } else if (it.type === 'korzinka') {
-      body = `<dl>${row(t('card.town'), it.town)}${row(t('card.address'), it.a)}${row(t('card.hours'), hoursText(it.h))}${row(t('korzinka.plays'), KORZINKA.playsDay)}</dl><p class="ic-sub">${esc(t('map.korzinkaSub'))}</p><p class="ic-coord">${formatDMS(it.ll[0], it.ll[1])} · OpenStreetMap</p>`;
+      body = `<dl>${row(t('card.town'), it.town)}${row(t('card.address'), place(it.a))}${row(t('card.hours'), hoursText(it.h))}${row(t('korzinka.plays'), KORZINKA.playsDay)}</dl><p class="ic-sub">${esc(t('map.korzinkaSub'))}</p>${routeHTML(it.ll)}`;
       section = 'korzinka';
       plan = 'korzinka';
+    } else if (it.type === 'venue') {
+      const v = it.v;
+      body = `<dl>${row(t('card.town'), t(`cities.${it.key}`))}${row(t('card.address'), venueAddr(v))}${row(t('card.hours'), hoursText(v.h))}${row(t('regions.plays'), v.k === 'korzinka' ? KORZINKA.playsDay : REGIONS.playsDay)}</dl>
+        ${v.how === 'street' ? `<p class="ic-sub ic-approx">≈ ${esc(t('card.approx'))}</p>` : ''}${routeHTML(it.ll)}`;
+      section = 'regions';
+      plan = v.k === 'korzinka' ? 'korzinka' : 'regions';
     } else if (it.type === 'town') {
       body = `<dl>${row(t('card.stores'), num(korByTown[it.name] || 0))}</dl>`;
       section = 'korzinka';
@@ -269,8 +290,21 @@ export function initExplore(world, { bus, places, lenis, story }) {
     const g = world.goal;
     Object.assign(g, { tx: x, tz: z, dist: dist ?? it.dist, el: clamp(g.el, 45, 70), az: clamp(((g.az + 540) % 360) - 180, -30, 30), shift: 0 });
     constrain();
-    if (it.type === 'city') bus.dispatchEvent(new CustomEvent('region', { detail: it.key }));
+    if (it.type === 'city') {
+      bus.dispatchEvent(new CustomEvent('region', { detail: it.key }));
+      if (world.city.has(it.key)) {
+        story.setExploreCity(it.key);
+        Object.assign(g, { dist: story.cityPose(it.key).dist, el: 44, az: -8 });
+        constrain();
+      }
+    } else if (it.type !== 'venue') story.setExploreCity(null);
   };
+  bus.addEventListener('venuecard', (e) => {
+    const c = world.city.active;
+    const v = c && c.key === e.detail.key ? c.venues[e.detail.i] : null;
+    if (!v) return;
+    openCard({ type: 'venue', key: c.key, v, w: v.w, ll: v.ll, dist: 1.4 });
+  });
   bus.addEventListener('flyto', (e) => {
     const d = e.detail;
     let it;

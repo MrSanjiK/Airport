@@ -7,8 +7,11 @@ import { formatDMS } from './scene/geo.js';
 const CHAPTERS = ['hero', 'airport', 'korzinka', 'horeca', 'regions', 'plan'];
 const ALL = [...CHAPTERS, 'explore'];
 const TRI = '<svg class="wp-tri" viewBox="0 0 15 13" aria-hidden="true"><path d="M7.5 1.2L13.8 11.8H1.2z"/></svg>';
+const DOT = '<svg class="wp-tri wp-pin" viewBox="0 0 15 13" aria-hidden="true"><circle cx="7.5" cy="6.5" r="4.4"/></svg>';
+const CITY_R = { andijon: 4.5, fargona: 4.5, namangan: 4.5, margilon: 3.5, asaka: 3.0, qoqon: 4.0, samarqand: 5.5, buxoro: 5.0, jizzax: 3.5, qarshi: 4.5 };
 const AERO = '<svg class="wp-aero" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 4.5l1.6 5.4 5.4 2.1-5.4 1.9L12 19.5l-1.6-5.6L5 12l5.4-2.1z"/></svg>';
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const escH = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const smooth = (x) => x * x * (3 - 2 * x);
 const lerp = (a, b, k) => a + (b - a) * k;
 const lerpAngle = (a, b, k) => a + ((((b - a) % 360) + 540) % 360 - 180) * k;
@@ -85,7 +88,7 @@ export function initStory(world, { places, nav, bus }) {
     addLabel({
       cls: 'wp--cluster',
       world: world.worldAt(ll[0], ll[1], 0.4),
-      html: () => `<span class="cl-badge">${g.n}</span><span class="cl-name">${name}</span>`,
+      html: () => `${DOT}<span class="wp-box"><span class="wp-name">${name}</span><span class="wp-sub">${g.n} Korzinka</span></span>`,
       weights: { korzinka: 1, regions: 0.6, plan: 0.5, explore: 1 },
       onClick: () => fly({ type: 'town', name, ll, dist: g.n > 20 ? 34 : 14 }),
       key: `town-${name}`,
@@ -96,7 +99,7 @@ export function initStory(world, { places, nav, bus }) {
   addLabel({
     cls: 'wp--cluster wp--cluster-h',
     world: world.worldAt(hc[0], hc[1], 0.4),
-    html: () => `<span class="cl-badge">75+</span><span class="cl-name">HoReCa · ${t('cities.toshkent')}</span>`,
+    html: () => `${DOT}<span class="wp-box"><span class="wp-name">HoReCa · ${t('cities.toshkent')}</span><span class="wp-sub">75+ ${t('horeca.venues')}</span></span>`,
     weights: { horeca: 1, explore: 1, plan: 0.5 },
     onClick: () => fly({ type: 'town', name: t('cities.toshkent'), ll: hc, dist: 30 }),
     key: 'horeca-cluster',
@@ -207,10 +210,46 @@ export function initStory(world, { places, nav, bus }) {
   let introDone = false;
   let cameraFree = false;
   let focus = null;
+  let regionKey = null;
+  let exploreCity = null;
+  let shownCity = null;
+  // a city with a model is viewed close enough to read its streets; the rest from a regional height
+  const cityPose = (key, shift = 0) => ({ t: places.cities[key], dist: CITY_R[key] ? CITY_R[key] * 2.2 : 240, az: -8, el: CITY_R[key] ? 44 : 50, shift });
   bus.addEventListener('regionfocus', (e) => {
-    const c = e.detail && places.cities[e.detail];
-    focus = c ? world.goalFromPose({ t: c, dist: 240, az: 0, el: 50, shift: POSES.regions.shift }) : null;
+    regionKey = e.detail || null;
+    focus = regionKey && places.cities[regionKey] ? world.goalFromPose(cityPose(regionKey, POSES.regions.shift)) : null;
   });
+  let fitted = null;
+  // the venues' extent (with the centre) sets the target and the distance; the view leans a little for depth
+  const fitVenues = (c, shift) => {
+    const pts = [...c.venues.map((v) => v.ll), c.center];
+    const lon = pts.map((p) => p[0]);
+    const lat = pts.map((p) => p[1]);
+    const cx = (Math.min(...lon) + Math.max(...lon)) / 2;
+    const cy = (Math.min(...lat) + Math.max(...lat)) / 2;
+    const ext = Math.max((Math.max(...lon) - Math.min(...lon)) * 85, (Math.max(...lat) - Math.min(...lat)) * 110.6);
+    const room = shift ? 0.5 : 0.85;
+    return { t: [cx, cy], dist: Math.max(3.2, (ext * 1.35) / room), az: -8, el: 46, shift };
+  };
+  // venue labels for a city model, built the first time it is shown
+  const venueLabels = new Map();
+  const KIND = { korzinka: 'Korzinka', makro: 'Makro' };
+  const addVenueLabels = (c) => {
+    bus.dispatchEvent(new CustomEvent('cityvenues', { detail: { key: c.key, venues: c.venues } }));
+    venueLabels.set(c.key, c.venues.map((v) => {
+      const l = addLabel({
+        cls: `wp--venue wp--${v.k}`,
+        world: v.w,
+        html: () => `${DOT}<span class="wp-box"><span class="wp-name">${escH(v.n)}</span><span class="wp-sub">${escH(KIND[v.k] || t('card.kindCafe'))}${v.how === 'street' ? ' · ≈' : ''}</span></span>`,
+        weights: {},
+        onClick: () => bus.dispatchEvent(new CustomEvent('venuecard', { detail: { key: c.key, i: v.i } })),
+        key: `v-${c.key}-${v.i}`,
+      });
+      l.cityKey = c.key;
+      l.prio = 95 - (v.how === 'street' ? 10 : 0);
+      return l;
+    }));
+  };
   let exploring = false;
   let active = 'hero';
   const frameState = () => {
@@ -299,18 +338,43 @@ export function initStory(world, { places, nav, bus }) {
     world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0);
     if (world.roads) world.roads.city = 1 - clamp((w.hero + w.airport) * 1.4);
     world.airport.setHot(w.airport);
-    world.kor.uniforms.uOpacity.value = clamp(w.korzinka + w.regions * 0.6 + w.plan * 0.5 + w.horeca * 0.45 + ex) * nearK;
-    world.hor.uniforms.uOpacity.value = clamp(w.horeca * 1.4 + w.plan * 0.5 + ex) * nearK;
+    const cityNow = world.city.active;
+    const noCity = 1 - world.city.k;
+    world.kor.uniforms.uOpacity.value = clamp(w.korzinka + w.regions * 0.6 + w.plan * 0.5 + w.horeca * 0.45 + ex) * nearK * noCity;
+    world.hor.uniforms.uOpacity.value = clamp(w.horeca * 1.4 + w.plan * 0.5 + ex) * nearK * noCity;
+    if (world.roads) world.roads.fade = noCity;
     const px = world.renderer.getPixelRatio();
     world.kor.uniforms.uPx.value = world.hor.uniforms.uPx.value = px;
     world.kor.uniforms.uSize.value = 20 + 6 * (1 - clamp((dist - 10) / 60));
     world.hor.uniforms.uSize.value = 24 + 6 * (1 - clamp((dist - 10) / 60));
-    world.route.opacity = clamp(w.hero + w.airport * 0.1 + w.korzinka * 0.55 + w.horeca * 0.3 + w.regions + w.plan + ex);
+    // the network is read from its venues and cities, not drawn as a route
+    world.route.opacity = 0;
+    // which city model is up: the explorer's pick, else the Regions plate's pick while that chapter holds the screen
+    const wantCity = exploring ? exploreCity : w.regions > 0.4 ? regionKey : null;
+    if (wantCity !== shownCity) { shownCity = wantCity; world.city.show(world.city.has(wantCity) ? wantCity : null); }
+    if (cityNow && !venueLabels.has(cityNow.key)) addVenueLabels(cityNow);
+    // once a city's venues are known, frame them all rather than the city centre
+    if (cityNow && fitted !== cityNow.key) {
+      fitted = cityNow.key;
+      const pose = fitVenues(cityNow, exploring ? 0 : POSES.regions.shift);
+      if (!exploring && regionKey === cityNow.key) focus = world.goalFromPose(pose);
+      if (exploring && exploreCity === cityNow.key) Object.assign(world.goal, world.goalFromPose(pose));
+    }
+    if (!cityNow) fitted = null;
     // the route ends before the legend's caption instead of running under the sheet
     const lb = legendEl.getBoundingClientRect();
     world.route.mask = lb.width ? [lb.left - 12, lb.top - 34, lb.right + 12, innerHeight + 40] : null;
     world.route.maskK = clamp(w.hero * 1.5 - 0.2) * (exploring ? 0 : 1);
 
+    // panels the map labels must never run under: chapter plates, the airport frame, the open card, the bars
+    const blockers = [];
+    document.querySelectorAll('.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hplate, .planner-sheet').forEach((el) => {
+      if (el.style.visibility === 'hidden' || el.offsetParent === null) return;
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight || r.width < 2) return;
+      if (el.classList.contains('hplate') && +el.style.opacity < 0.3) return;
+      blockers.push([r.left - 6, r.top - 6, r.right + 6, r.bottom + 6]);
+    });
     // labels: compute targets, then declutter greedily by priority
     const heroBox = heroCopy.getBoundingClientRect();
     const legBox = legendEl.getBoundingClientRect();
@@ -321,6 +385,9 @@ export function initStory(world, { places, nav, bus }) {
       // weights decide whether a label shows, not how faint it is: half-lit labels read as ghosts over the streets
       target = introDone ? clamp(target * 2) : 0;
       if (l.far) target *= l.el.classList.contains('wp--cluster') ? farK : clamp(farK + 0.35);
+      // a city's own venues show only while its model is up; its waypoint and store cluster step aside
+      if (l.cityKey) target = introDone && cityNow && cityNow.key === l.cityKey ? clamp(world.city.k * 1.4 - 0.2) : 0;
+      else if (cityNow && world.city.k > 0.3 && (l.key === cityNow.key || l.cluster || l.key === 'tas')) target = 0;
       const p = world.project(typeof l.w === 'function' ? l.w() : l.w, l.proj);
       if (!p.visible) target = 0;
       if (target > 0 && w.hero > 0.3 && p.x > heroBox.left - 30 && p.x < heroBox.right + 30 && p.y > heroBox.top - 20 && p.y < heroBox.bottom + 20) target = 0;
@@ -335,13 +402,20 @@ export function initStory(world, { places, nav, bus }) {
     cands.forEach((l) => {
       if (!l.size || l.sizeStale) { l.size = [l.el.offsetWidth || 90, l.el.offsetHeight || 34]; l.sizeStale = false; }
       const [bw, bh] = l.size;
-      const cl = l.el.classList.contains('wp--cluster');
-      const x0 = cl ? l.proj.x - 16 : l.proj.x - bw / 2;
-      const y0 = cl ? l.proj.y - 16 : l.proj.y - 8;
+      const x0 = l.proj.x - bw / 2;
+      const y0 = l.proj.y - 8;
       const box = [x0 - 3, y0 - 3, x0 + bw + 3, y0 + bh + 3];
-      // a box the viewport would cut reads as broken: drop it rather than clip it
+      // a box the viewport would cut reads as broken: drop it rather than clip it; nothing sits under a plate or panel
       const cut = box[0] < 6 || box[2] > innerWidth - 6 || box[3] > innerHeight - 6;
-      if (cut || kept.some((k) => box[0] < k[2] && box[2] > k[0] && box[1] < k[3] && box[3] > k[1])) { l.target = 0; l.op = Math.min(l.op, 0.3); }
+      const under = blockers.some((k) => box[0] < k[2] && box[2] > k[0] && box[1] < k[3] && box[3] > k[1]);
+      const hit = (bx) => kept.some((k) => bx[0] < k[2] && bx[2] > k[0] && bx[1] < k[3] && bx[3] > k[1]);
+      // a crowded venue keeps its pin (still clickable) and folds its card away instead of vanishing
+      if (l.cityKey && !cut && !under && hit(box)) {
+        const pin = [l.proj.x - 9, l.proj.y - 9, l.proj.x + 9, l.proj.y + 9];
+        if (!hit(pin)) { l.el.classList.add('is-compact'); kept.push(pin); return; }
+      }
+      if (l.cityKey) l.el.classList.remove('is-compact');
+      if (cut || under || hit(box)) { l.target = 0; l.op = Math.min(l.op, 0.3); }
       else kept.push(box);
     });
     labels.forEach((l) => {
@@ -429,7 +503,9 @@ export function initStory(world, { places, nav, bus }) {
   return {
     introDone() { introDone = true; world.state.ready = true; },
     releaseCamera() { cameraFree = true; },
-    setExplore(v) { exploring = v; if (!v) frameState(); },
+    setExplore(v) { exploring = v; if (!v) { exploreCity = null; frameState(); } },
+    setExploreCity(key) { exploreCity = key; },
+    cityPose,
     weights,
   };
 }

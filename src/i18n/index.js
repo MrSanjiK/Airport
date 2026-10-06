@@ -115,3 +115,34 @@ export function money(mln) {
   }
   return { value: num(Math.round(mln)), unit: t('units.mln') };
 }
+
+// Addresses and names that arrive in Cyrillic (OpenStreetMap, the decks) are shown in Latin script outside Russian,
+// with the Russian street words turned into their Uzbek forms: "ул. Шарафа Рашидова, 12" → "Sharafa Rashidova ko'chasi, 12".
+const CYR = { а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'yo', ж: 'j', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'x', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sh', ъ: '’', ы: 'i', ь: '', э: 'e', ю: 'yu', я: 'ya', ў: 'o‘', қ: 'q', ғ: 'g‘', ҳ: 'h' };
+// (JavaScript's \b only knows ASCII letters, so the Cyrillic words are bounded by spaces and punctuation)
+const W = (src) => new RegExp(`(^|[\\s,(])(?:${src})(?=$|[\\s,.)])\\.?`, 'giu');
+const WORDS = [
+  [W('улица|ул'), 'k'], [W('проспект|пр-т|пр'), 'p'], [W('переулок|пер'), 't'],
+  [W('махалля|МФЙ|МСГ'), 'm'], [W('массив'), 'ms'], [W('район|р-н'), 'r'], [W('квартал'), 'q'], [W('г'), ''], [W('дом|д'), ''],
+];
+const SUFFIX = { k: 'ko‘chasi', p: 'shoh ko‘chasi', t: 'tor ko‘chasi', m: 'mahallasi', ms: 'massivi', r: 'tumani', q: 'mavzesi', '': '' };
+const translit = (s) => s.replace(/[А-яЁёЎўҚқҒғҲҳ]/g, (ch) => {
+  const lo = ch.toLowerCase();
+  const out = CYR[lo] ?? ch;
+  if (/^[Ѐ-ӿ]$/.test(ch) && ch !== lo) return out.charAt(0).toUpperCase() + out.slice(1);
+  return out;
+});
+export function place(text) {
+  if (!text || current.code === 'ru' || !/[Ѐ-ӿ]/.test(text)) return text || '';
+  return text.split(',').map((part) => {
+    let kind = null;
+    let p = part.trim();
+    for (const [re, k] of WORDS) {
+      re.lastIndex = 0;
+      if (re.test(p)) { if (k) kind = k; re.lastIndex = 0; p = p.replace(re, ' ').trim(); }
+    }
+    // trailing Russian words ("Кургантепа улица")
+    p = translit(p).replace(/\s+/g, ' ').trim();
+    return kind && SUFFIX[kind] ? `${p} ${SUFFIX[kind]}` : p;
+  }).filter(Boolean).join(', ');
+}

@@ -42,7 +42,7 @@ export default {
     qoqon: "Коканд", margilon: "Маргилан", asaka: "Асака", jizzax: "Джизак", qarshi: "Карши", navoiy: "Навои", guliston: "Гулистан",
     nurafshon: "Ташкентская область", chirchiq: "Чирчик",
   },
-  card: { photoBy: "Фото", zoom: "Приблизить", add: "Добавить в медиаплан", added: "Добавлено в план", open: "Открыть раздел", close: "Закрыть", networkPhoto: "Фото сети", hours: "Часы работы", address: "Адрес", stores: "Магазины Korzinka", town: "Город" },
+  card: { kindCafe: "Кафе · ресторан", route: "Маршрут", approx: "Адрес показан по улице", photoBy: "Фото", zoom: "Приблизить", add: "Добавить в медиаплан", added: "Добавлено в план", open: "Открыть раздел", close: "Закрыть", networkPhoto: "Фото сети", hours: "Часы работы", address: "Адрес", stores: "Магазины Korzinka", town: "Город" },
   units: { bln: "млрд сум", mln: "млн сум", perMonth: "/ мес", month3: "3 мес", month6: "6 мес", month12: "12 мес", months: "мес", sec: "сек", min: "мин", sum: "сум", vat: "Цены указаны без учёта НДС", screens: "экр.", plays: "показов / день", m2: "м²" },
   airport: {
     headline: "Ташкентский аэропорт. 18 000 000 посещений. А теперь — весь Узбекистан.", headSub: "LED-экраны, 200 мониторов и лайтбоксы — а также Korzinka, 75+ ресторанов, 11 регионов.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "На карте — рестораны сети, найденные в OpenStreetMap. Полный список — ниже.",
   },
   regions: {
+    placed: "Объекты с точным адресом на карте",
     pick: "Выберите город", all: "Вся сеть", venueList: "Объекты сети", photos: "Фото объектов", share: "доля в сети", showMap: "Показать на карте", valley: "Ферганская долина · другие объекты", onRequest: "Список объектов и фото — по запросу.", stores: "Магазины Korzinka", landmark: "Город", expand: "Показать ещё", collapse: "Свернуть", storesPhoto: "Магазины Korzinka",
     citiesTitle: "Города сети",
     title: "11 регионов",
@@ -129,7 +130,7 @@ export default {
     planLabel: "Выбранный план",
   },
   footer: {
-    author: "Автор сайта", imagery: "Спутниковые снимки: Sentinel-2 cloudless 2016 — EOX IT Services GmbH (CC BY 4.0), NASA Blue Marble и Black Marble.",
+    author: "Автор сайта",
     sourcesTitle: "Источники", photos: "Фото городов: авторы Wikimedia Commons (CC BY / CC BY-SA / CC0) — автор указан на каждом снимке.",
     about: "Media Port — подразделение indoor-медиа рекламного холдинга Orient Advertising, созданное для работы в Ташкентском международном аэропорту. В холдинге работают более 100 специалистов.",
     slogan: "Osmon qadar hayratlanasiz",

@@ -43,41 +43,31 @@ export function createDrapedLines(vec, sample) {
   };
   const rivers = mk(build(vec.rivers, 3, 0.14), 1.1);
   const neighbors = mk(build(vec.neighbors, 4, 0.18), 1.0, true);
-  const uzGeo = build(vec.uz, 2.5, 0.22);
-  // over imagery the border is a light line on a dark casing, the way satellite atlases draw it
-  const uzCase = mk(uzGeo, 4.6);
-  const uz = mk(uzGeo, 1.9);
-  group.children[group.children.length - 1].renderOrder = 3;
+  const uz = mk(build(vec.uz, 2.5, 0.22), 2.1);
 
   const res = new THREE.Vector2();
-  const C = {
-    line: [new THREE.Color(0.99, 0.98, 0.95), new THREE.Color(0.78, 0.87, 1.0)],
-    casing: [new THREE.Color(0.05, 0.12, 0.22), new THREE.Color(0.0, 0.02, 0.06)],
-    river: [new THREE.Color(0.62, 0.84, 0.98), new THREE.Color(0.35, 0.62, 0.95)],
-  };
-  const mixC = (pair, t, out) => out.copy(pair[0]).lerp(pair[1], t);
+  const DAY = { ink: new THREE.Color(0.086, 0.231, 0.404), river: new THREE.Color(0.30, 0.50, 0.72) };
+  const NIGHT = { ink: new THREE.Color(0.62, 0.74, 0.88), river: new THREE.Color(0.35, 0.62, 0.95) };
+  const tmp = new THREE.Color();
   return {
     group,
     opacity: 1,
     update(night, renderer) {
       renderer.getDrawingBufferSize(res);
-      [rivers, neighbors, uzCase, uz].forEach((m) => m.resolution.copy(res));
+      [rivers, neighbors, uz].forEach((m) => m.resolution.copy(res));
       // widths are in device pixels; keep them visually constant across DPR
       const dpr = renderer.getPixelRatio();
-      uz.linewidth = 1.9 * dpr;
-      uzCase.linewidth = 4.6 * dpr;
-      neighbors.linewidth = 1.1 * dpr;
-      rivers.linewidth = 1.2 * dpr;
-      mixC(C.line, night, uz.color);
-      mixC(C.casing, night, uzCase.color);
+      uz.linewidth = 2.1 * dpr;
+      neighbors.linewidth = 1.0 * dpr;
+      rivers.linewidth = 1.15 * dpr;
+      uz.color.copy(tmp.copy(DAY.ink).lerp(NIGHT.ink, night));
       neighbors.color.copy(uz.color);
-      mixC(C.river, night, rivers.color);
       const o = this.opacity;
       uz.opacity = o;
-      uzCase.opacity = 0.42 * o;
       neighbors.opacity = 0.5 * o;
-      rivers.opacity = 0.55 * o;
       group.visible = o > 0.001;
+      rivers.color.copy(tmp.copy(DAY.river).lerp(NIGHT.river, night));
+      rivers.opacity = 0.85 * o;
     },
   };
 }
@@ -209,18 +199,17 @@ export function createRoads(roads, sample) {
     group,
     opacity: 1,
     city: 1,
+    fade: 1,
     update(night, renderer, dist) {
       renderer.getDrawingBufferSize(res);
       const dpr = renderer.getPixelRatio();
       const near = (1 - Math.min(1, Math.max(0, (dist - 40) / 160))) * this.city;
-      // imagery roads: pale gold highways and white streets by day, sodium-lit at night
-      const day = [[1.0, 0.9, 0.62], [1, 1, 1], [1, 1, 1]];
-      const lit = [[1.0, 0.72, 0.38], [1.0, 0.8, 0.5], [0.95, 0.75, 0.5]];
-      [[trunk, 1.3, 0.42 + 0.2 * near], [major, 1.5, 0.55 * near], [minor, 0.9, 0.3 * near]].forEach(([m, w, o], i) => {
+      const ink = [0.086 + (0.62 - 0.086) * night, 0.231 + (0.74 - 0.231) * night, 0.404 + (0.88 - 0.404) * night];
+      [[trunk, 1.1, 0.22 + 0.25 * near], [major, 1.5, 0.5 * near], [minor, 0.9, 0.3 * near]].forEach(([m, w, o]) => {
         m.resolution.copy(res);
         m.linewidth = w * dpr;
-        m.color.setRGB(day[i][0] + (lit[i][0] - day[i][0]) * night, day[i][1] + (lit[i][1] - day[i][1]) * night, day[i][2] + (lit[i][2] - day[i][2]) * night);
-        m.opacity = o * this.opacity;
+        m.color.setRGB(ink[0], ink[1], ink[2]);
+        m.opacity = o * this.opacity * this.fade;
       });
       major.visible = minor.visible = near > 0.01;
       group.visible = this.opacity > 0.001;

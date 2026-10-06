@@ -42,7 +42,7 @@ export default {
     qoqon: "코칸드", margilon: "마르길란", asaka: "아사카", jizzax: "지자흐", qarshi: "카르시", navoiy: "나보이", guliston: "굴리스탄",
     nurafshon: "타슈켄트주", chirchiq: "치르치크",
   },
-  card: { photoBy: "사진", zoom: "확대", add: "미디어 플랜에 추가", added: "플랜에 추가됨", open: "섹션 열기", close: "닫기", networkPhoto: "네트워크 사진", hours: "영업시간", address: "주소", stores: "Korzinka 매장", town: "도시" },
+  card: { kindCafe: "카페 · 레스토랑", route: "길찾기", approx: "거리 기준 위치", photoBy: "사진", zoom: "확대", add: "미디어 플랜에 추가", added: "플랜에 추가됨", open: "섹션 열기", close: "닫기", networkPhoto: "네트워크 사진", hours: "영업시간", address: "주소", stores: "Korzinka 매장", town: "도시" },
   units: { bln: "십억 숨", mln: "백만 숨", perMonth: "/ 월", month3: "3개월", month6: "6개월", month12: "12개월", months: "개월", sec: "초", min: "분", sum: "숨", vat: "가격은 부가세 별도입니다", screens: "스크린", plays: "회 송출 / 일", m2: "m²" },
   airport: {
     headline: "타슈켄트 공항. 연 18,000,000회 방문. 이제 — 우즈베키스탄 전역.", headSub: "LED 스크린, 모니터 200대, 라이트박스 — 그리고 Korzinka, 75개 이상 레스토랑, 11개 지역.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "지도에는 OpenStreetMap에서 찾은 네트워크 레스토랑이 표시됩니다. 전체 목록은 아래에 있습니다.",
   },
   regions: {
+    placed: "지도에 표시된 장소",
     pick: "도시를 선택하세요", all: "전체 네트워크", venueList: "네트워크 장소", photos: "장소 사진", share: "네트워크 내 비중", showMap: "지도에서 보기", valley: "페르가나 계곡 · 기타 장소", onRequest: "장소 목록과 사진은 요청 시 제공됩니다.", stores: "Korzinka 매장", landmark: "도시", expand: "더 보기", collapse: "접기", storesPhoto: "Korzinka 매장",
     citiesTitle: "네트워크 도시",
     title: "11개 지역",
@@ -129,7 +130,7 @@ export default {
     planLabel: "선택한 플랜",
   },
   footer: {
-    author: "웹사이트 제작", imagery: "위성 영상: Sentinel-2 cloudless 2016 — EOX IT Services GmbH(CC BY 4.0), NASA Blue Marble 및 Black Marble.",
+    author: "웹사이트 제작",
     sourcesTitle: "출처", photos: "도시 사진: 위키미디어 공용 기여자(CC BY / CC BY-SA / CC0), 각 사진에 저작자 표시.",
     about: "Media Port는 Orient Advertising 광고 그룹의 실내 미디어 부문으로, 타슈켄트 국제공항 운영을 위해 설립되었습니다. 그룹에는 100명 이상의 전문가가 일합니다.",
     slogan: "Osmon qadar hayratlanasiz",

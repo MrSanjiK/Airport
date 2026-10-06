@@ -42,7 +42,7 @@ export default {
     qoqon: "قوقند", margilon: "مرغيلان", asaka: "أساكا", jizzax: "جيزاخ", qarshi: "قرشي", navoiy: "نوائي", guliston: "كلستان",
     nurafshon: "ولاية طشقند", chirchiq: "تشيرتشيك",
   },
-  card: { photoBy: "صورة", zoom: "تكبير", add: "أضف إلى الخطة", added: "أُضيف إلى الخطة", open: "افتح القسم", close: "إغلاق", networkPhoto: "صورة من الشبكة", hours: "ساعات العمل", address: "العنوان", stores: "متاجر كورزينكا", town: "المدينة" },
+  card: { kindCafe: "مقهى · مطعم", route: "الاتجاهات", approx: "الموقع حسب الشارع", photoBy: "صورة", zoom: "تكبير", add: "أضف إلى الخطة", added: "أُضيف إلى الخطة", open: "افتح القسم", close: "إغلاق", networkPhoto: "صورة من الشبكة", hours: "ساعات العمل", address: "العنوان", stores: "متاجر كورزينكا", town: "المدينة" },
   units: { bln: "مليار سوم", mln: "مليون سوم", perMonth: "/ شهر", month3: "3 أشهر", month6: "6 أشهر", month12: "12 شهراً", months: "أشهر", sec: "ثانية", min: "دقيقة", sum: "سوم", vat: "الأسعار لا تشمل ضريبة القيمة المضافة", screens: "شاشة", plays: "عرض / يوم", m2: "م²" },
   airport: {
     headline: "مطار طشقند. 18,000,000 زيارة. والآن — أوزبكستان كلها.", headSub: "شاشات LED و200 شاشة وصناديق مضيئة — إضافة إلى كورزينكا وأكثر من 75 مطعماً و11 منطقة.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "تعرض الخريطة مطاعم الشبكة الموجودة في OpenStreetMap. القائمة الكاملة أدناه.",
   },
   regions: {
+    placed: "المواقع المحددة على الخريطة",
     pick: "اختر مدينة", all: "الشبكة كاملة", venueList: "مواقع الشبكة", photos: "صور المواقع", share: "حصة من الشبكة", showMap: "عرض على الخريطة", valley: "وادي فرغانة · مواقع أخرى", onRequest: "قائمة المواقع والصور عند الطلب.", stores: "متاجر كورزينكا", landmark: "المدينة", expand: "عرض المزيد", collapse: "عرض أقل", storesPhoto: "متاجر كورزينكا",
     citiesTitle: "مدن الشبكة",
     title: "11 منطقة",
@@ -129,7 +130,7 @@ export default {
     planLabel: "الخطة المختارة",
   },
   footer: {
-    author: "تصميم الموقع", imagery: "صور الأقمار الصناعية: Sentinel-2 cloudless 2016 — EOX IT Services GmbH ‏(CC BY 4.0)، وNASA Blue Marble وBlack Marble.",
+    author: "تصميم الموقع",
     sourcesTitle: "المصادر", photos: "صور المدن: مساهمو ويكيميديا كومنز (CC BY / CC BY-SA / CC0)، مع ذكر المؤلف على كل صورة.",
     about: "ميديا بورت هي قسم الإعلام الداخلي في مجموعة Orient Advertising الإعلانية، أُنشئت للعمل في مطار طشقند الدولي. يعمل في المجموعة أكثر من 100 متخصص.",
     slogan: "Osmon qadar hayratlanasiz",

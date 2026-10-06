@@ -1,0 +1,670 @@
+{
+ "andijon": [
+  {
+   "n": "Mehmon",
+   "au": "Bobur shoh ko'chasi, 3",
+   "nr": "Меҳмон",
+   "a": "проспект Бобур, 3",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Uz Turk 2",
+   "au": "Amir Temur ko'chasi, 9",
+   "nr": "Уз Турк 2",
+   "a": "проспект Амира Темура, 9",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "O'zbegim · Makro M32",
+   "au": "Sulton ko'chasi, 10",
+   "nr": "Ўзбегим Макро М32",
+   "a": "проспект Султон, 10",
+   "kind": "makro",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Makro M20",
+   "au": "Amir Umarxon ko'chasi, 24",
+   "nr": "Макро М20",
+   "a": "ул. Амир Умархон, 24",
+   "kind": "makro",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Makro M16",
+   "au": "Bobur shoh ko'chasi, 8",
+   "nr": "Макро М16",
+   "a": "проспект Бобура, 8",
+   "kind": "makro",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Stimorol",
+   "au": "Kichik massiv 4, Lermontov ko'chasi, 30",
+   "nr": "Стиморол",
+   "a": "Малый массив 4, ул. Лермонтова, 30",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · Navruz",
+   "au": "Mashrab ko'chasi, 62",
+   "nr": "Korzinka Навруз",
+   "a": "ул. Машраб, 62",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · Vokzal",
+   "au": "Amir Temur ko'chasi, 62",
+   "nr": "Korzinka Вокзал",
+   "a": "ул. Амира Темура, 62",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Mega polis",
+   "au": "Toshkent ko'chasi, 44",
+   "nr": "Мега полис",
+   "a": "ул. Тошкент, 44",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Gumbaz 1",
+   "au": "Bobur shoh ko'chasi, 36",
+   "nr": "Гумбаз 1",
+   "a": "проспект Бобура, 36",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "O'zbegim Food Court",
+   "au": "Sulton ko'chasi, 10",
+   "nr": "Ўзбегим Food Kord",
+   "a": "проспект Султон, 10",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "O'zbegim · Sulton Ahmet",
+   "au": "Sulton shoh ko'chasi, 10",
+   "nr": "Ўзбегим Султон Ахмет",
+   "a": "проспект Султон шох, 10",
+   "kind": "cafe",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · O'zbegim",
+   "au": "Cho'lpon ko'chasi, 10",
+   "nr": "Корзинка — Андижан Узбегим",
+   "a": "ул. Чулпон, 10",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · To'rt ko'cha",
+   "au": "O'zbekiston ko'chasi, 140",
+   "nr": "Корзинка — Андижан To‘rt ko‘cha",
+   "a": "ул. Узбекистанская, 140",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · Amir Temur",
+   "au": "Amir Temur ko'chasi, 35b",
+   "nr": "Корзинка — Андижан Амир Темур",
+   "a": "проспект Амира Темура, 35б",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  },
+  {
+   "n": "Korzinka · Otabekov",
+   "au": "Otabekov ko'chasi, 9",
+   "nr": "Корзинка — Андижан Атабекова-9",
+   "a": "ул. Атабекова, 9",
+   "kind": "korzinka",
+   "city": "Андижан",
+   "cityUz": "Andijon"
+  }
+ ],
+ "asaka": [
+  {
+   "n": "Gumbaz",
+   "au": "Karvonsaroy ko'chasi, 1",
+   "nr": "Гумбаз",
+   "a": "ул. Карвонсарой, 1",
+   "kind": "cafe",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Iris",
+   "au": "Imom Buxoriy ko'chasi, 14",
+   "nr": "Ирис",
+   "a": "ул. Имама Бухари, 14",
+   "kind": "cafe",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Sulton Saroy",
+   "au": "Imom Buxoriy ko'chasi, 13",
+   "nr": "Султон Сарой",
+   "a": "ул. Имама Бухари, 13",
+   "kind": "cafe",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Obu Rohat",
+   "au": "Imom Buxoriy ko'chasi",
+   "nr": "Обу Роҳат",
+   "a": "ул. Имама Бухари",
+   "kind": "cafe",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Yulduz",
+   "au": "Kalin ko'chasi, 31",
+   "nr": "Юлдуз",
+   "a": "ул. Калин, 31",
+   "kind": "cafe",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Korzinka",
+   "au": "Jaloliddin Manguberdi ko'chasi, 36",
+   "nr": "Korzinka",
+   "a": "ул. Жалолиддин Мангуберди, 36",
+   "kind": "korzinka",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  },
+  {
+   "n": "Makro M22",
+   "au": "Umid ko'chasi, 49",
+   "nr": "Макро М22",
+   "a": "ул. Умид, 49",
+   "kind": "makro",
+   "city": "Асака",
+   "cityUz": "Asaka"
+  }
+ ],
+ "fargona": [
+  {
+   "n": "Rayhon",
+   "au": "Vatan ravnaqi ko'chasi, 1",
+   "nr": "Райхон",
+   "a": "ул. Ватан равнақи, 1",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "O'zbegim milliy taomlari",
+   "au": "Dodxoh ko'chasi, 22a",
+   "nr": "Ўзбегим миллий таомлари",
+   "a": "ул. Додхох, 22а",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Istiqlol",
+   "au": "Yuksalish ko'chasi, 104/2",
+   "nr": "Истиқлол",
+   "a": "ул. Юксалиш, 104/2",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "KWIK",
+   "au": "Al-Farg'oniy ko'chasi",
+   "nr": "KWIK",
+   "a": "ул. Ал-Фарғоний, напротив университета",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Oybek osh markazi 1",
+   "au": "Oqsuv ko'chasi, 12",
+   "nr": "Ойбек Ош маркази 1",
+   "a": "ул. Оқсув, 12",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Oybek osh markazi 2",
+   "au": "Bahor ko'chasi, 13",
+   "nr": "Ойбек Ош маркази 2",
+   "a": "Кўксарой, ул. Баҳор, 13",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Sulton Ahmet",
+   "au": "Yuksalish ko'chasi, 1",
+   "nr": "Султон Ахмет",
+   "a": "ул. Юксалиш, 1",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Oxu",
+   "au": "Mustaqillik ko'chasi, 55",
+   "nr": "Оху",
+   "a": "ул. Мустакиллик, 55",
+   "kind": "cafe",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Korzinka",
+   "au": "Yuksalish ko'chasi, 53",
+   "nr": "Korzinka",
+   "a": "ул. Юксалиш, 53",
+   "kind": "korzinka",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Korzinka · Markaziy univermag",
+   "au": "Mustaqillik ko'chasi, 50",
+   "nr": "Корзинка — Фергана ЦУМ",
+   "a": "проспект Мустакиллик, 50",
+   "kind": "korzinka",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Korzinka · Forobiy",
+   "au": "Forobiy ko'chasi, 34/2",
+   "nr": "Корзинка — Фергана Фаробий-22",
+   "a": "ул. Фаробий, 34/2",
+   "kind": "korzinka",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  },
+  {
+   "n": "Korzinka · Abdulla Qodiriy",
+   "au": "Abdulla Qodiriy ko'chasi, 37a",
+   "nr": "Корзинка — Абдулла Кадыри",
+   "a": "ул. Абдулла Кадыри, 37а",
+   "kind": "korzinka",
+   "city": "Фергана",
+   "cityUz": "Farg'ona"
+  }
+ ],
+ "margilon": [
+  {
+   "n": "Marg'ilon kabob",
+   "au": "Istiqlol ko'chasi, 32",
+   "nr": "Марғилон кабоб",
+   "a": "ул. Истиқлол, 32",
+   "kind": "cafe",
+   "city": "Маргилан",
+   "cityUz": "Marg'ilon"
+  },
+  {
+   "n": "Yakko Marg'ilon",
+   "au": "Navoiy ko'chasi, 41",
+   "nr": "Якко Марғилон",
+   "a": "ул. Навоий, 41",
+   "kind": "cafe",
+   "city": "Маргилан",
+   "cityUz": "Marg'ilon"
+  },
+  {
+   "n": "Kish Mish",
+   "au": "Eski Tor ko'chasi, 186",
+   "nr": "Киш Миш",
+   "a": "ул. Ески Тор, 186",
+   "kind": "cafe",
+   "city": "Маргилан",
+   "cityUz": "Marg'ilon"
+  },
+  {
+   "n": "Korzinka",
+   "au": "Burhoniddin Marg'inoniy ko'chasi",
+   "nr": "Корзинка — Маргилан",
+   "a": "ул. Бурхониддина Маргилоний",
+   "kind": "korzinka",
+   "city": "Маргилан",
+   "cityUz": "Marg'ilon"
+  }
+ ],
+ "qoqon": [
+  {
+   "n": "Oilaviy",
+   "au": "Istiqlol ko'chasi, 4",
+   "nr": "Оилавий",
+   "a": "ул. Истиқлол, 4",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "My cafe",
+   "au": "Istiqlol ko'chasi, 4",
+   "nr": "My cafe",
+   "a": "ул. Истиқлол, 4",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Mini Food",
+   "au": "Xudoyorxon ko'chasi, 13",
+   "nr": "Mini Food",
+   "a": "ул. Худоёрхон, 13",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Benazir",
+   "au": "Xudoyorxon ko'chasi, 11",
+   "nr": "Беназир кафе",
+   "a": "ул. Худоёрхон, 11",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Bahor",
+   "au": "Xudoyorxon ko'chasi, 2",
+   "nr": "Бахор",
+   "a": "ул. Худоёрхон, 2",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Benazir 1",
+   "au": "Bobur ko'chasi",
+   "nr": "Беназир 1",
+   "a": "ул. Бобур",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Benazir 2",
+   "au": "Chahri ko'chasi",
+   "nr": "Беназир 2",
+   "a": "ул. Чахри",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Benazir 3",
+   "au": "Navoiy ko'chasi",
+   "nr": "Беназир 3",
+   "a": "ул. Навоий",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Makro M24",
+   "au": "Istiqlol ko'chasi, 4",
+   "nr": "Макро М24",
+   "a": "ул. Истиқлол, 4",
+   "kind": "makro",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Korzinka",
+   "au": "Shohruhobod ko'chasi, 39",
+   "nr": "Korzinka",
+   "a": "ул. Шохрухобод, 39",
+   "kind": "korzinka",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Yoshlik",
+   "au": "Bobur ko'chasi",
+   "nr": "Ёшлик",
+   "a": "ул. Бобура, напротив Пед. института",
+   "kind": "cafe",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Korzinka · Go'zal",
+   "au": "Furqat ko'chasi, 75",
+   "nr": "Корзинка — Коканд Гузаль",
+   "a": "ул. Фуркат, 75",
+   "kind": "korzinka",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  },
+  {
+   "n": "Korzinka · Charxiy",
+   "au": "Asqarali Charxiy ko'chasi, 1",
+   "nr": "Корзинка — Коканд Чархий",
+   "a": "ул. Аскарали Чархий, 1",
+   "kind": "korzinka",
+   "city": "Коканд",
+   "cityUz": "Qo'qon"
+  }
+ ],
+ "namangan": [
+  {
+   "n": "Korzinka",
+   "au": "Nurafshon mahallasi, 38",
+   "nr": "Корзинка — Наманган",
+   "a": "махалля Нурафшан, 38",
+   "kind": "korzinka",
+   "city": "Наманган",
+   "cityUz": "Namangan"
+  },
+  {
+   "n": "Korzinka · Afsona",
+   "au": "Girvonbuloq ko'chasi, 242",
+   "nr": "Корзинка — Наманган Афсона",
+   "a": "ул. Гирвонбулок, 242",
+   "kind": "korzinka",
+   "city": "Наманган",
+   "cityUz": "Namangan"
+  },
+  {
+   "n": "Korzinka · Grand",
+   "au": "Hamroh ko'chasi, 96A",
+   "nr": "Корзинка — Наманган Гранд",
+   "a": "ул. Хамрох, 96А",
+   "kind": "korzinka",
+   "city": "Наманган",
+   "cityUz": "Namangan"
+  }
+ ],
+ "samarqand": [
+  {
+   "n": "Korzinka · Samarqand",
+   "au": "Rudakiy ko'chasi, 54",
+   "nr": "Корзинка — Самарканд",
+   "a": "ул. Рудакий, 54",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Anjir",
+   "au": "Beruniy ko'chasi, 56B",
+   "nr": "Корзинка — Анжир",
+   "a": "ул. Беруни, 56Б",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Dinamo",
+   "au": "Mir Said Baraka ko'chasi, 2",
+   "nr": "Корзинка — Самарканд Динамо",
+   "a": "ул. Мир Саид Барака, 2",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Atlas",
+   "au": "Buyuk Ipak Yo'li ko'chasi, 131-B",
+   "nr": "Корзинка — Самарканд Атлас",
+   "a": "ул. Буюк Ипак Йули, 131-Б",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Gagarin",
+   "au": "Gagarin ko'chasi, 86",
+   "nr": "Корзинка — Самарканд Гагарина",
+   "a": "ул. Гагарина, 86",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Kaganat",
+   "au": "Amir Temur ko'chasi, 24",
+   "nr": "Корзинка — Самарканд Каганат",
+   "a": "ул. Амира Темура, 24",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  },
+  {
+   "n": "Korzinka · Festival Mall",
+   "au": "Farhod ko'chasi, 57a",
+   "nr": "Корзинка — Самарканд Festival Mall",
+   "a": "ул. Фархадская, 57а",
+   "kind": "korzinka",
+   "city": "Самарканд",
+   "cityUz": "Samarqand"
+  }
+ ],
+ "buxoro": [
+  {
+   "n": "Korzinka · Buxoro-1",
+   "au": "Bahouddin Naqshband ko'chasi, 149",
+   "nr": "Корзинка — Бухара-1",
+   "a": "ул. Б. Накшбанд, 149",
+   "kind": "korzinka",
+   "city": "Бухара",
+   "cityUz": "Buxoro"
+  },
+  {
+   "n": "Korzinka · Buxoro-2",
+   "au": "Afrosiyob va Ibn Sino ko'chalari kesishmasi",
+   "nr": "Корзинка — Бухара-2",
+   "a": "пересечение улиц Афросиаб и Ибн Сино",
+   "kind": "korzinka",
+   "city": "Бухара",
+   "cityUz": "Buxoro"
+  },
+  {
+   "n": "Korzinka · Buxoro-3",
+   "au": "5-mikrorayon",
+   "nr": "Корзинка — Бухара-3",
+   "a": "5-микрорайон",
+   "kind": "korzinka",
+   "city": "Бухара",
+   "cityUz": "Buxoro"
+  }
+ ],
+ "jizzax": [
+  {
+   "n": "Korzinka · Jizzax",
+   "au": "Sharof Rashidov ko'chasi, Toshloq mahallasi",
+   "nr": "Корзинка — Джизак",
+   "a": "махалля Ташлак, ул. Шарафа Рашидова",
+   "kind": "korzinka",
+   "city": "Джизак",
+   "cityUz": "Jizzax"
+  },
+  {
+   "n": "Korzinka · Ko'k Saroy",
+   "au": "Zargarlik ko'chasi, 4B",
+   "nr": "Корзинка — Кок Сарой",
+   "a": "МФЙ Маданият, ул. Заргарлик, 4B",
+   "kind": "korzinka",
+   "city": "Джизак",
+   "cityUz": "Jizzax"
+  },
+  {
+   "n": "Korzinka · O'ratepalik",
+   "au": "Islom Karimov ko'chasi",
+   "nr": "Корзинка — Уратепалик",
+   "a": "проспект Ислама Каримова, МСГ Уратепалик",
+   "kind": "korzinka",
+   "city": "Джизак",
+   "cityUz": "Jizzax"
+  }
+ ],
+ "qarshi": [
+  {
+   "n": "Korzinka · Qarshi",
+   "au": "Alisher Navoiy ko'chasi, 27",
+   "nr": "Корзинка — Карши",
+   "a": "ул. А. Навои, 27",
+   "kind": "korzinka",
+   "city": "Карши",
+   "cityUz": "Qarshi"
+  },
+  {
+   "n": "Korzinka · Qarshi Atlas",
+   "au": "Islom Karimov ko'chasi, 17",
+   "nr": "Корзинка — Карши Атлас",
+   "a": "ул. Ислама Каримова, 17",
+   "kind": "korzinka",
+   "city": "Карши",
+   "cityUz": "Qarshi"
+  },
+  {
+   "n": "Korzinka · Qarshi-2",
+   "au": "Alisher Navoiy ko'chasi, Kunchiqar mahallasi",
+   "nr": "Корзинка — Карши-2",
+   "a": "ул. А. Навои, махалля Кунчикар",
+   "kind": "korzinka",
+   "city": "Карши",
+   "cityUz": "Qarshi"
+  },
+  {
+   "n": "Korzinka · Qarshi-4",
+   "au": "Islom Karimov ko'chasi, 48",
+   "nr": "Корзинка — Карши-4",
+   "a": "ул. Ислама Каримова, 48",
+   "kind": "korzinka",
+   "city": "Карши",
+   "cityUz": "Qarshi"
+  }
+ ]
+}

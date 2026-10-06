@@ -1,4 +1,4 @@
-import { t, num, money, onLang } from './i18n/index.js';
+import { t, num, money, onLang, place, lang } from './i18n/index.js';
 import { AIRPORT, LED_ZONES, LED_FACTS, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS } from './data/inventory.js';
 import { CITY_PHOTOS } from './data/photo-credits.js';
 import { CITY_VENUES, CITY_GALLERY, CITY_STORES } from './data/regions.js';
@@ -258,6 +258,10 @@ export function initSections({ bus, places }) {
   // the deck and the deck's venue list, and the chart flies to it.
   let rgKey = 'all';
   let rgOpen = false;
+  // venues placed on the city model (scripts/data/cities.py), once that city has been shown
+  const placed = new Map();
+  bus.addEventListener('cityvenues', (e) => { placed.set(e.detail.key, e.detail.venues); if (e.detail.key === rgKey) renderCity(); });
+  const KIND = { korzinka: 'Korzinka', makro: 'Makro' };
   const korByCity = (key) => places.korzinka.filter((k) => {
     const c = places.cities[key];
     return c && Math.hypot((k.p[0] - c[0]) * 0.75, k.p[1] - c[1]) < 0.12;
@@ -298,7 +302,14 @@ export function initSections({ bus, places }) {
           ${Array.from({ length: shots }, (_, i) => `<figure>${img(`rg/${r.key}-${i + 1}`, `${t(`cities.${r.key}`)} · ${t('card.networkPhoto')}`)}</figure>`).join('')}
           ${CITY_STORES.includes(r.key) ? `<figure class="is-store">${img(`rg/kz-${r.key}-1`, `${t(`cities.${r.key}`)} · ${t('regions.storesPhoto')}`)}<figcaption>${esc(t('regions.storesPhoto'))}</figcaption></figure>` : ''}
         </div></div>` : ''}
-        ${venues.length ? `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.venueList'))} <small>${venues.length}</small></h4>
+        ${placed.has(r.key) ? (() => {
+          const pv = placed.get(r.key);
+          const nm = (v) => (lang().code === 'ru' && v.nr ? v.nr : v.n);
+          const ad = (v) => (lang().code === 'ru' ? v.ar || v.a : v.a || place(v.ar));
+          return `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.placed'))} <small>${pv.length}</small></h4>
+          <ol>${pv.map((v) => `<li><button type="button" data-venue="${v.i}"><b>${esc(nm(v))}</b><span>${esc(KIND[v.k] || t('card.kindCafe'))} · ${esc(ad(v))}${v.how === 'street' ? ' ≈' : ''}</span></button></li>`).join('')}</ol>
+          ${pv.length > 6 ? `<button type="button" class="rg-more">${esc(t(rgOpen ? 'regions.collapse' : 'regions.expand'))}</button>` : ''}</div>`;
+        })() : venues.length ? `<div class="rg-venues${rgOpen ? ' is-open' : ''}"><h4>${esc(t('regions.venueList'))} <small>${venues.length}</small></h4>
           <ol>${venues.map(([n, a]) => `<li><b>${esc(n)}</b><span>${esc(a)}</span></li>`).join('')}</ol>
           ${venues.length > 6 ? `<button type="button" class="rg-more">${esc(t(rgOpen ? 'regions.collapse' : 'regions.expand'))}</button>` : ''}</div>`
         : `<p class="note">${esc(t('regions.onRequest'))}</p>`}
@@ -309,6 +320,7 @@ export function initSections({ bus, places }) {
           ${stores ? `<span class="rg-stores tnum"><b>${stores}</b> ${esc(t('regions.stores'))}</span>` : ''}
         </div>`;
       box.querySelector('.rg-more')?.addEventListener('click', () => { rgOpen = !rgOpen; renderCity(); });
+      box.querySelectorAll('[data-venue]').forEach((b) => b.addEventListener('click', () => bus.dispatchEvent(new CustomEvent('venuecard', { detail: { key: r.key, i: +b.dataset.venue } }))));
       box.querySelector('[data-rg-map]').addEventListener('click', () => bus.dispatchEvent(new CustomEvent('flyto', { detail: { type: 'city', key: r.key } })));
       box.querySelector('[data-rg-plan]').addEventListener('click', (e) => {
         bus.dispatchEvent(new CustomEvent('planadd', { detail: 'regions' }));

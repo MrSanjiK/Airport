@@ -42,7 +42,7 @@ export default {
     qoqon: "Hokand", margilon: "Margilan", asaka: "Asaka", jizzax: "Cizzah", qarshi: "Karşi", navoiy: "Nevai", guliston: "Gülistan",
     nurafshon: "Taşkent ili", chirchiq: "Çırçık",
   },
-  card: { photoBy: "Fotoğraf", zoom: "Yakınlaştır", add: "Medya planına ekle", added: "Plana eklendi", open: "Bölümü aç", close: "Kapat", networkPhoto: "Ağ fotoğrafı", hours: "Çalışma saatleri", address: "Adres", stores: "Korzinka mağazaları", town: "Şehir" },
+  card: { kindCafe: "Kafe · restoran", route: "Yol tarifi", approx: "Sokağa göre konumlandı", photoBy: "Fotoğraf", zoom: "Yakınlaştır", add: "Medya planına ekle", added: "Plana eklendi", open: "Bölümü aç", close: "Kapat", networkPhoto: "Ağ fotoğrafı", hours: "Çalışma saatleri", address: "Adres", stores: "Korzinka mağazaları", town: "Şehir" },
   units: { bln: "milyar som", mln: "milyon som", perMonth: "/ ay", month3: "3 ay", month6: "6 ay", month12: "12 ay", months: "ay", sec: "sn", min: "dk", sum: "som", vat: "Fiyatlara KDV dahil değildir", screens: "ekran", plays: "gösterim / gün", m2: "m²" },
   airport: {
     headline: "Taşkent Havalimanı. 18.000.000 ziyaret. Şimdi — tüm Özbekistan.", headSub: "LED ekranlar, 200 monitör ve lightbox — ayrıca Korzinka, 75+ restoran, 11 bölge.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "Haritada OpenStreetMap'te bulunan ağ restoranları gösteriliyor. Tam liste aşağıda.",
   },
   regions: {
+    placed: "Haritada konumu belli noktalar",
     pick: "Bir şehir seçin", all: "Tüm ağ", venueList: "Ağdaki noktalar", photos: "Nokta fotoğrafları", share: "ağdaki payı", showMap: "Haritada göster", valley: "Fergana vadisi · diğer noktalar", onRequest: "Nokta listesi ve fotoğraflar talep üzerine.", stores: "Korzinka mağazaları", landmark: "Şehir", expand: "Daha fazla", collapse: "Daha az", storesPhoto: "Korzinka mağazaları",
     citiesTitle: "Ağ şehirleri",
     title: "11 bölge",
@@ -129,7 +130,7 @@ export default {
     planLabel: "Seçilen plan",
   },
   footer: {
-    author: "Site yapımcısı", imagery: "Uydu görüntüleri: Sentinel-2 cloudless 2016 — EOX IT Services GmbH (CC BY 4.0), NASA Blue Marble ve Black Marble.",
+    author: "Site yapımcısı",
     sourcesTitle: "Kaynaklar", photos: "Şehir fotoğrafları: Wikimedia Commons katkıcıları (CC BY / CC BY-SA / CC0), her fotoğrafta belirtilmiştir.",
     about: "Media Port, Orient Advertising reklam holdinginin Taşkent Uluslararası Havalimanı için kurulan iç mekân medya birimidir. Holdingde 100'den fazla uzman çalışıyor.",
     slogan: "Osmon qadar hayratlanasiz",

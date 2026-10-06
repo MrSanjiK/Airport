@@ -42,7 +42,7 @@ export default {
     qoqon: "Qo'qon", margilon: "Marg'ilon", asaka: "Asaka", jizzax: "Jizzax", qarshi: "Qarshi", navoiy: "Navoiy", guliston: "Guliston",
     nurafshon: "Toshkent viloyati", chirchiq: "Chirchiq",
   },
-  card: { photoBy: "Foto", zoom: "Yaqinlashish", add: "Media-planga qo'shish", added: "Rejaga qo'shildi", open: "Bo'limni ochish", close: "Yopish", networkPhoto: "Tarmoq surati", hours: "Ish vaqti", address: "Manzil", stores: "Korzinka do'konlari", town: "Shahar" },
+  card: { kindCafe: "Kafe · restoran", route: "Marshrut", approx: "Manzil ko‘cha bo‘yicha ko‘rsatilgan", photoBy: "Foto", zoom: "Yaqinlashish", add: "Media-planga qo'shish", added: "Rejaga qo'shildi", open: "Bo'limni ochish", close: "Yopish", networkPhoto: "Tarmoq surati", hours: "Ish vaqti", address: "Manzil", stores: "Korzinka do'konlari", town: "Shahar" },
   units: { bln: "mlrd so'm", mln: "mln so'm", perMonth: "/ oy", month3: "3 oy", month6: "6 oy", month12: "12 oy", months: "oy", sec: "soniya", min: "daqiqa", sum: "so'm", vat: "QQS hisobga olinmagan", screens: "ekran", plays: "ko'rsatuv / kun", m2: "m²" },
   airport: {
     headline: "Toshkent aeroporti. 18 000 000 tashrif. Endi — butun O'zbekiston.", headSub: "LED ekranlar, 200 monitor va lightbox — hamda Korzinka, 75+ restoran, 11 hudud.",
@@ -99,6 +99,7 @@ export default {
     mapNote: "Xaritada OpenStreetMap'da topilgan tarmoq restoranlari. To'liq ro'yxat — quyida.",
   },
   regions: {
+    placed: "Xaritada aniq joylashgan obyektlar",
     pick: "Shaharni tanlang", all: "Butun tarmoq", venueList: "Tarmoqdagi joylar", photos: "Joylardan suratlar", share: "tarmoqdagi ulushi", showMap: "Xaritada ko'rsatish", valley: "Farg'ona vodiysi · boshqa joylar", onRequest: "Joylar ro'yxati va suratlar — so'rov bo'yicha.", stores: "Korzinka do'konlari", landmark: "Shahar", expand: "Yana ko'rsatish", collapse: "Yig'ish", storesPhoto: "Korzinka do'konlari",
     citiesTitle: "Tarmoq shaharlari",
     title: "11 hudud",
@@ -129,7 +130,7 @@ export default {
     planLabel: "Tanlangan reja",
   },
   footer: {
-    author: "Sayt muallifi", imagery: "Sun'iy yo'ldosh suratlari: Sentinel-2 cloudless 2016 — EOX IT Services GmbH (CC BY 4.0), NASA Blue Marble va Black Marble.",
+    author: "Sayt muallifi",
     sourcesTitle: "Manbalar", photos: "Shahar suratlari: Wikimedia Commons mualliflari (CC BY / CC BY-SA / CC0) — har bir suratda muallif ko'rsatilgan.",
     about: "Media Port — Orient Advertising reklama xoldingining indoor-media bo'linmasi, Toshkent xalqaro aeroportida ishlash uchun yaratilgan. Xoldingda 100 dan ortiq mutaxassis ishlaydi.",
     slogan: "Osmon qadar hayratlanasiz",

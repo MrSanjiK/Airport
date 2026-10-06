@@ -172,7 +172,6 @@ async function boot() {
     settle();
     if (startY <= innerHeight * 0.5) { world.setGoal(world.goalFromPose(POSES.hero)); world.jump(); }
     finish();
-    world.loadDetail(gsap);
     return;
   }
 
@@ -195,7 +194,7 @@ async function boot() {
   const lerp = (x, y, k) => x + (y - x) * k;
   const tl = gsap.timeline({
     // the scroll story takes the camera only once the flight has landed exactly on the hero pose
-    onComplete: () => { story.releaseCamera(); lenis?.start(); world.loadDetail(gsap); },
+    onComplete: () => { story.releaseCamera(); lenis?.start(); },
   });
   tl.to(fly, {
     k: 1, duration: 3.0, ease: 'power3.inOut',

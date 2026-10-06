@@ -245,14 +245,13 @@ export function initPlanner({ bus }) {
         </div>
         <div><h3><b>01</b> · ${esc(t('footer.networks'))}</h3><ul>${['airport', 'korzinka', 'horeca', 'regions', 'plan'].map((k) => `<li><a href="#${k}">${esc(t(`nav.${k}`))}</a></li>`).join('')}</ul></div>
         <div><h3><b>02</b> · ${esc(t('footer.contacts'))}</h3><ul class="footer-phones">${PHONES.map((p) => `<li><a class="tnum" href="tel:${p.replace(/\s/g, '')}">${p}</a></li>`).join('')}</ul><p class="footer-small">${HOLDING.name}</p></div>
-        <div><h3><b>03</b> · ${esc(t('footer.sourcesTitle'))}</h3><p class="footer-small">${esc(t('map.sources'))}</p><p class="footer-small">${esc(t('footer.imagery'))}</p><p class="footer-small">${esc(t('footer.photos'))}</p></div>
+        <div><h3><b>03</b> · ${esc(t('footer.sourcesTitle'))}</h3><p class="footer-small">${esc(t('map.sources'))}</p><p class="footer-small">${esc(t('footer.photos'))}</p></div>
       </div>
       <div class="footer-base"><span>© ${new Date().getFullYear()} ${esc(t('footer.rights'))}</span>
         <div class="footer-author"><span>${esc(t('footer.author'))}</span>
           <a class="pill pill--sm" href="tel:+998943494994"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg><span class="tnum">+998 94 349 49 94</span></a>
           <a class="pill pill--sm" href="https://t.me/busanjik" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14.5 2.5 1.8 7.4c-.6.2-.6 1 0 1.2l3.1 1 1.2 3.7c.2.5.8.6 1.1.2l1.8-1.9 3.2 2.4c.4.3 1 .1 1.1-.4l2.1-10.1c.1-.6-.4-1.1-1-.9z"/><path d="m4.9 9.6 7.3-4.8-5.6 6"/></svg>Telegram</a>
           <a class="pill pill--sm" href="https://instagram.com/busanjik" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><circle cx="8" cy="8" r="2.9"/><circle cx="11.6" cy="4.4" r=".6"/></svg>Instagram</a>
-          <span class="footer-handle">@busanjik</span>
         </div>
         <a class="pill pill--icon" href="#top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4"/></svg>${esc(t('footer.top'))}</a></div>
     </div>`;

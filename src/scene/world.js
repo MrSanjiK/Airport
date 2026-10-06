@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { toXZ, toLonLat, EXAG, W, D, LONC, LATC, KX, KZ } from './geo.js';
-import { loadHeights, buildOverlays, createTerrain, loadSatellite } from './terrain.js';
-import satMeta from '../data/satellite.json';
+import { toXZ, toLonLat, EXAG, W, D } from './geo.js';
+import { loadHeights, buildOverlays, createTerrain } from './terrain.js';
 import { createIcons, worldAt } from './layers.js';
 import { createAirport } from './airport.js';
+import { createCityLayer } from './city.js';
 import { createDrapedLines, createRoute, createRoads } from './lines.js';
 
 THREE.ColorManagement.enabled = false;
@@ -40,16 +40,10 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   scene.background = bg;
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 8000);
 
-  // elevation and the whole-sheet imagery load together; the progress bar follows the larger of the two
-  let pH = 0, pS = 0;
-  const report = () => onProgress?.(0.15 + ((pH * 2 + pS * 1.3) / 3.3) * 0.72);
-  const [heights, sat] = await Promise.all([
-    loadHeights(quality.dem, (p) => { pH = p; report(); }),
-    loadSatellite(satMeta, quality.dem < 2048, document.documentElement.dataset.theme === 'night', (p) => { pS = p; report(); }),
-  ]);
+  const heights = await loadHeights(quality.dem, (p) => onProgress?.(0.15 + p * 0.72));
   const overlays = buildOverlays(data.vectors, quality.overlay);
   onProgress?.(0.9);
-  const terrain = createTerrain(heights, overlays, quality.seg, sat, [LONC, LATC, KX, KZ]);
+  const terrain = createTerrain(heights, overlays, quality.seg);
   scene.add(terrain.mesh);
 
   const sample = heights.sample;
@@ -71,9 +65,9 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   const hor = createIcons(data.places.horeca.map((h) => h.p), sample, 1);
   scene.add(kor.points, hor.points);
 
-  terrain.uniforms.uHub.value.set(hubWorld.x, hubWorld.z);
   const airport = createAirport(data.places.airportPlan, data.airportDetail, hubWorld);
   scene.add(airport.group);
+  const city = createCityLayer({ scene, sample: heights.sample, terrain });
   const lines = createDrapedLines(data.vectors, sample);
   scene.add(lines.group);
   const roads = data.roads ? createRoads(data.roads, sample) : null;
@@ -244,6 +238,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     bg.setRGB(0.929 + (0.039 - 0.929) * state.night, 0.949 + (0.09 - 0.949) * state.night, 0.965 + (0.161 - 0.965) * state.night);
     route.update(state.night, renderer);
     airport.setNight(state.night);
+    city.update(state.night, renderer, dt);
     lines.update(state.night, renderer);
     if (roads) { roads.opacity = lines.opacity; roads.update(state.night, renderer, cur.dist); }
 
@@ -261,15 +256,11 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   onProgress?.(1);
 
   return {
-    renderer, scene, camera, sample, route, lines, roads, goal, cur, kor, hor, airport, terrain, hubWorld, state, field,
+    renderer, scene, camera, sample, route, lines, roads, goal, cur, kor, hor, airport, terrain, hubWorld, state, field, city,
     setPose(p) { poseToState(p); },
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },
     jump() { Object.assign(cur, goal); applyCamera(); },
-    // finer imagery streams in after the intro and cross-fades over the whole-sheet layer
-    async loadDetail(gsap) {
-      if (await terrain.loadDetail()) gsap.to(terrain.uniforms.uDetail, { value: 1, duration: 1.6, ease: 'power2.inOut' });
-    },
     // compile every shader and upload every texture before the first visible frame
     prewarm() { renderer.compile(scene, camera); renderer.render(scene, camera); },
     project, pick,

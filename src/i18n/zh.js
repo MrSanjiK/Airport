@@ -42,7 +42,7 @@ export default {
     qoqon: "浩罕", margilon: "马尔吉兰", asaka: "阿萨卡", jizzax: "吉扎克", qarshi: "卡尔希", navoiy: "纳沃伊", guliston: "古利斯坦",
     nurafshon: "塔什干州", chirchiq: "奇尔奇克",
   },
-  card: { photoBy: "照片", zoom: "放大", add: "加入媒体计划", added: "已加入计划", open: "打开栏目", close: "关闭", networkPhoto: "网络照片", hours: "营业时间", address: "地址", stores: "Korzinka 门店", town: "城市" },
+  card: { kindCafe: "咖啡馆 · 餐厅", route: "路线", approx: "按街道定位", photoBy: "照片", zoom: "放大", add: "加入媒体计划", added: "已加入计划", open: "打开栏目", close: "关闭", networkPhoto: "网络照片", hours: "营业时间", address: "地址", stores: "Korzinka 门店", town: "城市" },
   units: { bln: "十亿苏姆", mln: "百万苏姆", perMonth: "/ 月", month3: "3 个月", month6: "6 个月", month12: "12 个月", months: "个月", sec: "秒", min: "分钟", sum: "苏姆", vat: "价格不含增值税", screens: "块屏", plays: "次播放 / 天", m2: "平方米" },
   airport: {
     headline: "塔什干机场。18,000,000 人次。如今——覆盖整个乌兹别克斯坦。", headSub: "LED 屏、200 台显示器和灯箱——以及 Korzinka、75+ 家餐厅、11 个地区。",
@@ -99,6 +99,7 @@ export default {
     mapNote: "地图显示在 OpenStreetMap 中找到的网络餐厅。完整名单见下方。",
   },
   regions: {
+    placed: "地图上已定位的网点",
     pick: "选择城市", all: "整个网络", venueList: "网络网点", photos: "网点照片", share: "占网络比例", showMap: "在地图上显示", valley: "费尔干纳谷地 · 其他网点", onRequest: "网点清单和照片可按需提供。", stores: "Korzinka 门店", landmark: "城市", expand: "显示更多", collapse: "收起", storesPhoto: "Korzinka 门店",
     citiesTitle: "网络城市",
     title: "11 个地区",
@@ -129,7 +130,7 @@ export default {
     planLabel: "所选计划",
   },
   footer: {
-    author: "网站作者", imagery: "卫星影像：Sentinel-2 cloudless 2016 — EOX IT Services GmbH（CC BY 4.0），NASA Blue Marble 与 Black Marble。",
+    author: "网站作者",
     sourcesTitle: "来源", photos: "城市照片：维基共享资源作者（CC BY / CC BY-SA / CC0），每张照片均注明作者。",
     about: "Media Port 是 Orient Advertising 广告集团的室内媒体部门，专为塔什干国际机场运营而设立。集团拥有 100 多名专业人员。",
     slogan: "Osmon qadar hayratlanasiz",
