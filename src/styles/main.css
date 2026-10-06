@@ -467,7 +467,10 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 .btn-quiet svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ───────── Hero (comp-2) ───────── */
-main { position: relative; z-index: 3; }
+/* the page sits above the map labels; only its own panels take the pointer, so a click on open map
+   reaches the label or the chart beneath instead of the empty page layer */
+main { position: relative; z-index: 3; pointer-events: none; }
+.hero-copy, .scroll-cue, .chapter .plate, .planner-sheet { pointer-events: auto; }
 .hero { position: relative; height: 100svh; min-height: 640px; }
 /* map knock-out behind the title block, the way charts clear ink under their legends */
 .hero::before {
