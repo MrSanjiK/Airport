@@ -108,7 +108,7 @@ export function initStory(world, { places, nav, bus }) {
     far: 1,
   }).prio = 85;
   // the head office, on the About page only, once the camera has come down over Yunusobod
-  const office = [69.28757, 41.35491];
+  const office = [69.2527619, 41.3120115]; // Nest One, block C
   const officeLabel = addLabel({
     cls: 'wp--office',
     world: world.worldAt(office[0], office[1], 0.05),
@@ -187,9 +187,10 @@ export function initStory(world, { places, nav, bus }) {
     [[r.a, a], [r.b, b]].forEach(([w, txt]) => { if (txt) addLabel({ cls: 'wp--rw', world: local(w), html: () => `<span class="wp-name">${txt}</span>`, weights: { explore: 1 }, key: `rw-${txt}` }).prio = 20; });
   });
 
-  onLang(() => { labels.forEach((l) => { l.el.innerHTML = l.html(); l.sizeStale = true; }); renderCallouts(); renderFrame(); });
+  onLang(() => { labels.forEach((l) => { l.el.innerHTML = l.html(); l.sizeStale = true; }); renderCallouts(); renderFrame(); world.invalidate(); });
 
   bus.addEventListener('zone', (e) => {
+    world.invalidate();
     zoneLabels.forEach((l) => l.el.classList.toggle('is-active', l.key === `zone-${e.detail}`));
     callouts.forEach((c) => c.el.classList.toggle('is-active', c.z.id === e.detail));
     curZone = e.detail;
@@ -589,8 +590,8 @@ export function initStory(world, { places, nav, bus }) {
   return {
     introDone() { introDone = true; world.state.ready = true; },
     releaseCamera() { cameraFree = true; },
-    setExplore(v) { exploring = v; if (!v) { exploreCity = null; frameState(); } },
-    setAbout(v) { aboutMode = v; frameState(); },
+    setExplore(v) { exploring = v; if (!v) { exploreCity = null; frameState(); } world.invalidate(); },
+    setAbout(v) { aboutMode = v; frameState(); world.invalidate(); },
     setAboutCity(key) { aboutCity = key; },
     setExploreCity(key) { exploreCity = key; },
     cityPose,

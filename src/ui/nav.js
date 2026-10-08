@@ -1,4 +1,5 @@
 import logo from '../assets/logo.svg?raw';
+import oaMark from '../assets/oa-mark.svg?raw';
 import { LANGS, lang, setLang, t, onLang } from '../i18n/index.js';
 import { flagSvg } from './flags.js';
 
@@ -13,6 +14,7 @@ const DIR = { mediaport: 'mediaport', flytv: 'flytv', mediagate: 'mediagate' };
 
 export function mountLogos() {
   document.querySelectorAll('[data-logo]').forEach((el) => (el.innerHTML = logo));
+  document.querySelectorAll('[data-oa-mark]').forEach((el) => (el.innerHTML = oaMark));
 }
 
 export function initNav({ onTheme } = {}) {

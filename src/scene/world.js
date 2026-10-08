@@ -257,10 +257,31 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     lines.update(state.night, renderer);
     if (roads) { roads.opacity = lines.opacity; roads.update(state.night, renderer, cur.dist); }
 
+    // nothing on the chart moves (camera settled, page still, no fade running): after a short grace the frame is
+    // kept as it is and neither the story nor the GPU does any work until something changes
+    const sig = `${cur.tx.toFixed(5)},${cur.ty.toFixed(5)},${cur.tz.toFixed(5)},${cur.dist.toFixed(4)},${cur.az.toFixed(3)},${cur.el.toFixed(3)},${cur.shift.toFixed(4)},${cur.shiftY.toFixed(4)},${state.night.toFixed(3)},${scrollY},${field.opacity.toFixed(3)},${city.k.toFixed(3)},${route.progress.toFixed(3)},${lines.opacity.toFixed(3)},${innerWidth}x${innerHeight},${dirty}`;
+    quiet = sig === lastSig ? quiet + 1 : 0;
+    lastSig = sig;
+    if (quiet > 45) return;
     listeners.forEach((fn) => fn(time, dt));
     renderer.render(scene, camera);
     drawField();
+    // a GPU that cannot keep up gets fewer pixels, a quarter step at a time, never below one per CSS pixel
+    slow = slow * 0.96 + (dt > 0.029 ? 1 : 0) * 0.04;
+    if (slow > 0.6 && renderer.getPixelRatio() > 1.01 && time - lastDrop > 3) {
+      lastDrop = time;
+      slow = 0;
+      renderer.setPixelRatio(Math.max(1, renderer.getPixelRatio() - 0.25));
+      resize();
+    }
   };
+  let quiet = 0;
+  let lastSig = '';
+  let dirty = 0;
+  // any input wakes the story up, even one that moves nothing yet (a key, a click on a chip)
+  ['pointerdown', 'click', 'keydown', 'wheel', 'touchmove'].forEach((ev) => addEventListener(ev, () => dirty++, { passive: true, capture: true }));
+  let slow = 0;
+  let lastDrop = 0;
 
   document.addEventListener('visibilitychange', () => {
     const vis = document.visibilityState === 'visible';
@@ -272,6 +293,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
 
   return {
     renderer, scene, camera, sample, route, lines, roads, goal, cur, kor, hor, airport, terrain, hubWorld, state, field, city,
+    invalidate() { dirty++; },
     setPose(p) { poseToState(p); },
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },
@@ -280,6 +302,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     // driver allows it (KHR_parallel_shader_compile), so the loader's pen never stalls
     async prewarm() {
       try { await renderer.compileAsync(scene, camera); } catch (e) { renderer.compile(scene, camera); }
+      city.unwarm();
     },
     project, pick,
     onFrame(fn) { listeners.add(fn); return () => listeners.delete(fn); },

@@ -141,3 +141,19 @@ export const PLAN_ITEMS = [
   { id: 'horeca', group: 'horeca', price: HORECA.price },
   { id: 'regions', group: 'regions', price: REGIONS.price },
 ];
+
+// Brands that have run campaigns with the holding (tvline.uz partners); logos in public/img/partners/<id>.png.
+// h: the logo's height in the marquee, as a share of the default (square marks stand taller, wide wordmarks lower)
+export const PARTNERS = [
+  { id: 'click', name: 'Click' },
+  { id: 'payme', name: 'Payme' },
+  { id: 'artel', name: 'Artel' },
+  { id: 'imzo', name: 'Imzo · Akfa' },
+  { id: 'maccoffee', name: 'MacCoffee' },
+  { id: 'crafers', name: 'Crafers', h: 1.4 },
+  { id: 'chocofella', name: 'Chocofella', h: 0.8 },
+  { id: 'delice', name: 'Delice' },
+  { id: 'newport', name: 'Newport', h: 0.62 },
+  { id: 'hotlunch', name: 'Hot Lunch', h: 1.45 },
+  { id: 'tpu', name: 'Tashkent Perfect University' },
+];

@@ -24,7 +24,8 @@ function quality() {
   const small = Math.min(innerWidth, innerHeight) < 700 || innerWidth < 900;
   const lowMem = (navigator.deviceMemory || 8) <= 4;
   if (small || lowMem) return { dem: 1024, seg: { segX: 420, segZ: 280 }, overlay: 1.25, dpr: 1.5 };
-  return { dem: 2048, seg: { segX: 960, segZ: 640 }, overlay: 2, dpr: 1.75 };
+  // a retina screen at desktop width is over 3000 device pixels across: the chart caps lower there
+  return { dem: 2048, seg: { segX: 960, segZ: 640 }, overlay: 2, dpr: innerWidth * (window.devicePixelRatio || 1) > 3000 ? 1.5 : 1.75 };
 }
 
 function webglOK() {
@@ -129,7 +130,7 @@ async function boot() {
   initMini(bus);
   initLightbox();
 
-  const finish = () => loader.classList.add('is-done');
+  const finish = () => { loader.classList.add('is-done'); ld?.stop?.(); };
 
   // the planner sheet and footer card are full-width: map controls fade while they are on screen
   const sheets = new Map();
@@ -186,6 +187,7 @@ async function boot() {
   if (reduced || startY > innerHeight * 0.5 || new URLSearchParams(location.search).has('nointro')) {
     settle();
     if (startY <= innerHeight * 0.5) { world.setGoal(world.goalFromPose(POSES.hero)); world.jump(); }
+    world.prewarm();
     finish();
     if (wantAbout) about.open();
     return;

@@ -147,6 +147,8 @@ export function createLoader(el, vectors) {
 
   return {
     set(p) { target = Math.max(target, Math.min(1, p)); },
+    // the page skipped the intro (no motion, or a restored scroll): the pen stops for good
+    stop() { cancelAnimationFrame(raf); },
     // The outline closes and glows once; Uzbekistan's interior opens onto the live chart, then the whole page does.
     // Resolves when the chart is fully uncovered and still in register, i.e. the moment the camera may move.
     complete(gsap, { onOpen } = {}) {

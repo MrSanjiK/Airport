@@ -26,10 +26,10 @@ export function badge(d, size = 'md', bare = false) {
 
 export const tagline = (d) => t(`dir.${TAG[d.id]}`);
 
-// The strip that opens every direction's chapter: its mark, what it is, the holding, and its own site.
+// The strip that opens every direction's chapter: its mark (no tile), what it is, and the holding.
+// Visitors stay on this site: the brands' own sites are not linked.
 export function brandBar(d) {
-  return `<div class="brandbar">${badge(d)}
+  return `<div class="brandbar">${badge(d, 'md', true)}
     <span class="bb-text"><b>${d.brand}${d.sub ? ` · ${d.sub}` : ''}</b><small>${tagline(d)} · ${t('dir.holding')}</small></span>
-    ${d.site ? `<a class="bb-site" href="https://${d.site}" target="_blank" rel="noopener">${d.site}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11l6-6M6 5h5v5"/></svg></a>` : ''}
   </div>`;
 }

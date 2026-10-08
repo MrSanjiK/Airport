@@ -66,82 +66,42 @@ export function createCityLayer({ scene, sample, terrain }) {
   const canalMat = new LineMaterial({ color: 0x4d80b8, linewidth: 1.4, transparent: true, depthWrite: false, worldUnits: false });
   canalMat.userData = { w: 1.4, o: 0.7 };
 
-  const shapeXZ = (ring) => ring.map(([x, z]) => new THREE.Vector2(x, z));
+  // the geometry is built in a worker (cityWorker.js); here it is only wrapped and placed on its levelled plate
+  const worker = new Worker(new URL('./cityWorker.js', import.meta.url), { type: 'module' });
+  const waiting = new Map();
+  worker.onmessage = (e) => { const done = waiting.get(e.data.key); waiting.delete(e.data.key); done?.(e.data.error ? null : e.data); };
+  const fetchBuilt = (key) => new Promise((resolve) => {
+    waiting.set(key, resolve);
+    worker.postMessage({ key, url: new URL(`/data/city/${key}.json`, location.href).href });
+  });
 
-  const build = (key, d) => {
+  const assemble = (key, d) => {
     const [c0, c1] = d.c;
-    const P = (dx, dy) => toXZ(c0 + dx / 1e5, c1 + dy / 1e5);
     const y0 = (Math.max(0, sample(c0, c1)) / 1000) * EXAG;
     const group = new THREE.Group();
     group.visible = false;
-    const venueB = new Set(d.venues.map((v) => v.b).filter((b) => b >= 0));
-
-    // buildings: roofs and walls in one geometry, roof outlines in another
-    const pos = [];
-    const nor = [];
-    const ven = [];
-    const edges = [];
-    d.bld.forEach((b, i) => {
-      const h = (b[0] / 1000) * HEX;
-      let ring = [];
-      for (let j = 1; j < b.length; j += 2) ring.push(P(b[j], b[j + 1]));
-      if (ring.length < 3) return;
-      if (THREE.ShapeUtils.isClockWise(shapeXZ(ring))) ring = ring.reverse();
-      const v = venueB.has(i) ? 1 : 0;
-      const top = y0 + h * (v ? 1.35 : 1);
-      const tris = THREE.ShapeUtils.triangulateShape(shapeXZ(ring), []);
-      tris.forEach((t) => t.slice().reverse().forEach((k) => { pos.push(ring[k][0], top, ring[k][1]); nor.push(0, 1, 0); ven.push(v); }));
-      for (let k = 0; k < ring.length; k++) {
-        const [ax, az] = ring[k];
-        const [bx, bz] = ring[(k + 1) % ring.length];
-        const len = Math.hypot(bx - ax, bz - az) || 1;
-        const nx = (bz - az) / len;
-        const nz = -(bx - ax) / len;
-        pos.push(ax, y0, az, bx, y0, bz, bx, top, bz, ax, y0, az, bx, top, bz, ax, top, az);
-        for (let q = 0; q < 6; q++) { nor.push(nx, 0, nz); ven.push(v); }
-        edges.push(ax, top, az, bx, top, bz);
-      }
-    });
+    group.position.y = y0;
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
-    g.setAttribute('aVenue', new THREE.Float32BufferAttribute(ven, 1));
+    g.setAttribute('position', new THREE.BufferAttribute(d.pos, 3));
+    g.setAttribute('normal', new THREE.BufferAttribute(d.nor, 3));
+    g.setAttribute('aVenue', new THREE.BufferAttribute(d.ven, 1));
     const mesh = new THREE.Mesh(g, buildMat);
     mesh.renderOrder = 5;
     const eg = new THREE.BufferGeometry();
-    eg.setAttribute('position', new THREE.Float32BufferAttribute(edges, 3));
+    eg.setAttribute('position', new THREE.BufferAttribute(d.edges, 3));
     const lines = new THREE.LineSegments(eg, edgeMat);
     lines.renderOrder = 6;
-
-    // parks and water as flat fills just above the levelled chart
-    const fill = (rings, mat, y) => {
-      const geos = [];
-      rings.forEach((r) => {
-        const ring = [];
-        for (let j = 0; j < r.length; j += 2) ring.push(P(r[j], r[j + 1]));
-        if (ring.length < 4) return;
-        const sg = new THREE.ShapeGeometry(new THREE.Shape(ring.map(([x, z]) => new THREE.Vector2(x, -z))));
-        sg.rotateX(-Math.PI / 2);
-        sg.translate(0, y, 0);
-        geos.push(sg);
-      });
-      if (!geos.length) return;
-      geos.forEach((sg) => { const m = new THREE.Mesh(sg, mat); m.renderOrder = 2; group.add(m); });
-    };
-    fill(d.green, greenMat, y0 + 0.0008);
-    fill(d.water, waterMat, y0 + 0.001);
-
-    // streets by class, and canals
-    const byClass = [[], [], [], []];
-    d.roads.forEach((r) => {
-      const out = byClass[r[0]];
-      for (let j = 1; j < r.length - 2; j += 2) {
-        const [ax, az] = P(r[j], r[j + 1]);
-        const [bx, bz] = P(r[j + 2], r[j + 3]);
-        out.push(ax, y0 + 0.003, az, bx, y0 + 0.003, bz);
-      }
+    // parks and water as flat fills just above the levelled chart, one mesh each
+    [[d.green, greenMat], [d.water, waterMat]].forEach(([arr, mat]) => {
+      if (!arr.length) return;
+      const fg = new THREE.BufferGeometry();
+      fg.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+      const m = new THREE.Mesh(fg, mat);
+      m.renderOrder = 2;
+      group.add(m);
     });
-    byClass.forEach((arr, i) => {
+    // streets by class, and canals
+    d.roads.forEach((arr, i) => {
       if (!arr.length) return;
       const lg = new LineSegmentsGeometry();
       lg.setPositions(arr);
@@ -149,45 +109,40 @@ export function createCityLayer({ scene, sample, terrain }) {
       l.renderOrder = 4 - i * 0.1;
       group.add(l);
     });
-    const can = [];
-    d.canals.forEach((r) => {
-      for (let j = 0; j < r.length - 2; j += 2) {
-        const [ax, az] = P(r[j], r[j + 1]);
-        const [bx, bz] = P(r[j + 2], r[j + 3]);
-        can.push(ax, y0 + 0.002, az, bx, y0 + 0.002, bz);
-      }
-    });
-    if (can.length) {
+    if (d.canals.length) {
       const lg = new LineSegmentsGeometry();
-      lg.setPositions(can);
+      lg.setPositions(d.canals);
       group.add(new LineSegments2(lg, canalMat));
     }
     group.add(mesh, lines);
     scene.add(group);
-
-    // venues: world anchor on top of their building (or the street), for the DOM labels
-    const venues = d.venues.map((v, i) => {
-      const lon = c0 + v.p[0] / 1e5;
-      const lat = c1 + v.p[1] / 1e5;
-      const [x, z] = toXZ(lon, lat);
-      const b = v.b >= 0 ? d.bld[v.b] : null;
-      const top = b ? y0 + (b[0] / 1000) * HEX * 1.35 : y0;
-      return { ...v, i, ll: [lon, lat], w: new THREE.Vector3(x, top + 0.004, z) };
-    });
+    const venues = d.venues.map((v) => ({ ...v, w: new THREE.Vector3(v.w[0], v.w[1] + y0, v.w[2]) }));
     const [cx, cz] = toXZ(c0, c1);
     return { key, group, venues, center: [c0, c1], x: cx, z: cz, y0, r: d.r };
   };
 
-  const load = async (key) => {
-    if (groups.has(key)) return groups.get(key);
-    if (!cache.has(key)) cache.set(key, fetch(`/data/city/${key}.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null));
-    const d = await cache.get(key);
-    if (!d) return null;
-    if (!groups.has(key)) groups.set(key, build(key, d));
-    return groups.get(key);
+  // every city material on one degenerate stand-in, so the loader's prewarm compiles their programs: the first
+  // model to come up (Tashkent, in the HoReCa chapter) then costs no shader compile mid-scroll
+  const warm = new THREE.Group();
+  {
+    const tri = new THREE.BufferGeometry();
+    tri.setAttribute('position', new THREE.Float32BufferAttribute([0, -1e3, 0, 1e-6, -1e3, 0, 0, -1e3, 1e-6], 3));
+    tri.setAttribute('normal', new THREE.Float32BufferAttribute([0, 1, 0, 0, 1, 0, 0, 1, 0], 3));
+    tri.setAttribute('aVenue', new THREE.Float32BufferAttribute([0, 0, 0], 1));
+    warm.add(new THREE.Mesh(tri, buildMat), new THREE.Mesh(tri, greenMat), new THREE.Mesh(tri, waterMat), new THREE.LineSegments(tri, edgeMat));
+    [...roadMats, canalMat].forEach((m) => { const lg = new LineSegmentsGeometry(); lg.setPositions([0, -1e3, 0, 1e-6, -1e3, 0]); warm.add(new LineSegments2(lg, m)); });
+    warm.traverse((o) => { o.frustumCulled = false; });
+    scene.add(warm);
+  }
+
+  const load = (key) => {
+    if (!cache.has(key)) cache.set(key, fetchBuilt(key).then((d) => { if (!d) return null; const c = assemble(key, d); groups.set(key, c); return c; }));
+    return cache.get(key);
   };
 
   return {
+    // after the loader's compile the stand-in leaves the scene
+    unwarm() { scene.remove(warm); },
     has: (key) => !!(key && (SITES[key] || GROUPS[key])),
     load,
     // the site whose area holds a point (lon, lat), for the explorer's automatic models

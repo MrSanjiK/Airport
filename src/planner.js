@@ -2,6 +2,9 @@ import { t, num, money, onLang } from './i18n/index.js';
 import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS } from './data/inventory.js';
 import logo from './assets/logo.svg?raw';
 import { badge, tagline } from './ui/brand.js';
+import { mountPartners } from './ui/partners.js';
+import { mountFaq } from './ui/faq.js';
+import oaMark from './assets/oa-mark.svg?raw';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const CHECK = '<svg viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7"/></svg>';
@@ -295,6 +298,7 @@ export function initPlanner({ bus }) {
         <div class="footer-brand">
           <span class="logo">${logo}</span>
           <p>${esc(t('footer.about'))}</p>
+          <a class="footer-oa" href="#about"><span class="oa-mark" aria-hidden="true">${oaMark}</span><span><b>Orient Advertising</b><small>${esc(t('dir.holdingK'))}</small></span></a>
           <div class="footer-pills">
             <a class="pill" href="https://wa.me/${tel.replace(/\D/g, '')}" target="_blank" rel="noopener"><i></i>WhatsApp</a>
             <a class="pill" href="tel:${tel}"><i></i>${esc(t('form.call'))}</a>
@@ -313,7 +317,7 @@ export function initPlanner({ bus }) {
     </div>`;
   };
 
-  const renderAll = () => { renderCalc(); renderStrip(); renderInquiry(); renderFooter(); };
+  const renderAll = () => { renderCalc(); renderStrip(); mountPartners(document.getElementById('partners')); mountFaq(document.getElementById('faq')); renderInquiry(); renderFooter(); };
   renderAll();
   onLang(renderAll);
   addEventListener('resize', placeThumb);
