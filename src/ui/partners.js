@@ -1,9 +1,11 @@
 import { t } from '../i18n/index.js';
 import { PARTNERS } from '../data/inventory.js';
 
-// The brands that trust the holding, as two rows drifting past in opposite directions. At rest the marks are
-// one ink; under the pointer a row stops and the mark takes its own colours. Rows run only while on screen.
-const item = (p) => `<li class="pm-item" style="--h:${p.h || 1}"><img src="/img/partners/${p.id}.png" alt="${p.name}" loading="lazy" decoding="async" draggable="false" /></li>`;
+// The brands that trust the holding, as two rows drifting past in opposite directions, no tiles. Rows run only
+// while on screen and stop under the pointer.
+// one ink by default (a white knock-out version as a mask, filled with the chart's ink: legible on either theme);
+// in daylight the mark under the pointer takes its own colours
+const item = (p) => `<li class="pm-item" style="--h:${p.h || 1};--m:url(/img/partners/${p.id}-mono.png)"><img src="/img/partners/${p.id}.png" alt="${p.name}" loading="lazy" decoding="async" draggable="false" /><span class="pm-ink" aria-hidden="true"></span></li>`;
 const row = (list, rev) => `<div class="pm-row${rev ? ' pm-row--rev' : ''}"><ul class="pm-track">${list.map(item).join('')}${list.map(item).join('').replace(/alt="[^"]*"/g, 'alt="" aria-hidden="true"')}</ul></div>`;
 
 export function partnersHTML() {

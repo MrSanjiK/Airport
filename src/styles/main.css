@@ -1208,14 +1208,13 @@ html.is-intro .hero-copy, html.is-intro .legend, html.is-intro .scroll-cue, html
 
 /* ───────── Directions: six original brands under the Media Port site ───────── */
 /* a brand mark on a white tile, so every logo reads as printed in either theme */
-.badge { display: inline-flex; align-items: center; gap: 9px; flex: none; padding: 7px 12px; border-radius: 12px; background: #fff;
-  box-shadow: 0 0 0 1px rgba(16, 40, 72, 0.08), 0 6px 14px -10px rgba(16, 40, 72, 0.45); }
+.badge { display: inline-flex; align-items: center; gap: 9px; flex: none; padding: 0; border-radius: 0; background: none; box-shadow: none; }
 .badge img { display: block; width: auto; }
 .badge--md { height: 46px; } .badge--md .bd-logo { height: 28px; } .badge--md .bd-sub { height: 22px; }
 .badge--sm { height: 40px; padding: 6px 11px; gap: 8px; border-radius: 12px; } .badge--sm .bd-logo { height: 24px; } .badge--sm .bd-sub { height: 18px; }
 .badge .bd-logo--mediagate, .badge .bd-logo--tvline { height: 34px; } .badge--sm .bd-logo--mediagate, .badge--sm .bd-logo--tvline { height: 28px; }
-.bd-logo--svg { display: inline-flex; width: 132px; color: #163b67; } .badge--sm .bd-logo--svg { width: 104px; } .bd-logo--svg svg { width: 100%; height: auto; }
-.bd-sep { width: 1px; align-self: stretch; margin-block: 2px; background: rgba(16, 40, 72, 0.14); }
+.bd-logo--svg { display: inline-flex; width: 132px; color: var(--ink); } .badge--sm .bd-logo--svg { width: 104px; } .bd-logo--svg svg { width: 100%; height: auto; }
+.bd-sep { width: 1px; align-self: stretch; margin-block: 2px; background: var(--hair); }
 .bd-subtext { font: 800 15px/1 var(--f-display); letter-spacing: -0.01em; color: var(--brand); } .badge--sm .bd-subtext { font-size: 12.5px; }
 .badge--tvl-korzinka .bd-sub { height: 20px; } .badge--sm.badge--tvl-korzinka .bd-sub { height: 16px; }
 .badge--tvl-region .bd-sub { height: 26px; } .badge--sm.badge--tvl-region .bd-sub { height: 22px; }
@@ -1255,9 +1254,7 @@ html.is-intro .hero-copy, html.is-intro .legend, html.is-intro .scroll-cue, html
 .dock-k { font: 650 11.5px/1 var(--f-chart); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); text-shadow: 0 0 8px var(--paper), 0 0 2px var(--paper); }
 .dock-row { display: flex; flex-wrap: wrap; gap: 8px; max-width: 640px; }
 .dock-item { display: inline-flex; border-radius: 12px; transition: transform 0.45s var(--ease-out); }
-.dock-item .badge { box-shadow: 0 0 0 1px rgba(16, 40, 72, 0.08), 0 10px 22px -14px rgba(16, 40, 72, 0.55); transition: box-shadow 0.4s var(--ease-out); }
 .dock-item:hover { transform: translateY(-3px); }
-.dock-item:hover .badge { box-shadow: 0 0 0 1.5px var(--brand), 0 14px 26px -14px color-mix(in srgb, var(--brand) 70%, transparent); }
 html.is-intro .dock { visibility: hidden; }
 /* the holding chart carries the six on a wide screen; the dock is the phone's version of it */
 @media (min-width: 1181px) { .dock { display: none; } }
@@ -1564,20 +1561,18 @@ html.is-about .rail, html.is-about .scroll-cue, html.is-about .legend { display:
 .brandbar .badge--bare { padding: 6px 10px; }
 
 /* the holding's own mark and lock-up: drawn in its blue by day, in the chart's ink at night */
-.oa-mark { display: inline-grid; place-items: center; flex: none; color: #24468f; }
+.oa-mark { display: inline-grid; place-items: center; flex: none; color: #12174e; }
 .oa-mark svg { display: block; width: 100%; height: auto; }
 [data-theme='night'] .oa-mark, [data-theme='night'] .ab-logo { color: var(--ink); }
 .hold-hub .oa-mark { width: 30px; margin-block: -6px; }
 .ab-hub .oa-mark { width: 28px; margin-block: -4px; }
 .ab-title { margin-top: 22px; }
-.ab-logo { display: block; width: min(380px, 78%); color: #24468f; }
+.ab-logo { display: block; width: min(440px, 88%); color: #12174e; }
 .ab-logo svg { display: block; width: 100%; height: auto; }
 .footer-oa { display: inline-flex; align-items: center; gap: 12px; margin-top: 18px; text-decoration: none; color: var(--ink); }
-.footer-oa .oa-mark { width: 40px; }
-.footer-oa > span:last-child { display: grid; gap: 3px; }
-.footer-oa b { font: 750 15px/1.1 var(--f-display); }
-.footer-oa small { font: 650 10.5px/1 var(--f-chart); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
-.footer-oa:hover b { color: var(--route); }
+.footer-oa .hold-logo { width: 150px; }
+.footer-oa small { padding-inline-start: 12px; border-inline-start: 1px solid var(--hair); font: 650 10.5px/1.2 var(--f-chart); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.footer-oa:hover .hold-logo { opacity: 0.8; }
 
 /* partners: two rows drifting past in opposite directions; one ink at rest, their own colours under the pointer */
 .partners { margin-top: clamp(28px, 4vh, 48px); }
@@ -1593,20 +1588,23 @@ html.is-about .rail, html.is-about .scroll-cue, html.is-about .legend { display:
 .pm-rows.is-run .pm-track { animation-play-state: running; }
 .pm-rows.is-run .pm-row:hover .pm-track { animation-play-state: paused; }
 @keyframes pm-drift { to { transform: translate3d(-50%, 0, 0); } }
-.pm-item {
-  display: grid; place-items: center; flex: none; height: 76px; padding: 0 30px; margin-inline-end: 12px; border-radius: 999px;
-  background: #fff; border: 1px solid rgba(16, 40, 72, 0.07); box-shadow: 0 1px 0 rgba(16, 40, 72, 0.03), 0 14px 26px -20px rgba(16, 40, 72, 0.45);
-  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+.pm-item { position: relative; display: grid; place-items: center; flex: none; height: 84px; padding: 0 clamp(26px, 3vw, 46px); }
+.pm-item img { display: block; height: calc(36px * var(--h, 1)); width: auto; max-width: 180px; object-fit: contain; opacity: 0; transition: opacity 0.5s var(--ease-out); user-select: none; }
+.pm-ink {
+  position: absolute; inset: 0; margin: auto; height: calc(36px * var(--h, 1)); width: calc(100% - 2 * clamp(26px, 3vw, 46px)); background: var(--ink); opacity: 0.55;
+  -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat;
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
-.pm-item img { display: block; height: calc(34px * var(--h, 1)); width: auto; max-width: 168px; object-fit: contain; filter: grayscale(1) contrast(1.05); opacity: 0.62; transition: filter 0.5s var(--ease-out), opacity 0.5s var(--ease-out); user-select: none; }
-.pm-item:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 1px 0 rgba(16, 40, 72, 0.04), 0 22px 34px -20px rgba(16, 40, 72, 0.6); }
-.pm-item:hover img { filter: none; opacity: 1; }
-[data-theme='night'] .pm-item { background: #e8eef6; border-color: transparent; box-shadow: 0 14px 30px -20px rgba(0, 0, 0, 0.9); }
-[data-theme='night'] .pm-item img { opacity: 0.7; }
+.pm-item:hover .pm-ink { opacity: 1; transform: scale(1.06); }
+/* in daylight the hovered mark shows its own colours */
+:root:not([data-theme='night']) .pm-item:hover img { opacity: 1; transform: scale(1.06); transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out); }
+:root:not([data-theme='night']) .pm-item:hover .pm-ink { opacity: 0; }
+[data-theme='night'] .pm-ink { opacity: 0.6; }
+[data-theme='night'] .pm-item:hover .pm-ink { opacity: 1; }
 .ab-partners { margin-top: 30px; margin-inline: calc(-1 * clamp(24px, 2.8vw, 44px)); }
 .ab-partners .pm-head { justify-items: start; text-align: start; padding-inline: clamp(24px, 2.8vw, 44px); }
 .ab-partners .pm-head h3 { font-size: 1.15rem; }
-@media (max-width: 700px) { .pm-item { height: 62px; padding: 0 22px; } .pm-item img { height: calc(28px * var(--h, 1)); max-width: 130px; } }
+@media (max-width: 700px) { .pm-item { height: 64px; padding: 0 22px; } .pm-item img, .pm-ink { height: calc(28px * var(--h, 1)); } .pm-item img { max-width: 130px; } .pm-ink { width: calc(100% - 44px); } }
 @media (prefers-reduced-motion: reduce) {
   .pm-track { animation: none; }
   .pm-row { overflow-x: auto; }
@@ -1651,3 +1649,17 @@ html.is-about .rail, html.is-about .scroll-cue, html.is-about .legend { display:
 [dir='rtl'] .faq-a p { padding: 0 calc(20px + 16px + 22px) 20px 20px; }
 .faq-item.is-open .faq-a { grid-template-rows: 1fr; }
 .faq-q:focus-visible { outline: 2px solid var(--route); outline-offset: -2px; border-radius: 20px; }
+
+/* the holding's own lock-up in the hero chart's hub */
+.hold-logo { display: block; width: clamp(128px, 10.5vw, 168px); color: #12174e; }
+.hold-logo svg { display: block; width: 100%; height: auto; }
+[data-theme='night'] .hold-logo { color: var(--ink); }
+.hold-hub { padding: 10px 22px 10px 18px; }
+/* the phone menu: marks without tiles read larger, like the chapter heads */
+.mobile-nav .badge--sm { gap: 10px; }
+.mobile-nav .badge--sm .bd-logo { height: 30px; }
+.mobile-nav .badge--sm .bd-logo--mediagate, .mobile-nav .badge--sm .bd-logo--tvline { height: 36px; }
+.mobile-nav .badge--sm .bd-logo--svg { width: 128px; }
+.mobile-nav .badge--sm .bd-sub { height: 22px; }
+.mobile-nav .badge--sm.badge--tvl-region .bd-sub { height: 30px; }
+.mobile-nav .badge--sm .bd-subtext { font-size: 17px; }

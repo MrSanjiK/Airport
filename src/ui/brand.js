@@ -13,9 +13,9 @@ export const logoImg = (name, cls, alt = '') => (NIGHT.has(name)
   ? `<img class="${cls} lg-day" src="/img/brand/${name}.png" alt="${alt}" decoding="async" /><img class="${cls} lg-night" src="/img/brand/${name}-d.png" alt="" aria-hidden="true" decoding="async" />`
   : `<img class="${cls}" src="/img/brand/${name}.png" alt="${alt}" decoding="async" />`);
 
-// The direction's own mark. On a white tile it reads as printed in either theme; `bare` drops the tile.
-// size: 'sm' (calculator, dock), 'md' (chapter heads)
-export function badge(d, size = 'md', bare = false) {
+// The direction's own mark, never on a tile: the printed mark by day, its night cut on the dark chart.
+// size: 'sm' (calculator, dock, phone menu), 'md' (chapter heads, mega panels)
+export function badge(d, size = 'md', bare = true) {
   const img = (name, cls, alt) => (bare ? logoImg(name, cls, alt) : `<img class="${cls}" src="/img/brand/${name}.png" alt="${alt}" />`);
   const main = d.logo ? img(d.logo, `bd-logo bd-logo--${d.logo}`, d.brand) : `<span class="bd-logo bd-logo--svg" aria-label="${d.brand}">${logo}</span>`;
   let sub = '';
