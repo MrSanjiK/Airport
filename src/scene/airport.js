@@ -29,15 +29,21 @@ const bldVert = /* glsl */ `${LOGV}
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     #include <logdepthbuf_vertex>
   }`;
+// the diorama: everything beyond r0 dissolves (buildings, trees) or fades (ground) by r1, so the model melts into the chart
+const DISC = /* glsl */ `
+  uniform vec4 uDisc;
+  float discFade(vec2 p){ return uDisc.w > 0.0 ? smoothstep(uDisc.z, uDisc.w, length(p - uDisc.xy)) : 0.0; }
+  float dither(){ return fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))); }`;
 const bldFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
-  uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;
+  uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;${DISC}
   varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   // a line that fades out before it would alias (the terminal is a 100 px symbol in the hero, a full plate later)
   float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
   void main(){
     #include <logdepthbuf_fragment>
+    if (dither() < discFade(vP.xz) * 1.6) discard;
     vec3 n = normalize(vN);
     float l = clamp(dot(n, normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
     float roof = step(0.8, n.y);
@@ -79,7 +85,7 @@ const groundVert = /* glsl */ `${LOGV}
   }`;
 const groundFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
-  uniform vec3 uColor; uniform float uOpacity, uGrain, uScale;
+  uniform vec3 uColor; uniform float uOpacity, uGrain, uScale;${DISC}
   varying vec2 vW;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -87,13 +93,13 @@ const groundFrag = /* glsl */ `
   void main(){
     #include <logdepthbuf_fragment>
     float g = (noise(vW * uScale) - 0.5) * 0.7 + (noise(vW * uScale * 4.3) - 0.5) * 0.3;
-    gl_FragColor = vec4(uColor * (1.0 + g * uGrain), uOpacity);
+    gl_FragColor = vec4(uColor * (1.0 + g * uGrain), uOpacity * (1.0 - discFade(vW)));
   }`;
 
 // Trees, cars, aircraft: one light, day and night colours, instancing-aware
 const shadeVert = /* glsl */ `${LOGV}
   uniform vec3 uDay, uNightC; uniform float uNight;
-  varying vec3 vN; varying vec3 vC;
+  varying vec3 vN; varying vec3 vC; varying vec2 vL;
   void main(){
     vec4 p = vec4(position, 1.0); vec3 n = normal;
     vec3 c = mix(uDay, uNightC, uNight);
@@ -103,16 +109,17 @@ const shadeVert = /* glsl */ `${LOGV}
     #ifdef USE_INSTANCING_COLOR
       c = instanceColor * mix(vec3(1.0), uNightC, uNight);
     #endif
-    vC = c; vN = normalize(mat3(modelMatrix) * n);
+    vC = c; vN = normalize(mat3(modelMatrix) * n); vL = (modelMatrix * p).xz;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * p;
     #include <logdepthbuf_vertex>
   }`;
 const shadeFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
-  uniform vec3 uLight; uniform float uOpacity;
-  varying vec3 vN; varying vec3 vC;
+  uniform vec3 uLight; uniform float uOpacity; uniform vec3 uOrigin;${DISC}
+  varying vec3 vN; varying vec3 vC; varying vec2 vL;
   void main(){
     #include <logdepthbuf_fragment>
+    if (dither() < discFade(vL - uOrigin.xz) * 1.6) discard;
     float l = clamp(dot(normalize(vN), normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
     gl_FragColor = vec4(vC * mix(0.6, 1.05, l), uOpacity);
   }`;
@@ -152,6 +159,12 @@ const KIND = { gen: 0, dep: 1, arr: 1, term: 1, canopy: 3, hangar: 2, tank: 3 };
 
 export function createAirport(model, hubWorld) {
   const group = new THREE.Group();
+  const disc = { value: new THREE.Vector4(0, 0, 0, 0) };
+  // the same disc in world units, for the shaders that measure in world space
+  const shadeDisc = { value: new THREE.Vector4(0, 0, 0, 0) };
+  // trees, cars and aircraft are instanced: their fade works in world space, measured from the group's origin
+  const origin = { value: new THREE.Vector3() };
+  const scaleNow = new THREE.Vector3();
   const [hx, hz] = toXZ(model.o[0], model.o[1]);
   const L = ([x, z]) => [x * KM * KXR, z * KM];
   const rnd = mulberry(7);
@@ -161,7 +174,7 @@ export function createAirport(model, hubWorld) {
     const [day, night] = C[key];
     const m = new THREE.ShaderMaterial({
       vertexShader: groundVert, fragmentShader: groundFrag,
-      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale } },
+      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale }, uDisc: disc },
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
     });
     m.userData = { day: new THREE.Color(...day), night: new THREE.Color(...night), base: opacity, order };
@@ -172,7 +185,7 @@ export function createAirport(model, hubWorld) {
   const shade = (day, night, { opacity = 1 } = {}) => {
     const m = new THREE.ShaderMaterial({
       vertexShader: shadeVert, fragmentShader: shadeFrag,
-      uniforms: { uDay: { value: new THREE.Color(...day) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: opacity } },
+      uniforms: { uDay: { value: new THREE.Color(...day) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: opacity }, uDisc: shadeDisc, uOrigin: origin },
       transparent: opacity < 1,
     });
     mats.push(m);
@@ -182,7 +195,7 @@ export function createAirport(model, hubWorld) {
   const bldMat = () => {
     const m = new THREE.ShaderMaterial({
       vertexShader: bldVert, fragmentShader: bldFrag,
-      uniforms: { uNight: { value: 0 }, uStorey: { value: STOREY }, uOpacity: { value: 1 }, uLight: { value: LIGHT } },
+      uniforms: { uNight: { value: 0 }, uStorey: { value: STOREY }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc },
     });
     bmats.push(m);
     return m;
@@ -635,7 +648,34 @@ export function createAirport(model, hubWorld) {
     setSymbol(mode.hero, mode.plate, mode.solo);
   };
 
-  return { group, origin: model.o, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, terminals };
+  // the diorama pass (Fly TV and Media Gate, and the airport chapter on a phone): the whole model over the chart,
+  // the ground fading out round the terminal complex
+  const DISC_R = [0.62, 1.15];
+  const discK = () => (mode.hero < 0.5 ? Math.min(1, mode.solo * 1.6) : 0);
+  const discOn = (k) => {
+    flat.visible = true;
+    fleet.visible = true;
+    groups.airside.visible = true;
+    plateLand.visible = true;
+    context.visible = true;
+    groups.gates.visible = true;
+    groups.far.visible = true;
+    groups.t1.visible = true;
+    groups.t3.visible = false;
+    flatMats.forEach((m) => (m.uniforms.uOpacity.value = m.userData.base * k));
+    disc.value.set(0, 0, DISC_R[0], DISC_R[1]);
+    group.updateMatrixWorld();
+    group.getWorldScale(scaleNow);
+    origin.value.setFromMatrixPosition(group.matrixWorld);
+    shadeDisc.value.set(0, 0, DISC_R[0] * scaleNow.x, DISC_R[1] * scaleNow.x);
+  };
+  const discOff = () => {
+    disc.value.set(0, 0, 0, 0);
+    shadeDisc.value.set(0, 0, 0, 0);
+    plateOff();
+  };
+
+  return { group, origin: model.o, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, terminals };
 }
 
 // An A320-class airliner in km, nose at the origin, fuselage running down +z.

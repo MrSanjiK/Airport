@@ -17,8 +17,8 @@ export const POSES = {
   hero: { t: [68.3, 40.6], dist: 820, az: 4, el: 42, shift: 0 },
   airport: { t: [69.2687, 41.2634], dist: 46, az: 33, el: 56, shift: 0.24 },
   // Fly TV and Media Gate look at the same terminal from two other sides, clear of their plates
-  flytv: { t: [69.2687, 41.2634], dist: 40, az: -52, el: 36, shift: -0.24 },
-  mediagate: { t: [69.2687, 41.2634], dist: 34, az: 128, el: 48, shift: 0.24 },
+  flytv: { t: [69.2687, 41.2634], dist: 48, az: -52, el: 38, shift: -0.24 },
+  mediagate: { t: [69.2687, 41.2634], dist: 42, az: 128, el: 48, shift: 0.24 },
   korzinka: { t: [68.6, 40.8], dist: 1350, az: -6, el: 52, shift: -0.22 },
   horeca: { t: [69.26, 41.3], dist: 62, az: -10, el: 50, shift: 0.19 },
   regions: { t: [69.6, 40.35], dist: 1550, az: 8, el: 44, shift: -0.27 },
@@ -264,7 +264,19 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     lastSig = sig;
     if (quiet > 45) return;
     listeners.forEach((fn) => fn(time, dt));
-    renderer.render(scene, camera);
+    // the airport as a diorama: drawn on its own over the chart (depth cleared), its ground fading into the map
+    const dk = airport.discK();
+    if (dk > 0.01) {
+      airport.group.visible = false;
+      renderer.render(scene, camera);
+      airport.group.visible = true;
+      renderer.autoClear = false;
+      renderer.clearDepth();
+      airport.discOn(dk);
+      renderer.render(airport.group, camera);
+      airport.discOff();
+      renderer.autoClear = true;
+    } else renderer.render(scene, camera);
     drawField();
     // a GPU that cannot keep up gets fewer pixels, a quarter step at a time, never below one per CSS pixel
     slow = slow * 0.96 + (dt > 0.029 ? 1 : 0) * 0.04;

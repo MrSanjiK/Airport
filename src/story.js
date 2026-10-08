@@ -406,11 +406,12 @@ export function initStory(world, { places, nav, bus }) {
     // the terminal keeps its plate size through all three airport directions
     const wAir = w.airport + w.flytv + w.mediagate;
     const as = 1 + heroS * w.hero + (PLATE.scale - 1) * wAir;
-    // on the plate the volumes are drawn at half the hero symbol's height exaggeration, so the plan reads
-    world.airport.group.scale.set(as, as * (1 - 0.45 * wAir), as);
+    // the model keeps the same 4x height exaggeration everywhere, as it reads on the About page
+    world.airport.group.scale.set(as, as, as);
     // the terminal stands on the levelled Tashkent plate when that model is up
     world.airport.group.position.y = world.city.flatY(world.airport.group.position.x, world.airport.group.position.z, world.hubWorld.y);
-    world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0, w.flytv + w.mediagate);
+    // a phone has no plate frame: there the airport chapter shows the diorama too
+    world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0, w.flytv + w.mediagate + (frame.offsetParent ? 0 : w.airport));
     if (world.roads) world.roads.city = 1 - clamp((w.hero + wAir) * 1.4);
     world.airport.setHot(w.airport);
     const cityNow = world.city.active;
