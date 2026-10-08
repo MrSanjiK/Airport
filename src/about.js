@@ -17,7 +17,8 @@ const POSE = {
   overview: { t: [66.1, 40.9], dist: 1500, az: 0, el: 60, shift: 0.2 },
   airport: { t: AIRPORT, dist: 2.6, az: 24, el: 50, shift: 0.22 },
   region: { t: [70.9, 40.65], dist: 520, az: 6, el: 48, shift: 0.2 },
-  office: { t: OFFICE, dist: 1.5, az: -18, el: 48, shift: 0.22 },
+  // from the south-east, so block C stands in front of the Nest One tower
+  office: { t: OFFICE, dist: 1.85, az: -62, el: 36, shift: 0.22 },
 };
 const MEGA = { mediaport: 'mediaport', flytv: 'flytv', mediagate: 'mediagate', 'tvl-korzinka': 'korzinka', 'tvl-horeca': 'horeca', 'tvl-region': 'regions' };
 const TAG = { mediaport: 'tagMediaport', flytv: 'tagFlytv', mediagate: 'tagMediagate', 'tvl-korzinka': 'tagKorzinka', 'tvl-horeca': 'tagHoreca', 'tvl-region': 'tagRegion' };
@@ -56,7 +57,11 @@ export function initAbout({ nav, bus, lenis, reduced }) {
 
   const aim = (key) => {
     if (!world || !isOpen) return;
-    world.setGoal(world.goalFromPose(POSE[key] || POSE.overview));
+    // on a phone the plate takes the top of the screen: the subject is framed below it
+    const phone = innerWidth < 960;
+    world.setGoal(world.goalFromPose({ ...(POSE[key] || POSE.overview), shiftY: phone ? -0.26 : 0 }));
+    // the office's neighbourhood rises out of the chart under the contact block
+    world.office?.show(key === 'office');
   };
   // a block must hold the middle of the screen for a moment before the camera follows: a fast scroll past
   // several blocks makes one calm move, not a chain of flights
@@ -255,6 +260,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : scrollTo(0, 0);
     nav?.setCurrent('about');
     story?.setAbout(true);
+    world?.office?.load();
     pose = 'overview';
     render();
     aim(pose);
@@ -274,6 +280,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     el.hidden = true;
     el.innerHTML = '';
     story?.setAbout(false);
+    world?.office?.show(false);
     history.replaceState(null, '', location.pathname);
     // back where the reader left the story, unless a link asked for somewhere else
     requestAnimationFrame(() => {
@@ -289,7 +296,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     open, close,
     get isOpen() { return isOpen; },
     // the chart arrives after the loader: from then on the page steers the camera
-    attach(w, s) { world = w; story = s; if (isOpen) { story.setAbout(true); aim(pose); } },
+    attach(w, s) { world = w; story = s; if (isOpen) { story.setAbout(true); world.office?.load(); aim(pose); } },
     office: OFFICE,
   };
 }

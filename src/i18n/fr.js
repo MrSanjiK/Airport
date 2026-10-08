@@ -506,7 +506,8 @@ export default {
     "f5t": "Surfaces en Duty Free",
     "f5": "Présenter votre produit face à face à un large public.",
     "f6t": "Zones interactives",
-    "f6": "Des solutions créatives qui captent le public."
+    "f6": "Des solutions créatives qui captent le public.",
+    "officeBlock": "bloc C"
   },
   "partners": {
     "k": "Partenaires",

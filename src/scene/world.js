@@ -3,6 +3,7 @@ import { toXZ, toLonLat, EXAG, W, D } from './geo.js';
 import { loadHeights, buildOverlays, createTerrain } from './terrain.js';
 import { createIcons, worldAt } from './layers.js';
 import { createAirport } from './airport.js';
+import { createOffice } from './office.js';
 import { createCityLayer } from './city.js';
 import { createDrapedLines, createRoute, createRoads } from './lines.js';
 
@@ -79,6 +80,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   aimPlate(airport.origin);
   scene.add(airport.group);
   const city = createCityLayer({ scene, sample: heights.sample, terrain });
+  const office = createOffice({ worldAt: (lon, lat, lift) => worldAt(lon, lat, sample, lift) });
   await breathe();
   const lines = createDrapedLines(data.vectors, sample);
   scene.add(lines.group);
@@ -254,12 +256,13 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     route.update(state.night, renderer);
     airport.setNight(state.night);
     city.update(state.night, renderer, dt, cur.dist);
+    office.update(dt, state.night);
     lines.update(state.night, renderer);
     if (roads) { roads.opacity = lines.opacity; roads.update(state.night, renderer, cur.dist); }
 
     // nothing on the chart moves (camera settled, page still, no fade running): after a short grace the frame is
     // kept as it is and neither the story nor the GPU does any work until something changes
-    const sig = `${cur.tx.toFixed(5)},${cur.ty.toFixed(5)},${cur.tz.toFixed(5)},${cur.dist.toFixed(4)},${cur.az.toFixed(3)},${cur.el.toFixed(3)},${cur.shift.toFixed(4)},${cur.shiftY.toFixed(4)},${state.night.toFixed(3)},${scrollY},${field.opacity.toFixed(3)},${city.k.toFixed(3)},${route.progress.toFixed(3)},${lines.opacity.toFixed(3)},${innerWidth}x${innerHeight},${dirty}`;
+    const sig = `${cur.tx.toFixed(5)},${cur.ty.toFixed(5)},${cur.tz.toFixed(5)},${cur.dist.toFixed(4)},${cur.az.toFixed(3)},${cur.el.toFixed(3)},${cur.shift.toFixed(4)},${cur.shiftY.toFixed(4)},${state.night.toFixed(3)},${scrollY},${field.opacity.toFixed(3)},${city.k.toFixed(3)},${office.k.toFixed(3)},${route.progress.toFixed(3)},${lines.opacity.toFixed(3)},${innerWidth}x${innerHeight},${dirty}`;
     quiet = sig === lastSig ? quiet + 1 : 0;
     lastSig = sig;
     if (quiet > 45) return;
@@ -277,6 +280,13 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       airport.discOff();
       renderer.autoClear = true;
     } else renderer.render(scene, camera);
+    // the head office's neighbourhood: its own pass over the chart, like the airport diorama
+    if (office.group.visible) {
+      renderer.autoClear = false;
+      renderer.clearDepth();
+      renderer.render(office.group, camera);
+      renderer.autoClear = true;
+    }
     drawField();
     // a GPU that cannot keep up gets fewer pixels, a quarter step at a time, never below one per CSS pixel
     slow = slow * 0.96 + (dt > 0.029 ? 1 : 0) * 0.04;
@@ -306,6 +316,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   return {
     renderer, scene, camera, sample, route, lines, roads, goal, cur, kor, hor, airport, terrain, hubWorld, state, field, city,
     invalidate() { dirty++; },
+    office,
     setPose(p) { poseToState(p); },
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },

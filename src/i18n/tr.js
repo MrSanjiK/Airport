@@ -506,7 +506,8 @@ export default {
     "f5t": "Duty Free yüzeyleri",
     "f5": "Ürününüzü geniş bir kitleyle yüz yüze tanıtma fırsatı.",
     "f6t": "Etkileşimli alanlar",
-    "f6": "Kitleyi içine çeken yaratıcı çözümler."
+    "f6": "Kitleyi içine çeken yaratıcı çözümler.",
+    "officeBlock": "C Blok"
   },
   "partners": {
     "k": "İş ortakları",

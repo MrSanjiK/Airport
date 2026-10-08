@@ -514,7 +514,8 @@ export default {
     "f5t": "Duty Free'dagi yuzalar",
     "f5": "Mahsulotingizni keng auditoriyaga yuzma-yuz taqdim etish imkoniyati.",
     "f6t": "Interaktiv zonalar",
-    "f6": "Auditoriyani jalb qiladigan kreativ yechimlar."
+    "f6": "Auditoriyani jalb qiladigan kreativ yechimlar.",
+    "officeBlock": "C blok"
   },
   "partners": {
     "k": "Hamkorlar",

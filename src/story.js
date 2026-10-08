@@ -4,6 +4,7 @@ import { t, onLang, num, place, lang } from './i18n/index.js';
 import { REGIONS, LED_ZONES, LED_FACTS } from './data/inventory.js';
 import { profile } from './sections.js';
 import { formatDMS, toLonLat } from './scene/geo.js';
+import OA_MARK from './assets/oa-mark.svg?raw';
 
 const CHAPTERS = ['hero', 'airport', 'flytv', 'mediagate', 'korzinka', 'horeca', 'regions', 'plan'];
 const RAIL = { airport: 'mediaport', regions: 'region' };
@@ -107,17 +108,18 @@ export function initStory(world, { places, nav, bus }) {
     key: 'horeca-cluster',
     far: 1,
   }).prio = 85;
-  // the head office, on the About page only, once the camera has come down over Yunusobod
+  // the head office, on the About page only: a pin on block C of Nest One, once its neighbourhood has risen
   const office = [69.2527619, 41.3120115]; // Nest One, block C
+  const officeFallback = world.worldAt(office[0], office[1], 0.05);
   const officeLabel = addLabel({
     cls: 'wp--office',
-    world: world.worldAt(office[0], office[1], 0.05),
-    html: () => `${DOT}<span class="wp-box"><span class="wp-name">Orient Advertising</span><span class="wp-sub">${t('about.office')}</span></span>`,
+    world: () => world.office?.anchor || officeFallback,
+    html: () => `<span class="wp-oa" aria-hidden="true">${OA_MARK}</span><span class="wp-box"><span class="wp-name">Orient Advertising</span><span class="wp-sub">Nest One · ${t('about.officeBlock')}</span></span>`,
     weights: { about: 1 },
     key: 'office',
   });
   officeLabel.prio = 99;
-  officeLabel.when = () => world.cur.dist < 12;
+  officeLabel.when = () => world.cur.dist < 12 && (world.office?.k ?? 0) > 0.6;
 
   // Airport zones: numbered markers on the OSM terminal plan, named by callouts
   const ag = world.airport.group;

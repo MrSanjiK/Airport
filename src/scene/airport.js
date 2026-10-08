@@ -22,10 +22,10 @@ const LOGV = `#include <common>
 
 // Buildings: roof colour from above, shaded walls with storey windows (offices) or a glazed band (terminals)
 const bldVert = /* glsl */ `${LOGV}
-  attribute vec3 aRoof; attribute vec3 aWall; attribute vec3 aInfo;
-  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo;
+  attribute vec3 aRoof; attribute vec3 aWall; attribute vec3 aInfo; attribute vec2 aC;
+  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
   void main(){
-    vN = normalize(mat3(modelMatrix) * normal); vP = position; vRoof = aRoof; vWall = aWall; vInfo = aInfo;
+    vN = normalize(mat3(modelMatrix) * normal); vP = position; vRoof = aRoof; vWall = aWall; vInfo = aInfo; vC = aC;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     #include <logdepthbuf_vertex>
   }`;
@@ -33,17 +33,18 @@ const bldVert = /* glsl */ `${LOGV}
 const DISC = /* glsl */ `
   uniform vec4 uDisc;
   float discFade(vec2 p){ return uDisc.w > 0.0 ? smoothstep(uDisc.z, uDisc.w, length(p - uDisc.xy)) : 0.0; }
-  float dither(){ return fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))); }`;
+  // whole buildings and trees stop at the cut, measured from their own centre: a clean edge, never a stipple
+  bool discCut(vec2 c){ return uDisc.w > 0.0 && length(c - uDisc.xy) > mix(uDisc.z, uDisc.w, 0.55); }`;
 const bldFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
   uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;${DISC}
-  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo;
+  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   // a line that fades out before it would alias (the terminal is a 100 px symbol in the hero, a full plate later)
   float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
   void main(){
     #include <logdepthbuf_fragment>
-    if (dither() < discFade(vP.xz) * 1.6) discard;
+    if (discCut(vC)) discard;
     vec3 n = normalize(vN);
     float l = clamp(dot(n, normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
     float roof = step(0.8, n.y);
@@ -66,13 +67,21 @@ const bldFrag = /* glsl */ `
       lit = step(0.42, hash(cell + vInfo.yz * 97.0));
     } else if (kind < 1.5) {
       win = band(h, 0.14, 0.84);
+    } else if (kind > 3.5) {
+      // a glass tower: curtain wall from foot to crown, a dark floor line every storey
+      float fy = fract((vP.y - vInfo.y) / uStorey);
+      win = 1.0 - (1.0 - band(fy, 0.12, 1.0)) * 0.75;
+      vec2 cell = vec2(floor(along / (uStorey * 0.9)), floor((vP.y - vInfo.y) / uStorey));
+      lit = step(0.32, hash(cell + vInfo.yz * 97.0));
     }
     vec3 wallD = vWall * mix(0.58, 1.0, l);
     vec3 glassD = mix(vec3(0.3, 0.37, 0.46), vec3(0.52, 0.6, 0.7), l);
+    // towers take their wall colour as the glass tint (Nest One's silver, the office block's indigo)
+    if (kind > 3.5) glassD = mix(glassD, vWall * mix(0.7, 1.15, l), 0.6) + pow(l, 6.0) * 0.18;
     vec3 dayC = mix(mix(wallD, glassD, win * 0.9), roofD, roof);
     vec3 wallN = vWall * 0.12 + vec3(0.02, 0.035, 0.06);
     // at night the halls glow softly through their glass, office windows burn here and there
-    vec3 glow = kind < 0.5 ? vec3(1.0, 0.78, 0.5) * mix(0.08, 0.85, lit) : vec3(0.5, 0.62, 0.8) * mix(0.55, 0.75, l);
+    vec3 glow = (kind < 0.5 || kind > 3.5) ? vec3(1.0, 0.78, 0.5) * mix(0.08, 0.85, lit) : vec3(0.5, 0.62, 0.8) * mix(0.55, 0.75, l);
     vec3 nightC = mix(mix(wallN, glow, win), roofN, roof);
     gl_FragColor = vec4(mix(dayC, nightC, uNight), uOpacity);
   }`;
@@ -109,7 +118,11 @@ const shadeVert = /* glsl */ `${LOGV}
     #ifdef USE_INSTANCING_COLOR
       c = instanceColor * mix(vec3(1.0), uNightC, uNight);
     #endif
-    vC = c; vN = normalize(mat3(modelMatrix) * n); vL = (modelMatrix * p).xz;
+    vec4 o = vec4(0.0, 0.0, 0.0, 1.0);
+    #ifdef USE_INSTANCING
+      o = instanceMatrix * o;
+    #endif
+    vC = c; vN = normalize(mat3(modelMatrix) * n); vL = (modelMatrix * o).xz;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * p;
     #include <logdepthbuf_vertex>
   }`;
@@ -119,7 +132,7 @@ const shadeFrag = /* glsl */ `
   varying vec3 vN; varying vec3 vC; varying vec2 vL;
   void main(){
     #include <logdepthbuf_fragment>
-    if (dither() < discFade(vL - uOrigin.xz) * 1.6) discard;
+    if (discCut(vL - uOrigin.xz)) discard;
     float l = clamp(dot(normalize(vN), normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
     gl_FragColor = vec4(vC * mix(0.6, 1.05, l), uOpacity);
   }`;
@@ -342,7 +355,11 @@ export function createAirport(model, hubWorld) {
     ng.setAttribute('aRoof', new THREE.BufferAttribute(roof, 3));
     ng.setAttribute('aWall', new THREE.BufferAttribute(wall, 3));
     ng.setAttribute('aInfo', new THREE.BufferAttribute(info, 3));
-    return { g: ng, c: centroid(pts), top };
+    const cc = centroid(pts);
+    const ca = new Float32Array(n * 2);
+    for (let i = 0; i < n; i++) ca.set(cc, i * 2);
+    ng.setAttribute('aC', new THREE.BufferAttribute(ca, 2));
+    return { g: ng, c: cc, top };
   };
   const T = model.terminals;
   const ringL = (r) => r.map(L);
@@ -721,3 +738,6 @@ function mulberry(a) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+// shared with the head office's neighbourhood (office.js)
+export const SHADERS = { bldVert, bldFrag, groundVert, groundFrag, shadeVert, shadeFrag };

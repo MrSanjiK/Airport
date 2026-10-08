@@ -1538,7 +1538,13 @@ html.is-about .rail, html.is-about .scroll-cue, html.is-about .legend { display:
 .ab-route { margin-top: 18px; }
 .ab-cta { margin-top: 22px; height: 48px; padding: 0 24px; gap: 10px; font-size: 15px; }
 .ab-cta svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.wp--office .wp-box { border-color: var(--route); }
+.wp--office .wp-box { border-color: var(--route); box-shadow: 0 10px 24px -12px rgba(227, 0, 15, 0.55); }
+/* the office pin: the holding's mark in a white disc, standing on block C */
+.wp-oa { display: grid; place-items: center; width: 34px; height: 34px; margin-top: -17px; margin-bottom: 4px; border-radius: 50%; background: #fff; color: #12174e;
+  box-shadow: 0 0 0 2px var(--route), 0 8px 18px -8px rgba(16, 40, 72, 0.6); }
+.wp-oa svg { width: 24px; height: 24px; }
+.wp--office .wp-box { position: relative; }
+.wp--office .wp-box::after { content: ''; position: absolute; left: 50%; top: 100%; width: 1.5px; height: 30px; margin-left: -0.75px; background: linear-gradient(var(--route), color-mix(in srgb, var(--route) 20%, transparent)); }
 
 @media (max-width: 960px) {
   .about { padding-top: calc(var(--nav-h) + 3vh); }
