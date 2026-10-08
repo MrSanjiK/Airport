@@ -7,7 +7,7 @@ import { formatDMS, toLonLat } from './scene/geo.js';
 
 const CHAPTERS = ['hero', 'airport', 'flytv', 'mediagate', 'korzinka', 'horeca', 'regions', 'plan'];
 const RAIL = { airport: 'mediaport', regions: 'region' };
-const ALL = [...CHAPTERS, 'explore'];
+const ALL = [...CHAPTERS, 'explore', 'about'];
 const TRI = '<svg class="wp-tri" viewBox="0 0 15 13" aria-hidden="true"><path d="M7.5 1.2L13.8 11.8H1.2z"/></svg>';
 const DOT = '<svg class="wp-tri wp-pin" viewBox="0 0 15 13" aria-hidden="true"><circle cx="7.5" cy="6.5" r="4.4"/></svg>';
 const AERO = '<svg class="wp-aero" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 4.5l1.6 5.4 5.4 2.1-5.4 1.9L12 19.5l-1.6-5.6L5 12l5.4-2.1z"/></svg>';
@@ -54,7 +54,7 @@ export function initStory(world, { places, nav, bus }) {
     // in the hero the label hangs below the terminal symbol rather than over it
     world: () => tmpTas.copy(world.hubWorld).add(tasDrop.set(0, 0.1, 0.075 * world.airport.group.scale.x * heroW)),
     html: () => `${AERO}<span class="wp-box"><span class="wp-name">TAS</span><span class="wp-sub">${t('map.tas')}</span></span>`,
-    weights: { hero: 1, korzinka: 0.7, horeca: 0.6, regions: 0.8, plan: 0.8, explore: 1 },
+    weights: { hero: 1, korzinka: 0.7, horeca: 0.6, regions: 0.8, plan: 0.8, explore: 1, about: 0.8 },
     onClick: () => fly({ type: 'tas' }),
     key: 'tas',
   }).prio = 75;
@@ -68,7 +68,7 @@ export function initStory(world, { places, nav, bus }) {
     addLabel({
       world: world.worldAt(p[0], p[1], 0.3),
       html: () => `${TRI}<span class="wp-box"><span class="wp-name">${t(`cities.${k}`)}${row.iata ? `<span class="wp-code">${row.iata}</span>` : ''}</span><span class="wp-sub">${num(row.screens)} ${t('map.screens')} · ${num(row.venues)} ${t('map.venues')}</span></span>`,
-      weights: { hero: heroCities.includes(k) ? 0.9 : 0, regions: 1, plan: 0.8, korzinka: 0.5, explore: 1 },
+      weights: { hero: heroCities.includes(k) ? 0.9 : 0, regions: 1, plan: 0.8, korzinka: 0.5, explore: 1, about: 1 },
       // in the Regions chapter a city label picks the city in the plate; elsewhere it opens the map card
       onClick: () => (active === 'regions' && !exploring ? bus.dispatchEvent(new CustomEvent('regionpick', { detail: k })) : fly({ type: 'city', key: k })),
       key: k,
@@ -91,7 +91,7 @@ export function initStory(world, { places, nav, bus }) {
       cls: 'wp--cluster',
       world: world.worldAt(ll[0], ll[1], 0.4),
       html: () => `${DOT}<span class="wp-box"><span class="wp-name">${name}</span><span class="wp-sub">${g.n} Korzinka</span></span>`,
-      weights: { korzinka: 1, regions: 0.6, plan: 0.5, explore: 1 },
+      weights: { korzinka: 1, regions: 0.6, plan: 0.5, explore: 1, about: 0.6 },
       onClick: () => fly({ type: 'town', name, ll, dist: g.n > 20 ? 34 : 14 }),
       key: `town-${name}`,
       far: 1,
@@ -102,11 +102,22 @@ export function initStory(world, { places, nav, bus }) {
     cls: 'wp--cluster wp--cluster-h',
     world: world.worldAt(hc[0], hc[1], 0.4),
     html: () => `${DOT}<span class="wp-box"><span class="wp-name">HoReCa · ${t('cities.toshkent')}</span><span class="wp-sub">75+ ${t('horeca.venues')}</span></span>`,
-    weights: { horeca: 1, explore: 1, plan: 0.5 },
+    weights: { horeca: 1, explore: 1, plan: 0.5, about: 0.8 },
     onClick: () => fly({ type: 'town', name: t('cities.toshkent'), ll: hc, dist: 30 }),
     key: 'horeca-cluster',
     far: 1,
   }).prio = 85;
+  // the head office, on the About page only, once the camera has come down over Yunusobod
+  const office = [69.28757, 41.35491];
+  const officeLabel = addLabel({
+    cls: 'wp--office',
+    world: world.worldAt(office[0], office[1], 0.05),
+    html: () => `${DOT}<span class="wp-box"><span class="wp-name">Orient Advertising</span><span class="wp-sub">${t('about.office')}</span></span>`,
+    weights: { about: 1 },
+    key: 'office',
+  });
+  officeLabel.prio = 99;
+  officeLabel.when = () => world.cur.dist < 12;
 
   // Airport zones: numbered markers on the OSM terminal plan, named by callouts
   const ag = world.airport.group;
@@ -265,6 +276,9 @@ export function initStory(world, { places, nav, bus }) {
     }));
   };
   let exploring = false;
+  // the About page takes the screen: the story's chapters rest, the page itself steers the camera
+  let aboutMode = false;
+  let aboutCity = null;
   let active = 'hero';
   const frameState = () => {
     if (exploring) {
@@ -273,6 +287,12 @@ export function initStory(world, { places, nav, bus }) {
       return;
     }
     weights.explore = 0;
+    if (aboutMode) {
+      ALL.forEach((c) => (weights[c] = 0));
+      weights.about = 1;
+      return;
+    }
+    weights.about = 0;
     const y = scrollY;
     let i = 0;
     while (i < keys.length - 2 && y > keys[i + 1].y) i++;
@@ -394,8 +414,8 @@ export function initStory(world, { places, nav, bus }) {
     world.airport.setHot(w.airport);
     const cityNow = world.city.active;
     const noCity = 1 - world.city.k;
-    world.kor.uniforms.uOpacity.value = clamp(w.korzinka + w.regions * 0.6 + w.plan * 0.5 + w.horeca * 0.45 + ex) * nearK * noCity;
-    world.hor.uniforms.uOpacity.value = clamp(w.horeca * 1.4 + w.plan * 0.5 + ex) * nearK * noCity;
+    world.kor.uniforms.uOpacity.value = clamp(w.korzinka + w.regions * 0.6 + w.plan * 0.5 + w.horeca * 0.45 + ex + w.about * 0.8) * nearK * noCity;
+    world.hor.uniforms.uOpacity.value = clamp(w.horeca * 1.4 + w.plan * 0.5 + ex + w.about * 0.8) * nearK * noCity;
     if (world.roads) world.roads.fade = noCity;
     const px = world.renderer.getPixelRatio();
     world.kor.uniforms.uPx.value = world.hor.uniforms.uPx.value = px;
@@ -410,7 +430,7 @@ export function initStory(world, { places, nav, bus }) {
       const [tl, ta] = toLonLat(world.cur.tx, world.cur.tz);
       autoSite = world.city.siteAt(tl, ta);
     }
-    const wantCity = exploring ? exploreCity || autoSite : w.regions > 0.4 ? regionKey : w.horeca > 0.4 ? 'toshkent' : null;
+    const wantCity = exploring ? exploreCity || autoSite : aboutMode ? aboutCity : w.regions > 0.4 ? regionKey : w.horeca > 0.4 ? 'toshkent' : null;
     if (wantCity !== shownCity) { shownCity = wantCity; world.city.show(world.city.has(wantCity) ? wantCity : null); }
     if (cityNow && !venueLabels.has(cityNow.key)) addVenueLabels(cityNow);
     // once a city's venues are known, frame them all rather than the city centre
@@ -429,7 +449,7 @@ export function initStory(world, { places, nav, bus }) {
     // panels the map labels must never run under: chapter plates, the airport frame, the open card, the bars
     const blockers = [];
     // (in the explorer the chapters are faded out: only its own bar, the card and the nav count)
-    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hleaf, .hold-hub, .hold-gk, .planner-sheet').forEach((el) => {
+    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hleaf, .hold-hub, .hold-gk, .planner-sheet, .ab-plate, .ab-back').forEach((el) => {
       if (el.style.visibility === 'hidden' || el.offsetParent === null) return;
       const r = el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > innerHeight || r.width < 2) return;
@@ -445,6 +465,7 @@ export function initStory(world, { places, nav, bus }) {
       for (const c in l.weights) target += (l.weights[c] || 0) * w[c];
       // weights decide whether a label shows, not how faint it is: half-lit labels read as ghosts over the streets
       target = introDone ? clamp(target * 2) : 0;
+      if (l.when && !l.when()) target = 0;
       if (l.far) target *= l.el.classList.contains('wp--cluster') ? farK : clamp(farK + 0.35);
       // a city's own venues show only while its model is up; its waypoint and store cluster step aside
       if (l.cityKey) {
@@ -557,7 +578,7 @@ export function initStory(world, { places, nav, bus }) {
 
   // Cursor coordinates read off the chart
   addEventListener('pointermove', (e) => {
-    const over = e.target.closest?.('.plate, .planner-sheet, .nav, .hero-copy, .hleaf, .hold-hub, .hold-gk, .footer, .lang-pop, .rail, .info-card, .callout');
+    const over = e.target.closest?.('.plate, .planner-sheet, .nav, .hero-copy, .hleaf, .hold-hub, .hold-gk, .ab-plate, .ab-back, .footer, .lang-pop, .rail, .info-card, .callout');
     if (over || !introDone) { coord.classList.remove('is-on'); return; }
     const ll = world.pick(e.clientX, e.clientY);
     if (!ll) { coord.classList.remove('is-on'); return; }
@@ -569,6 +590,8 @@ export function initStory(world, { places, nav, bus }) {
     introDone() { introDone = true; world.state.ready = true; },
     releaseCamera() { cameraFree = true; },
     setExplore(v) { exploring = v; if (!v) { exploreCity = null; frameState(); } },
+    setAbout(v) { aboutMode = v; frameState(); },
+    setAboutCity(key) { aboutCity = key; },
     setExploreCity(key) { exploreCity = key; },
     cityPose,
     weights,

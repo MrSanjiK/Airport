@@ -96,6 +96,7 @@ export function initNav({ onTheme } = {}) {
     mobile.innerHTML =
       DIRECTIONS.map((d) => `<a href="#${d.chapter}" style="--brand:${d.color}">${badge(d, 'sm')}<small>${tagline(d)}</small></a>`).join('') +
       `<a href="#plan">${t('nav.plan')} <small>${t('mega.plan.stat')}</small></a>` +
+      `<a href="#about">${t('about.nav')} <small>Orient Advertising</small></a>` +
       `<a class="btn-primary" href="#plan"><span class="btn-primary-label">${t('hero.cta')}</span></a>`;
   };
   renderMobile();

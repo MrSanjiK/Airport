@@ -6,7 +6,7 @@ import { REGIONS, KORZINKA, HORECA, LED_FACTS, AIRPORT } from './data/inventory.
 import { formatDMS, toXZ, toLonLat, EXAG, BBOX } from './scene/geo.js';
 import { POSES } from './scene/world.js';
 
-const UI = '.plate, .planner-sheet, .nav, .hero-copy, .hplate, .footer, .lang-pop, .rail, .explore-fab, .explore-bar, .map-tip, .nav-scrim, .mobile-nav, .info-card, .callout, .wp.is-clickable';
+const UI = '.plate, .planner-sheet, .nav, .hero-copy, .hleaf, .hold-hub, .ab-plate, .ab-back, .footer, .lang-pop, .rail, .explore-fab, .explore-bar, .map-tip, .nav-scrim, .mobile-nav, .info-card, .callout, .wp.is-clickable';
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 // Uzbekistan's extent: the explorer never leaves it

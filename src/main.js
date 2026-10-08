@@ -7,6 +7,7 @@ import { initSections } from './sections.js';
 import { initPlanner } from './planner.js';
 import { createWorld, POSES } from './scene/world.js';
 import { initStory } from './story.js';
+import { initAbout } from './about.js';
 import { drawFallback } from './scene/fallback.js';
 import { initExplore } from './explore.js';
 import { createLoader, introDist, INTRO_TARGET } from './loader.js';
@@ -104,10 +105,17 @@ async function boot() {
     history.replaceState(null, '', id === 'top' ? location.pathname : `#${id}`);
     return true;
   };
+  // About is a page of its own over the chart: its link opens it, any other link closes it on the way
+  const about = initAbout({ nav, bus, lenis, reduced });
+  const wantAbout = location.hash === '#about';
   document.addEventListener('click', (e) => {
+    if (e.defaultPrevented) return;
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    if (goTo(a.getAttribute('href').slice(1))) e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    if (id === 'about') { e.preventDefault(); about.open(); return; }
+    if (about.isOpen) { e.preventDefault(); about.close(id === 'top' ? null : id); return; }
+    if (goTo(id)) e.preventDefault();
   });
   bus.addEventListener('goto', (e) => goTo(e.detail));
   // bring an element into view through the smooth scroller (native scrollIntoView fights it)
@@ -151,11 +159,13 @@ async function boot() {
     fb.hidden = false;
     drawFallback(fb, { vectors, places });
     finish();
+    if (wantAbout) about.open();
     return;
   }
   world.state.night = document.documentElement.dataset.theme === 'night' ? 1 : 0;
   if (import.meta.env.DEV) window.__mp = { world, gsap };
   const story = initStory(world, { places, nav, bus });
+  about.attach(world, story);
   world.start();
   bus.dispatchEvent(new CustomEvent('zone', { detail: 'arr32' }));
 
@@ -177,6 +187,7 @@ async function boot() {
     settle();
     if (startY <= innerHeight * 0.5) { world.setGoal(world.goalFromPose(POSES.hero)); world.jump(); }
     finish();
+    if (wantAbout) about.open();
     return;
   }
 
@@ -199,7 +210,7 @@ async function boot() {
   const lerp = (x, y, k) => x + (y - x) * k;
   const tl = gsap.timeline({
     // the scroll story takes the camera only once the flight has landed exactly on the hero pose
-    onComplete: () => { story.releaseCamera(); lenis?.start(); },
+    onComplete: () => { story.releaseCamera(); lenis?.start(); if (wantAbout) about.open(); },
   });
   tl.to(fly, {
     k: 1, duration: 3.0, ease: 'power3.inOut',

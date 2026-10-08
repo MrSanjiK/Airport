@@ -300,7 +300,7 @@ export function initPlanner({ bus }) {
             <a class="pill" href="tel:${tel}"><i></i>${esc(t('form.call'))}</a>
           </div>
         </div>
-        <div><h3><b>01</b> · ${esc(t('footer.networks'))}</h3><ul>${DIRECTIONS.map((d) => `<li><a href="#${d.chapter}">${esc(dirName(d))}</a></li>`).join('')}</ul></div>
+        <div><h3><b>01</b> · ${esc(t('footer.networks'))}</h3><ul>${DIRECTIONS.map((d) => `<li><a href="#${d.chapter}">${esc(dirName(d))}</a></li>`).join('')}<li><a href="#about">${esc(t('about.nav'))}</a></li></ul></div>
         <div><h3><b>02</b> · ${esc(t('footer.contacts'))}</h3><ul class="footer-phones">${PHONES.map((p) => `<li><a class="tnum" href="tel:${p.replace(/\s/g, '')}">${p}</a></li>`).join('')}</ul><p class="footer-small">${HOLDING.name}</p></div>
       </div>
       <div class="footer-base"><span>© ${new Date().getFullYear()} ${esc(t('footer.rights'))}<a class="footer-osm" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a></span>
