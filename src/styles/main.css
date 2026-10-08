@@ -302,6 +302,9 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 .call-act:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); }
 .call-act:first-child:hover { background: color-mix(in srgb, var(--route) 88%, #000); }
 .nav-logo { justify-self: start; display: inline-flex; color: var(--ink); text-decoration: none; padding: 6px 0; }
+/* the logo is the way home: no hard box when it holds focus, a soft ring only for keyboard users */
+.nav-logo:focus { outline: none; }
+.nav-logo:focus-visible { outline: none; border-radius: 12px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--route) 35%, transparent); }
 .logo { display: inline-flex; width: 104px; color: var(--ink); transition: color 0.6s; }
 .logo svg { width: 100%; height: auto; }
 .nav-links { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; position: relative; }
@@ -975,6 +978,8 @@ a.ph-credit:hover { background: rgba(10, 23, 41, 0.8); }
 .explore-bar kbd { font: 700 11px/1 var(--f-chart); padding: 3px 6px; border: 1px solid var(--hair); border-radius: 6px; margin-inline-end: 4px; }
 html.is-explore .explore-bar { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 html.is-explore main, html.is-explore .footer, html.is-explore .rail { opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease-out); }
+/* the faded page must not catch a single click meant for the map (its panels set pointer-events back to auto) */
+html.is-explore main *, html.is-explore .footer * { pointer-events: none !important; }
 html.is-explore .plates, html.is-explore .leaders { opacity: 0; }
 html.is-explore body { cursor: grab; }
 html.is-explore body:active { cursor: grabbing; }
