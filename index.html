@@ -52,7 +52,23 @@
         <li><a href="#plan" data-mega="plan" data-i18n="nav.plan">Narxlar</a></li>
       </ul>
       <div class="nav-actions">
-        <a class="nav-phone tnum" href="tel:+998901073333"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg>+998 90 107 33 33</a>
+        <div class="call" id="call">
+          <button class="call-btn" id="callBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="callPop">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg>
+            <span class="sr-only" data-i18n="footer.contacts">Aloqa</span>
+          </button>
+          <div class="call-pop" id="callPop" role="dialog" aria-labelledby="callNum" hidden>
+            <p class="call-k"><span data-i18n="footer.contacts">Aloqa</span> · Orient Advertising</p>
+            <div class="call-row">
+              <a class="call-num tnum" id="callNum" href="tel:+998991787777">+998 99 178 77 77</a>
+              <button class="call-copy" id="callCopy" type="button" data-i18n-attr="aria-label:form.copy" aria-label="Nusxalash"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><span class="call-done" data-i18n="form.copied">Nusxalandi</span></button>
+            </div>
+            <div class="call-acts">
+              <a class="call-act" href="tel:+998991787777"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg><span data-i18n="form.call">Qo'ng'iroq qilish</span></a>
+              <a class="call-act" href="https://wa.me/998991787777" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L2 14l2.9-.7A6.2 6.2 0 1 0 8 1.8z"/></svg><span>WhatsApp</span></a>
+            </div>
+          </div>
+        </div>
         <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">
           <span class="tt-thumb" aria-hidden="true"></span>
           <svg class="tt-ico tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g class="tt-rays"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.35 5.35l1.55 1.55M17.1 17.1l1.55 1.55M5.35 18.65l1.55-1.55M17.1 6.9l1.55-1.55"/></g></svg>

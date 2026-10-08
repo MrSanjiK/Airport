@@ -22,16 +22,16 @@ export const AIRPORT = {
 
 // LED zones. `terminal` + `spot` place the schematic marker on the real OSM terminal footprint.
 export const LED_ZONES = [
-  { id: 'filter', screens: 1, size: '1024×288', res: '2560×720', price: [80, 60, 45], img: 'air-filter', terminal: 'T2', spot: [0.30, 0.38] },
-  { id: 'dep1', screens: 1, size: '2560×224', res: '10112×786', price: [100, 80, 60], img: 'air-departure-1', terminal: 'T2', spot: [0.52, 0.30] },
-  { id: 'dep2', screens: 1, size: '1504×178', res: '4096×512', price: [90, 70, 50], img: 'air-departure-2', terminal: 'T2', spot: [0.66, 0.42] },
-  { id: 'dutyfree', screens: 1, size: '256×448', res: '640×1120', price: [40, 30, 20], img: 'air-dutyfree', terminal: 'T2', spot: [0.78, 0.30] },
-  { id: 'arr32', screens: 32, size: '512×176', res: '1920×704', price: [500, 400, 300], img: 'air-arrival-32', terminal: 'T2', spot: [0.42, 0.72], hit: true },
-  { id: 'cipdep', screens: 1, size: '512×256', res: '1920×1080', price: [80, 60, 40], img: 'air-cip-departure', terminal: 'T2', spot: [0.14, 0.56] },
-  { id: 'ciparr', screens: 2, size: '480×176', res: '1920×1080', price: [150, 125, 100], img: 'air-cip-arrival', terminal: 'T2', spot: [0.22, 0.80], hit: true },
-  { id: 'forecourt', screens: 3, size: '970×960', res: 'P2', price: [200, 175, 150], img: 'air-forecourt', terminal: 'T2', spot: [0.56, 0.06], outdoor: true },
+  { id: 'filter', screens: 1, size: '1024×288', res: '2560×720', price: [80, 60, 45], img: 'air-filter', terminal: 'DEP', spot: [0.5, 0.18] },
+  { id: 'dep1', screens: 1, size: '2560×224', res: '10112×786', price: [100, 80, 60], img: 'air-departure-1', terminal: 'DEP', spot: [0.34, 0.38] },
+  { id: 'dep2', screens: 1, size: '1504×178', res: '4096×512', price: [90, 70, 50], img: 'air-departure-2', terminal: 'DEP', spot: [0.66, 0.42] },
+  { id: 'dutyfree', screens: 1, size: '256×448', res: '640×1120', price: [40, 30, 20], img: 'air-dutyfree', terminal: 'DEP', spot: [0.56, 0.74] },
+  { id: 'arr32', screens: 32, size: '512×176', res: '1920×704', price: [500, 400, 300], img: 'air-arrival-32', terminal: 'ARR', spot: [0.5, 0.55], hit: true },
+  { id: 'cipdep', screens: 1, size: '512×256', res: '1920×1080', price: [80, 60, 40], img: 'air-cip-departure', terminal: 'DEP', spot: [0.16, 0.62] },
+  { id: 'ciparr', screens: 2, size: '480×176', res: '1920×1080', price: [150, 125, 100], img: 'air-cip-arrival', terminal: 'ARR', spot: [0.2, 0.72], hit: true },
+  { id: 'forecourt', screens: 3, size: '970×960', res: 'P2', price: [200, 175, 150], img: 'air-forecourt', terminal: 'DEP', spot: [0.56, 0.06], outdoor: true },
   { id: 't3', screens: 2, size: '1600×560', res: '6.8×2.33', price: [200, 150, 100], img: 'air-terminal3-b', terminal: 'T3', spot: [0.5, 0.5] },
-  { id: 'waiting', screens: 1, size: '7.2×3.2', res: '1920×1080', price: [200, 150, 100], img: 'air-arrival-waiting', terminal: 'T2', spot: [0.62, 0.86] },
+  { id: 'waiting', screens: 1, size: '7.2×3.2', res: '1920×1080', price: [200, 150, 100], img: 'air-arrival-waiting', terminal: 'ARR', spot: [0.46, 0.22] },
 ];
 
 export const LED_FACTS = { count: 40, pitch: 'P2', playsDay: 150, spotSec: 15, hours: '24/7' };
@@ -118,7 +118,7 @@ export const REGIONS = {
 };
 
 export const HOLDING = { name: 'Orient Advertising', specialists: 100 };
-export const PHONES = ['+998 90 107 33 33', '+998 90 980 40 40'];
+export const PHONES = ['+998 99 178 77 77'];
 export const TERMS = [3, 6, 12];
 
 // The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.

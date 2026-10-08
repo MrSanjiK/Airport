@@ -171,6 +171,27 @@ export function initNav({ onTheme } = {}) {
   document.addEventListener('pointerdown', (e) => { if (!pop.hidden && !e.target.closest('#lang')) closePop(false); });
   renderLang();
 
+  // Contact: one round button in the bar; the number, a call and WhatsApp open in a small sheet under it
+  const callBtn = $('#callBtn');
+  const callPop = $('#callPop');
+  const closeCall = (focusBtn) => { callPop.hidden = true; callBtn.setAttribute('aria-expanded', 'false'); if (focusBtn) callBtn.focus(); };
+  callBtn.addEventListener('click', () => {
+    if (!callPop.hidden) return closeCall();
+    closePop(false);
+    callPop.hidden = false;
+    callBtn.setAttribute('aria-expanded', 'true');
+    callPop.querySelector('.call-num').focus();
+  });
+  $('#callCopy').addEventListener('click', async (e) => {
+    const b = e.currentTarget;
+    try { await navigator.clipboard.writeText(callPop.querySelector('.call-num').textContent.trim()); } catch (err) { return; }
+    b.classList.add('is-done');
+    setTimeout(() => b.classList.remove('is-done'), 1600);
+  });
+  callPop.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCall(true); });
+  document.addEventListener('pointerdown', (e) => { if (!callPop.hidden && !e.target.closest('#call')) closeCall(false); });
+  btn.addEventListener('click', () => closeCall(false));
+
   onLang(() => { renderMega(); renderMobile(); renderLang(); syncTheme(); });
 
   // Current chapter dot in the nav

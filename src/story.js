@@ -203,7 +203,10 @@ export function initStory(world, { places, nav, bus }) {
       const el = document.querySelector(`[data-chapter="${id}"]`);
       const top = el.getBoundingClientRect().top + scrollY;
       const y = id === 'hero' ? 0 : id === 'plan' ? top + vh * 0.15 : top + vh * 0.42;
-      return { id, y, pose: world.goalFromPose(POSES[id]) };
+      // a long chapter holds its view until its own end reaches the screen's foot, so the map never fades
+      // into the next chapter while this one is still being read (the airport zones run ten deep)
+      const y2 = el.classList.contains('chapter') ? Math.max(y, top + el.offsetHeight - vh * 1.05) : y;
+      return { id, y, y2, pose: world.goalFromPose(POSES[id]) };
     });
   };
   measure();
@@ -275,7 +278,7 @@ export function initStory(world, { places, nav, bus }) {
     while (i < keys.length - 2 && y > keys[i + 1].y) i++;
     const a = keys[i];
     const b = keys[i + 1];
-    const raw = clamp((y - a.y) / Math.max(1, b.y - a.y));
+    const raw = clamp((y - a.y2) / Math.max(1, b.y - a.y2));
     const k = smooth(clamp((raw - 0.12) / 0.76));
     CHAPTERS.forEach((c) => (weights[c] = 0));
     weights[a.id] = 1 - k;

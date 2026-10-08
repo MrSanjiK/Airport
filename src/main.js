@@ -64,7 +64,7 @@ async function boot() {
     vectors: fetch('/data/vectors.json').then((r) => r.json()),
     places: fetch('/data/places.json').then((r) => r.json()),
     roads: fetch('/data/roads.json').then((r) => r.json()).catch(() => null),
-    airport: fetch('/data/airport-detail.json').then((r) => r.json()).catch(() => null),
+    airport: fetch('/data/airport-model.json').then((r) => r.json()),
   };
   mountLogos();
   await setLang(initialLang(), { persist: false });
@@ -78,7 +78,7 @@ async function boot() {
   const vectors = await early.vectors;
   ld = createLoader(loader, vectors);
   progress(0.06);
-  const [places, roads, airportDetail] = await Promise.all([early.places, early.roads, early.airport]);
+  const [places, roads, airportModel] = await Promise.all([early.places, early.roads, early.airport]);
   progress(0.14);
 
   initSections({ bus, places });
@@ -144,7 +144,7 @@ async function boot() {
   }
 
   try {
-    world = await createWorld(document.getElementById('gl'), { data: { places, vectors, roads, airportDetail }, onProgress: progress, quality: q });
+    world = await createWorld(document.getElementById('gl'), { data: { places, vectors, roads, airportModel }, onProgress: progress, quality: q });
   } catch (err) {
     console.error(err);
     const fb = document.getElementById('fallbackMap');

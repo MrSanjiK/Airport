@@ -28,12 +28,14 @@ export const POSES = {
 // The airport plate frames the whole terminal complex (hall, gallery, both gate piers and their aircraft) at
 // PLATE.scale; the camera aims at the complex's middle, which sits PLATE.center km from the hall's centroid,
 // and the view turns 33° so the complex runs down the plate.
-export const PLATE = { scale: 44, center: [-0.035, 0.07] };
-{
-  const [x0, z0] = toXZ(69.2687, 41.2634);
+export const PLATE = { scale: 44, center: [-0.03, 0.05] };
+// the plate (and the Fly TV and Media Gate views) aim at the Terminal 2 complex, wherever the model is centred
+const aimPlate = (o) => {
+  const [x0, z0] = toXZ(o[0], o[1]);
   POSES.airport.t = toLonLat(x0 + PLATE.center[0] * PLATE.scale, z0 + PLATE.center[1] * PLATE.scale);
   POSES.flytv.t = POSES.mediagate.t = POSES.airport.t;
-}
+};
+aimPlate([69.2668, 41.2621]);
 
 export async function createWorld(canvas, { data, onProgress, quality }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, logarithmicDepthBuffer: true, powerPreference: 'high-performance', alpha: false });
@@ -73,7 +75,8 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   scene.add(kor.points, hor.points);
 
   await breathe();
-  const airport = createAirport(data.places.airportPlan, data.airportDetail, hubWorld);
+  const airport = createAirport(data.airportModel, hubWorld);
+  aimPlate(airport.origin);
   scene.add(airport.group);
   const city = createCityLayer({ scene, sample: heights.sample, terrain });
   await breathe();
