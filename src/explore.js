@@ -387,6 +387,9 @@ export function initExplore(world, { bus, places, lenis, story }) {
       flyTo(downAt.it);
       openCard(downAt.it);
       hideTip();
+    } else if (downAt && moved < 6 && selected) {
+      // a click on the open map, away from any point, puts the card away
+      closeCard();
     }
     downAt = null;
   };
