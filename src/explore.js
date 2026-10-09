@@ -192,6 +192,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
   };
   const openCard = (it, { peek = false } = {}) => {
     selected = it;
+    openedAt = scrollY;
     card.innerHTML = cardHTML(it);
     card.classList.add('is-on');
     card.classList.toggle('is-peek', peek && innerWidth < 700);
@@ -210,6 +211,19 @@ export function initExplore(world, { bus, places, lenis, story }) {
     card.classList.remove('is-on');
     ring.classList.remove('is-on');
   }
+  // the card is never modal: a press anywhere outside it puts it away (a press on another point opens that one
+  // instead), and so does reading on through the story
+  addEventListener('pointerdown', (e) => {
+    if (!selected || e.target.closest?.('.info-card, .wp.is-clickable')) return;
+    // on the explorer's map a drag still turns the view with the card open; a plain click there closes it on release
+    if (exploring && !overUI(e)) return;
+    closeCard();
+  }, { capture: true });
+  let openedAt = 0;
+  addEventListener('scroll', () => {
+    if (!selected || exploring) return;
+    if (Math.abs(scrollY - openedAt) > innerHeight * 0.25) closeCard();
+  }, { passive: true });
 
   // keep ring and card glued to their point while the camera moves
   world.onFrame(() => {
