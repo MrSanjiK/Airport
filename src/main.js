@@ -132,6 +132,16 @@ async function boot() {
 
   const finish = () => { loader.classList.add('is-done'); ld?.stop?.(); };
 
+  // chapter plates arrive: the card rises into place and its blocks follow one after another, once per visit
+  if (!reduced && 'IntersectionObserver' in window) {
+    const enter = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-shown');
+      enter.unobserve(e.target);
+    }), { rootMargin: '0px 0px -12% 0px', threshold: 0.04 });
+    document.querySelectorAll('.chapter .plate, .planner-sheet').forEach((el) => { el.classList.add('will-enter'); enter.observe(el); });
+  }
+
   // the planner sheet and footer card are full-width: map controls fade while they are on screen
   const sheets = new Map();
   const io = new IntersectionObserver((entries) => {

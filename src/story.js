@@ -307,10 +307,17 @@ export function initStory(world, { places, nav, bus }) {
     weights[a.id] = 1 - k;
     weights[b.id] = k;
     if (cameraFree) {
+      // a flight, not a pan: across a long hop the camera climbs, crosses the chart high and looking down, and dives
+      // onto the next subject; the ground track moves mostly while it is high (zoom-out, pan, zoom-in)
+      const travel = Math.hypot(b.pose.tx - a.pose.tx, b.pose.tz - a.pose.tz);
+      const reach = travel / Math.max(1, Math.min(a.pose.dist, b.pose.dist));
+      const lift = Math.sin(Math.PI * k) * Math.min(1.1, Math.log(1 + reach * 0.9) * 0.55);
+      const pf = clamp(reach / 3);
+      const kt = lerp(k, k * k * k * (k * (6 * k - 15) + 10), pf);
       const g = {
-        tx: lerp(a.pose.tx, b.pose.tx, k), ty: lerp(a.pose.ty, b.pose.ty, k), tz: lerp(a.pose.tz, b.pose.tz, k),
-        dist: Math.exp(lerp(Math.log(a.pose.dist), Math.log(b.pose.dist), k)),
-        az: lerpAngle(a.pose.az, b.pose.az, k), el: lerp(a.pose.el, b.pose.el, k), shift: lerp(a.pose.shift, b.pose.shift, k), shiftY: lerp(a.pose.shiftY || 0, b.pose.shiftY || 0, k),
+        tx: lerp(a.pose.tx, b.pose.tx, kt), ty: lerp(a.pose.ty, b.pose.ty, kt), tz: lerp(a.pose.tz, b.pose.tz, kt),
+        dist: Math.exp(lerp(Math.log(a.pose.dist), Math.log(b.pose.dist), k) + lift),
+        az: lerpAngle(a.pose.az, b.pose.az, k), el: Math.min(82, lerp(a.pose.el, b.pose.el, k) + lift * 14), shift: lerp(a.pose.shift, b.pose.shift, k), shiftY: lerp(a.pose.shiftY || 0, b.pose.shiftY || 0, k),
       };
       // a city picked in the Regions plate pulls the chart down onto it while that chapter holds the screen
       const fw = focus ? weights.regions : 0;
@@ -392,6 +399,9 @@ export function initStory(world, { places, nav, bus }) {
   addEventListener('pointermove', (e) => { ptr.x = e.clientX / innerWidth - 0.5; ptr.y = e.clientY / innerHeight - 0.5; }, { passive: true });
 
   const proj = {};
+  let blockEls = [];
+  let blockMode = null;
+  let blockAge = 0;
   world.onFrame(() => {
     frameState();
     const w = weights;
@@ -453,7 +463,10 @@ export function initStory(world, { places, nav, bus }) {
     // panels the map labels must never run under: chapter plates, the airport frame, the open card, the bars
     const blockers = [];
     // (in the explorer the chapters are faded out: only its own bar, the card and the nav count)
-    document.querySelectorAll(exploring ? '.info-card.is-on, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card.is-on, .explore-bar, .nav, .rail ol, .hleaf, .hold-hub, .hold-gk, .planner-sheet, .ab-plate, .ab-back').forEach((el) => {
+    // the panel list is gathered twice a second, not every frame (the query alone cost half a millisecond)
+    if (exploring !== blockMode || (blockAge += 1) > 30) { blockMode = exploring; blockAge = 0; blockEls = [...document.querySelectorAll(exploring ? '.info-card, .explore-bar, .nav' : '.chapter .plate, .apt-frame, .info-card, .explore-bar, .nav, .rail ol, .hleaf, .hold-hub, .hold-gk, .planner-sheet, .ab-plate, .ab-back')]; }
+    blockEls.forEach((el) => {
+      if (el.classList.contains('info-card') && !el.classList.contains('is-on')) return;
       if (el.style.visibility === 'hidden' || el.offsetParent === null) return;
       const r = el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > innerHeight || r.width < 2) return;

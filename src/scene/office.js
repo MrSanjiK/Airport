@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { KX } from './geo.js';
 import { SHADERS } from './airport.js';
 
 /* ───── The head office: Nest One, block C, and its neighbourhood ─────
@@ -12,7 +10,6 @@ import { SHADERS } from './airport.js';
 const HEX = 1.25;
 const KM = 1 / 1000;
 const mh = (m) => m * KM * HEX;
-const KXR = KX / (111.32 * Math.cos((41.312 * Math.PI) / 180));
 const LIGHT = new THREE.Vector3(-0.55, 0.78, -0.37);
 const DISC_R = [0.5, 0.95];
 
@@ -28,16 +25,10 @@ const C = {
   ring: [[0.89, 0.0, 0.06], [1.0, 0.17, 0.23]],
   mark: [[0.97, 0.97, 0.95], [0.5, 0.56, 0.66]],
 };
-const ROOF = {
-  gen: [[0.86, 0.84, 0.8], [0.76, 0.75, 0.72], [0.66, 0.66, 0.67], [0.7, 0.5, 0.42], [0.58, 0.63, 0.68], [0.9, 0.89, 0.86], [0.8, 0.76, 0.68]],
-  tower: [[0.74, 0.77, 0.8], [0.66, 0.69, 0.73]],
-  nest: [[0.82, 0.85, 0.88]],
-  office: [[0.07, 0.09, 0.31]],
-};
-const WALL = { gen: [0.88, 0.86, 0.82], tower: [0.5, 0.6, 0.72], nest: [0.72, 0.8, 0.88], office: [0.2, 0.26, 0.62] };
-const KIND = { gen: 0, tower: 4, nest: 4, office: 4 };
+// layer heights for the ground fills, as in officeWorker.js
+const Y = (i) => 0.0002 + i * 0.00006;
 
-export function createOffice({ worldAt }) {
+export function createOffice({ worldAt, compile }) {
   const group = new THREE.Group();
   group.visible = false;
   const disc = { value: new THREE.Vector4(0, 0, DISC_R[0], DISC_R[1]) };
@@ -49,12 +40,6 @@ export function createOffice({ worldAt }) {
   let want = false;
   const state = { k: 0, anchor: null };
 
-  const L = ([x, z]) => [x * KM * KXR, z * KM];
-  const shapeOf = (pts, holes = []) => {
-    const s = new THREE.Shape(pts.map(([x, z]) => new THREE.Vector2(x, -z)));
-    holes.forEach((h) => s.holes.push(new THREE.Path(h.map(([x, z]) => new THREE.Vector2(x, -z)))));
-    return s;
-  };
   const ground = (key, { opacity = 1, grain = 0.08, scale = 220, order = 1 } = {}) => {
     const [day, night] = C[key];
     const m = new THREE.ShaderMaterial({
@@ -66,39 +51,6 @@ export function createOffice({ worldAt }) {
     grounds.push(m);
     return m;
   };
-  const flat = (rings, y, mat) => {
-    const gs = rings.filter((r) => r.length > 2).map((r) => {
-      const outer = Array.isArray(r[0][0]) ? r[0] : r;
-      const holes = Array.isArray(r[0][0]) ? r.slice(1) : [];
-      const g = new THREE.ShapeGeometry(shapeOf(outer.map(L), holes.map((h) => h.map(L))));
-      g.rotateX(-Math.PI / 2); g.translate(0, y, 0); g.deleteAttribute('uv'); g.deleteAttribute('normal');
-      return g.index ? g.toNonIndexed() : g;
-    });
-    if (!gs.length) return;
-    const mesh = new THREE.Mesh(mergeGeometries(gs), mat);
-    mesh.renderOrder = mat.userData.order;
-    group.add(mesh);
-  };
-  const ribbon = (lines, y, mat) => {
-    const pos = [];
-    lines.forEach(({ w, g }) => {
-      const pts = g.map(L);
-      const hw = (w * KM) / 2;
-      for (let i = 0; i < pts.length - 1; i++) {
-        const [ax, az] = pts[i];
-        const [bx, bz] = pts[i + 1];
-        const len = Math.hypot(bx - ax, bz - az) || 1;
-        const ux = (bx - ax) / len, uz = (bz - az) / len;
-        const nx = -uz * hw, nz = ux * hw, ex = ux * hw, ez = uz * hw;
-        pos.push(ax - ex + nx, y, az - ez + nz, ax - ex - nx, y, az - ez - nz, bx + ex - nx, y, bz + ez - nz, ax - ex + nx, y, az - ez + nz, bx + ex - nx, y, bz + ez - nz, bx + ex + nx, y, bz + ez + nz);
-      }
-    });
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    const mesh = new THREE.Mesh(g, mat);
-    mesh.renderOrder = mat.userData.order;
-    group.add(mesh);
-  };
   const shade = (night) => {
     const m = new THREE.ShaderMaterial({
       vertexShader: SHADERS.shadeVert, fragmentShader: SHADERS.shadeFrag,
@@ -107,140 +59,71 @@ export function createOffice({ worldAt }) {
     mats.push(m);
     return m;
   };
+  const addMesh = (pos, mat) => {
+    if (!pos.length) return;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mesh = new THREE.Mesh(g, mat);
+    mesh.renderOrder = mat.userData.order;
+    group.add(mesh);
+  };
+  const instanced = (geo, mat, { mat: m16, col }) => {
+    const n = col.length / 3;
+    if (!n) return;
+    const im = new THREE.InstancedMesh(geo, mat, n);
+    im.instanceMatrix = new THREE.InstancedBufferAttribute(m16, 16);
+    im.instanceColor = new THREE.InstancedBufferAttribute(col, 3);
+    im.frustumCulled = false;
+    group.add(im);
+  };
 
+  // everything heavy (triangulating ~600 buildings, the ground layers, cars and trees) is done in officeWorker.js;
+  // here the arrays only become meshes
   const build = (d) => {
-    let seed = 11;
-    const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-    const Y = (i) => 0.0002 + i * 0.00006;
-    // the city's own pavement, a square the disc rounds off
     {
+      // the city's own pavement, a square the disc rounds off
       const g = new THREE.PlaneGeometry(2, 2);
       g.rotateX(-Math.PI / 2);
       const mesh = new THREE.Mesh(g, ground('land', { grain: 0.1, order: 0 }));
       mesh.renderOrder = 0;
       group.add(mesh);
     }
-    flat(d.grass, Y(1), ground('grass', { grain: 0.16, scale: 90, order: 1 }));
-    flat(d.wood, Y(2), ground('wood', { grain: 0.22, scale: 160, order: 1 }));
-    flat(d.pitches, Y(3), ground('pitch', { grain: 0.06, order: 2 }));
-    flat(d.parking, Y(3), ground('park', { grain: 0.05, order: 2 }));
-    flat(d.water, Y(4), ground('water', { grain: 0.04, order: 3 }));
-    ribbon(d.canals, Y(4), ground('water', { grain: 0.04, order: 3 }));
-    ribbon(d.roads, Y(5), ground('road', { grain: 0.04, order: 3 }));
-    flat(d.shadows.map((s) => [s.o, ...s.h]), Y(7), ground('shadow', { opacity: 0.28, grain: 0, order: 5 }));
+    const G = d.ground;
+    addMesh(G.grass, ground('grass', { grain: 0.16, scale: 90, order: 1 }));
+    addMesh(G.wood, ground('wood', { grain: 0.22, scale: 160, order: 1 }));
+    addMesh(G.pitch, ground('pitch', { grain: 0.06, order: 2 }));
+    addMesh(G.park, ground('park', { grain: 0.05, order: 2 }));
+    const water = ground('water', { grain: 0.04, order: 3 });
+    addMesh(G.water, water);
+    addMesh(G.canal, water);
+    addMesh(G.road, ground('road', { grain: 0.04, order: 3 }));
+    addMesh(G.shadow, ground('shadow', { opacity: 0.28, grain: 0, order: 5 }));
+    addMesh(d.marks, ground('mark', { grain: 0, opacity: 0.85, order: 4 }));
 
-    // buildings: one geometry, colour and kind per building in attributes
     const bm = new THREE.ShaderMaterial({
       vertexShader: SHADERS.bldVert, fragmentShader: SHADERS.bldFrag,
       uniforms: { uNight: { value: 0 }, uStorey: { value: mh(3.6) }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc },
     });
     mats.push(bm);
-    const geos = d.bld.map((b) => {
-      const base = mh(b.b || 0);
-      const top = Math.max(base + mh(2), mh(b.h));
-      const g = new THREE.ExtrudeGeometry(shapeOf(b.g.map(L)), { depth: top - base, bevelEnabled: false });
-      g.rotateX(-Math.PI / 2);
-      g.translate(0, base, 0);
-      g.deleteAttribute('uv');
-      const ng = g.index ? g.toNonIndexed() : g;
-      const n = ng.attributes.position.count;
-      const pal = ROOF[b.c] || ROOF.gen;
-      const roof = pal[Math.floor(rnd() * pal.length)];
-      const wall = WALL[b.c] || WALL.gen;
-      const a = new Float32Array(n * 3), w = new Float32Array(n * 3), info = new Float32Array(n * 3);
-      for (let i = 0; i < n; i++) { a.set(roof, i * 3); w.set(wall, i * 3); info.set([KIND[b.c] ?? 0, base, top], i * 3); }
-      ng.setAttribute('aRoof', new THREE.BufferAttribute(a, 3));
-      ng.setAttribute('aWall', new THREE.BufferAttribute(w, 3));
-      ng.setAttribute('aInfo', new THREE.BufferAttribute(info, 3));
-      const pts = b.g.map(L);
-      const cc = [pts.reduce((s0, p) => s0 + p[0], 0) / pts.length, pts.reduce((s0, p) => s0 + p[1], 0) / pts.length];
-      const ca = new Float32Array(n * 2);
-      for (let i = 0; i < n; i++) ca.set(cc, i * 2);
-      ng.setAttribute('aC', new THREE.BufferAttribute(ca, 2));
-      return ng;
-    });
-    const merged = mergeGeometries(geos);
-    const bmesh = new THREE.Mesh(merged, bm);
+    const B = d.bld;
+    const bg = new THREE.BufferGeometry();
+    bg.setAttribute('position', new THREE.BufferAttribute(B.pos, 3));
+    bg.setAttribute('normal', new THREE.BufferAttribute(B.nor, 3));
+    bg.setAttribute('aRoof', new THREE.BufferAttribute(B.roof, 3));
+    bg.setAttribute('aWall', new THREE.BufferAttribute(B.wall, 3));
+    bg.setAttribute('aInfo', new THREE.BufferAttribute(B.info, 3));
+    bg.setAttribute('aC', new THREE.BufferAttribute(B.c, 2));
+    const bmesh = new THREE.Mesh(bg, bm);
     bmesh.renderOrder = 8;
     group.add(bmesh);
 
-    // street life: dashed centre lines on the main roads, cars in both lanes
-    const major = d.roads.filter((r) => r.w >= 11);
-    {
-      const pos = [];
-      major.forEach(({ g }) => {
-        const pts = g.map(L);
-        for (let i = 0; i < pts.length - 1; i++) {
-          const [ax, az] = pts[i];
-          const [bx, bz] = pts[i + 1];
-          const len = Math.hypot(bx - ax, bz - az);
-          if (len < 1e-4) continue;
-          const ux = (bx - ax) / len, uz = (bz - az) / len, hw = 0.00035, nx = -uz * hw, nz = ux * hw;
-          for (let t0 = 0.002; t0 < len - 0.004; t0 += 0.009) {
-            const t1 = t0 + 0.004;
-            const p0 = [ax + ux * t0, az + uz * t0], p1 = [ax + ux * t1, az + uz * t1];
-            pos.push(p0[0] + nx, Y(6), p0[1] + nz, p0[0] - nx, Y(6), p0[1] - nz, p1[0] - nx, Y(6), p1[1] - nz, p0[0] + nx, Y(6), p0[1] + nz, p1[0] - nx, Y(6), p1[1] - nz, p1[0] + nx, Y(6), p1[1] + nz);
-          }
-        }
-      });
-      const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-      const mesh = new THREE.Mesh(g, ground('mark', { grain: 0, opacity: 0.85, order: 4 }));
-      mesh.renderOrder = 4;
-      group.add(mesh);
-    }
-    {
-      const cars = [];
-      d.roads.filter((r) => r.w >= 8).forEach(({ w, g }) => {
-        const pts = g.map(L);
-        const lane = (w * KM) / 4;
-        for (let i = 0; i < pts.length - 1; i++) {
-          const [ax, az] = pts[i];
-          const [bx, bz] = pts[i + 1];
-          const len = Math.hypot(bx - ax, bz - az);
-          if (len < 1e-4) continue;
-          const ux = (bx - ax) / len, uz = (bz - az) / len;
-          for (const side of [-1, 1]) {
-            for (let t0 = rnd() * 0.02; t0 < len; t0 += 0.012 + rnd() * 0.03) {
-              if (cars.length > 1800) break;
-              cars.push([ax + ux * t0 - uz * lane * side, az + uz * t0 + ux * lane * side, Math.atan2(ux, uz) + (side > 0 ? Math.PI : 0)]);
-            }
-          }
-        }
-      });
-      if (cars.length) {
-        const cg = new THREE.BoxGeometry(0.0019, 0.0016, 0.0045);
-        cg.translate(0, 0.0008, 0);
-        const im = new THREE.InstancedMesh(cg, shade([0.3, 0.36, 0.48]), cars.length);
-        const m4 = new THREE.Matrix4();
-        const c = new THREE.Color();
-        const pal = [[0.97, 0.97, 0.97], [0.97, 0.97, 0.97], [0.97, 0.97, 0.97], [0.78, 0.8, 0.83], [0.2, 0.22, 0.25], [0.2, 0.22, 0.25], [0.5, 0.53, 0.57], [0.2, 0.28, 0.45], [0.7, 0.15, 0.15]];
-        cars.forEach(([x, z, a], i) => {
-          m4.compose(new THREE.Vector3(x, Y(6), z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, a, 0)), new THREE.Vector3(1, 1, 1));
-          im.setMatrixAt(i, m4);
-          im.setColorAt(i, c.setRGB(...pal[Math.floor(rnd() * pal.length)]));
-        });
-        group.add(im);
-      }
-    }
-
-    // trees
-    const tp = d.trees.map(L);
-    if (tp.length) {
-      const trees = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), shade([0.12, 0.2, 0.2]), tp.length);
-      const m4 = new THREE.Matrix4();
-      const c = new THREE.Color();
-      tp.forEach(([x, z], i) => {
-        const r = 0.0022 + rnd() * 0.0022;
-        m4.compose(new THREE.Vector3(x, r * 1.3, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rnd() * 6, 0)), new THREE.Vector3(r, r * 1.4, r));
-        trees.setMatrixAt(i, m4);
-        trees.setColorAt(i, c.setRGB(0.26 + rnd() * 0.08, 0.4 + rnd() * 0.1, 0.2 + rnd() * 0.06));
-      });
-      group.add(trees);
-    }
+    const cg = new THREE.BoxGeometry(0.0019, 0.0016, 0.0045);
+    cg.translate(0, 0.0008, 0);
+    instanced(cg, shade([0.3, 0.36, 0.48]), d.cars);
+    instanced(new THREE.IcosahedronGeometry(1, 1), shade([0.12, 0.2, 0.2]), d.trees);
 
     // block C: a red ring at its foot, the "you are here" of the chart
-    const [ox, oz] = L(d.office);
+    const [ox, oz, oh] = d.office;
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.044, 0.05, 64).rotateX(-Math.PI / 2), ground('ring', { grain: 0, order: 6 }));
     ring.position.set(ox, Y(8), oz);
     ring.renderOrder = 6;
@@ -252,13 +135,21 @@ export function createOffice({ worldAt }) {
     const at = worldAt(d.o[0], d.o[1], 0);
     group.position.copy(at);
     group.updateMatrixWorld(true);
-    // the pin floats above the block's roof, a leader line drawn down to it (CSS)
-    state.anchor = new THREE.Vector3(at.x + ox, at.y + mh(d.office[2]) + 0.12, at.z + oz);
-    return true;
+    // the pin floats above the block's roof, a leader line drawn down to it (CSS); set once the programs are ready,
+    // which is what lets the neighbourhood show
+    const anchor = new THREE.Vector3(at.x + ox, at.y + oh + 0.12, at.z + oz);
+    return Promise.resolve(compile?.(group)).then(() => { state.anchor = anchor; return true; });
   };
 
   const load = () => {
-    if (!built) built = fetch('/data/office-model.json').then((r) => r.json()).then(build).catch(() => null);
+    if (!built) {
+      built = new Promise((resolve) => {
+        const w = new Worker(new URL('./officeWorker.js', import.meta.url), { type: 'module' });
+        w.onmessage = (e) => { w.terminate(); resolve(e.data.error ? null : build(e.data)); };
+        w.onerror = () => { w.terminate(); resolve(null); };
+        w.postMessage({ url: new URL('/data/office-model.json', location.href).href });
+      });
+    }
     return built;
   };
 

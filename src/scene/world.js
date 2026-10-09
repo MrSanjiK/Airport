@@ -41,6 +41,9 @@ aimPlate([69.2668, 41.2621]);
 export async function createWorld(canvas, { data, onProgress, quality }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, logarithmicDepthBuffer: true, powerPreference: 'high-performance', alpha: false });
   renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  // checking every program's info log on its first use stalls the GPU queue (0.8 s on first sight of a pass):
+  // the shaders are stable, so the check runs only with ?debug
+  renderer.debug.checkShaderErrors = new URLSearchParams(location.search).has('debug');
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr));
   const scene = new THREE.Scene();
   const bg = new THREE.Color(0.929, 0.949, 0.965);
@@ -80,7 +83,11 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   aimPlate(airport.origin);
   scene.add(airport.group);
   const city = createCityLayer({ scene, sample: heights.sample, terrain });
-  const office = createOffice({ worldAt: (lon, lat, lift) => worldAt(lon, lat, sample, lift) });
+  // the office's programs compile (in parallel where the driver allows) before its neighbourhood may show
+  const office = createOffice({
+    worldAt: (lon, lat, lift) => worldAt(lon, lat, sample, lift),
+    compile: async (g) => { g.visible = true; try { await renderer.compileAsync(g, camera); } catch (e) { renderer.compile(g, camera); } g.visible = false; },
+  });
   await breathe();
   const lines = createDrapedLines(data.vectors, sample);
   scene.add(lines.group);
@@ -223,6 +230,19 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     renderer.autoClear = true;
   };
 
+  // camera springs: velocity per axis; W sets how quickly the camera arrives (~0.16 s), damping is critical
+  const vel = { tx: 0, ty: 0, tz: 0, ld: 0, ldx: 0, az: 0, el: 0, shift: 0, shiftY: 0 };
+  const W = 6.2;
+  const spring = (key, target, dt, from) => {
+    if (key === 'ld') {
+      const x = from;
+      vel.ld += (W * W * (target - x) - 2 * W * vel.ld) * dt;
+      vel.ldx = x + vel.ld * dt;
+      return;
+    }
+    vel[key] += (W * W * (target - cur[key]) - 2 * W * vel[key]) * dt;
+    cur[key] += vel[key] * dt;
+  };
   const clock = new THREE.Clock();
   let running = true;
   const listeners = new Set();
@@ -234,17 +254,24 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     const k = state.reduced ? 1 : 1 - Math.pow(0.0009, dt);
     pointer.sx += (pointer.x - pointer.sx) * k * 0.6;
     pointer.sy += (pointer.y - pointer.sy) * k * 0.6;
-    // ease the camera; distance in log space so long hops feel like a climb
-    cur.tx += (goal.tx - cur.tx) * k;
-    cur.ty += (goal.ty - cur.ty) * k;
-    cur.tz += (goal.tz - cur.tz) * k;
-    cur.dist = Math.exp(Math.log(cur.dist) + (Math.log(goal.dist) - Math.log(cur.dist)) * k);
-    // pointer parallax is held at zero through the intro: at a top-down view any azimuth sway would turn the map
-    // out of register with the loader's outline
-    cur.az += (goal.az + pointer.sx * 2.2 * state.parallax - cur.az) * k;
-    cur.el += (goal.el - pointer.sy * 1.4 * state.parallax - cur.el) * k;
-    cur.shift += (goal.shift - cur.shift) * k;
-    cur.shiftY += ((goal.shiftY || 0) - cur.shiftY) * k;
+    // a critically damped spring on every camera axis: each move eases in and out, never jerks, however the goal
+    // jumps (scroll, drag, a chapter link); distance in log space so long hops feel like a climb
+    const wz = Math.abs(goal.az + pointer.sx * 2.2 * state.parallax - cur.az) > 180 ? 360 * Math.sign(goal.az - cur.az) : 0;
+    if (state.reduced) {
+      Object.assign(cur, { tx: goal.tx, ty: goal.ty, tz: goal.tz, dist: goal.dist, az: goal.az, el: goal.el, shift: goal.shift, shiftY: goal.shiftY || 0 });
+    } else {
+      spring('tx', goal.tx, dt);
+      spring('ty', goal.ty, dt);
+      spring('tz', goal.tz, dt);
+      spring('ld', Math.log(goal.dist), dt, Math.log(cur.dist));
+      cur.dist = Math.exp(vel.ldx);
+      // pointer parallax is held at zero through the intro: at a top-down view any azimuth sway would turn the map
+      // out of register with the loader's outline
+      spring('az', goal.az - wz + pointer.sx * 2.2 * state.parallax, dt);
+      spring('el', goal.el - pointer.sy * 1.4 * state.parallax, dt);
+      spring('shift', goal.shift, dt);
+      spring('shiftY', goal.shiftY || 0, dt);
+    }
     applyCamera();
 
     const u = terrain.uniforms;
@@ -320,11 +347,17 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     setPose(p) { poseToState(p); },
     setGoal(g) { Object.assign(goal, g); },
     goalFromPose(p) { return poseToState(p, {}); },
-    jump() { Object.assign(cur, goal); applyCamera(); },
+    jump() { Object.assign(cur, goal); Object.keys(vel).forEach((k) => (vel[k] = 0)); applyCamera(); },
     // compile every shader and upload every texture before the first visible frame, off the main thread where the
     // driver allows it (KHR_parallel_shader_compile), so the loader's pen never stalls
     async prewarm() {
-      try { await renderer.compileAsync(scene, camera); } catch (e) { renderer.compile(scene, camera); }
+      // three compiles only what is visible: the airport's hidden parts (ground, fleet, the town round it) are
+      // shown for the compile, else their programs would compile in the middle of a scroll and freeze a frame
+      const restore = airport.showAll();
+      const all = async (sc) => { try { await renderer.compileAsync(sc, camera); } catch (e) { renderer.compile(sc, camera); } };
+      // the airport plate's backing card lives in a scene of its own: compiled here too (it cost 0.8 s on first show)
+      await Promise.all([all(scene), all(fieldScene)]);
+      restore();
       city.unwarm();
     },
     project, pick,

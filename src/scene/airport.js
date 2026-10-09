@@ -721,7 +721,13 @@ export function createAirport(model, hubWorld) {
     plateOff();
   };
 
-  return { group, origin: model.o, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, terminals };
+  // for the loader's shader compile: every part shown at once, so no program is left to compile mid-scroll
+  const showAll = () => {
+    [flat, fleet, plateLand, ...Object.values(groups)].forEach((g) => (g.visible = true));
+    return () => setSymbol(mode.hero, mode.plate, mode.solo);
+  };
+
+  return { group, origin: model.o, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
 }
 
 // An A320-class airliner in km, nose at the origin, fuselage running down +z.
