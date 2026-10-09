@@ -27,7 +27,9 @@ self.onmessage = async (e) => {
       if (ShapeUtils.isClockWise(v2(ring))) ring = ring.reverse();
       const v = venueB.has(i) ? 1 : 0;
       const top = h * (v ? 1.35 : 1);
-      ShapeUtils.triangulateShape(v2(ring), []).forEach((t) => t.slice().reverse().forEach((k) => { pos.push(ring[k][0], top, ring[k][1]); nor.push(0, 1, 0); ven.push(v); }));
+      // per building: a seed for its roof colour and window pattern, and its height for the storeys
+      const seed = ((i * 2654435761) % 1000) / 1000;
+      ShapeUtils.triangulateShape(v2(ring), []).forEach((t) => t.slice().reverse().forEach((k) => { pos.push(ring[k][0], top, ring[k][1]); nor.push(0, 1, 0); ven.push(v, seed, top); }));
       for (let k = 0; k < ring.length; k++) {
         const [ax, az] = ring[k];
         const [bx, bz] = ring[(k + 1) % ring.length];
@@ -35,7 +37,7 @@ self.onmessage = async (e) => {
         const nx = (bz - az) / len;
         const nz = -(bx - ax) / len;
         pos.push(ax, 0, az, bx, 0, bz, bx, top, bz, ax, 0, az, bx, top, bz, ax, top, az);
-        for (let q = 0; q < 6; q++) { nor.push(nx, 0, nz); ven.push(v); }
+        for (let q = 0; q < 6; q++) { nor.push(nx, 0, nz); ven.push(v, seed, top); }
         edges.push(ax, top, az, bx, top, bz);
       }
     });

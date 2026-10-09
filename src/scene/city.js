@@ -20,25 +20,49 @@ const HEX = 5;
 const LOGV = `#include <common>
 #include <logdepthbuf_pars_vertex>`;
 const vert = /* glsl */ `${LOGV}
-  attribute float aVenue;
-  varying vec3 vN; varying float vVenue; varying float vRoof;
+  attribute vec3 aVenue;
+  varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vInfo;
   void main(){
-    vN = normalize(mat3(modelMatrix) * normal); vVenue = aVenue; vRoof = step(0.9, normal.y);
+    vN = normalize(mat3(modelMatrix) * normal); vNl = normal; vP = position; vInfo = aVenue;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     #include <logdepthbuf_vertex>
   }`;
+// roofs in the colours of the town seen from above (concrete, tin, terracotta, tar), walls with storey windows that
+// burn at night, a contact shadow at every wall's foot; network venues in the brand red
 const frag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
-  uniform float uNight, uOpacity; uniform vec3 uLight;
-  varying vec3 vN; varying float vVenue; varying float vRoof;
+  uniform float uNight, uOpacity, uStorey; uniform vec3 uLight;
+  varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vInfo;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
   void main(){
     #include <logdepthbuf_fragment>
-    float l = clamp(dot(normalize(vN), normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
-    vec3 roofD = vec3(0.985, 0.99, 1.0), wallD = vec3(0.86, 0.9, 0.95) * mix(0.72, 1.0, l);
-    vec3 roofN = vec3(0.17, 0.27, 0.42), wallN = vec3(0.09, 0.16, 0.27) * mix(0.8, 1.15, l);
-    vec3 base = mix(mix(wallD, roofD, vRoof), mix(wallN, roofN, vRoof), uNight);
-    vec3 red = mix(vec3(0.89, 0.0, 0.06), vec3(1.0, 0.24, 0.3), uNight) * mix(mix(0.72, 1.0, l), 1.08, vRoof);
-    gl_FragColor = vec4(mix(base, red, vVenue), uOpacity);
+    float venue = vInfo.x, seed = vInfo.y, top = vInfo.z;
+    vec3 n = normalize(vN);
+    float l = clamp(dot(n, normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
+    float roof = step(0.9, n.y);
+    // roof palette, one per building
+    vec3 r0 = vec3(0.86, 0.85, 0.82), r1 = vec3(0.72, 0.72, 0.71), r2 = vec3(0.66, 0.48, 0.41), r3 = vec3(0.56, 0.6, 0.64), r4 = vec3(0.8, 0.76, 0.68);
+    vec3 roofC = seed < 0.34 ? r0 : seed < 0.56 ? r1 : seed < 0.72 ? r2 : seed < 0.86 ? r3 : r4;
+    roofC *= 1.0 + (hash(floor(vP.xz * 3000.0)) - 0.5) * 0.04;
+    // walls: storey windows along the facade
+    vec2 tg = vec2(-vNl.z, vNl.x);
+    float u = dot(vP.xz, tg / max(1e-5, length(tg)));
+    float fy = vP.y / uStorey;
+    float pw = uStorey * 0.6;
+    float win = band(fract(fy), 0.3, 0.76) * band(fract(u / pw), 0.2, 0.8) * step(1.2, top / uStorey) * step(0.5, fy);
+    float lit = step(0.45, hash(vec2(floor(u / pw), floor(fy)) + seed * 57.0));
+    float ao = mix(0.6, 1.0, smoothstep(0.0, uStorey * 1.8, vP.y));
+    vec3 wallD = mix(vec3(0.9, 0.89, 0.86), vec3(0.84, 0.86, 0.9), seed) * mix(0.62, 1.0, l);
+    vec3 glassD = mix(vec3(0.34, 0.41, 0.5), vec3(0.55, 0.63, 0.73), l);
+    vec3 day = mix(mix(wallD, glassD, win * 0.85) * ao, roofC * mix(0.94, 1.04, l), roof);
+    vec3 wallN = vec3(0.09, 0.16, 0.27) * mix(0.8, 1.15, l) * ao;
+    vec3 glow = vec3(1.0, 0.8, 0.52) * mix(0.06, 0.9, lit);
+    vec3 night = mix(mix(wallN, glow, win), vec3(0.17, 0.27, 0.42), roof);
+    vec3 base = mix(day, night, uNight);
+    vec3 red = mix(vec3(0.89, 0.0, 0.06), vec3(1.0, 0.24, 0.3), uNight) * mix(mix(0.72, 1.0, l), 1.08, roof);
+    red = mix(red, vec3(1.0, 0.9, 0.8), win * 0.35 * (1.0 - roof));
+    gl_FragColor = vec4(mix(base, red, venue), uOpacity);
   }`;
 
 export function createCityLayer({ scene, sample, terrain }) {
@@ -50,7 +74,7 @@ export function createCityLayer({ scene, sample, terrain }) {
 
   const buildMat = new THREE.ShaderMaterial({
     vertexShader: vert, fragmentShader: frag, transparent: true,
-    uniforms: { uNight: { value: 0 }, uOpacity: { value: 0 }, uLight: { value: LIGHT } },
+    uniforms: { uNight: { value: 0 }, uOpacity: { value: 0 }, uLight: { value: LIGHT }, uStorey: { value: (3.3 / 1000) * HEX } },
   });
   const edgeMat = new THREE.LineBasicMaterial({ color: 0x163b67, transparent: true, opacity: 0, depthWrite: false });
   const flatMat = (day, night, op) => {
@@ -84,7 +108,7 @@ export function createCityLayer({ scene, sample, terrain }) {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(d.pos, 3));
     g.setAttribute('normal', new THREE.BufferAttribute(d.nor, 3));
-    g.setAttribute('aVenue', new THREE.BufferAttribute(d.ven, 1));
+    g.setAttribute('aVenue', new THREE.BufferAttribute(d.ven, 3));
     const mesh = new THREE.Mesh(g, buildMat);
     mesh.renderOrder = 5;
     const eg = new THREE.BufferGeometry();
@@ -128,7 +152,7 @@ export function createCityLayer({ scene, sample, terrain }) {
     const tri = new THREE.BufferGeometry();
     tri.setAttribute('position', new THREE.Float32BufferAttribute([0, -1e3, 0, 1e-6, -1e3, 0, 0, -1e3, 1e-6], 3));
     tri.setAttribute('normal', new THREE.Float32BufferAttribute([0, 1, 0, 0, 1, 0, 0, 1, 0], 3));
-    tri.setAttribute('aVenue', new THREE.Float32BufferAttribute([0, 0, 0], 1));
+    tri.setAttribute('aVenue', new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0, 0, 0, 0], 3));
     warm.add(new THREE.Mesh(tri, buildMat), new THREE.Mesh(tri, greenMat), new THREE.Mesh(tri, waterMat), new THREE.LineSegments(tri, edgeMat));
     [...roadMats, canalMat].forEach((m) => { const lg = new LineSegmentsGeometry(); lg.setPositions([0, -1e3, 0, 1e-6, -1e3, 0]); warm.add(new LineSegments2(lg, m)); });
     warm.traverse((o) => { o.frustumCulled = false; });
@@ -200,7 +224,7 @@ export function createCityLayer({ scene, sample, terrain }) {
       const k = fade.k;
       buildMat.uniforms.uNight.value = night;
       buildMat.uniforms.uOpacity.value = k;
-      edgeMat.opacity = 0.5 * k * (1 - 0.55 * night);
+      edgeMat.opacity = 0.16 * k * (1 - 0.4 * night);
       edgeMat.color.setRGB(0.086 + (0.62 - 0.086) * night, 0.231 + (0.74 - 0.231) * night, 0.404 + (0.88 - 0.404) * night);
       [greenMat, waterMat].forEach((m) => { m.color.copy(m.userData.day).lerp(m.userData.night, night); m.opacity = m.userData.op * k; });
       [...roadMats, canalMat].forEach((m) => {
@@ -209,7 +233,8 @@ export function createCityLayer({ scene, sample, terrain }) {
         // seen from a regional height a town's streets would knot into a blot: they thin out with distance
         m.opacity = m.userData.o * k * Math.min(1, Math.max(0.12, (70 - dist) / 45));
       });
-      roadMats.forEach((m) => m.color.setRGB(0.086 + (0.62 - 0.086) * night, 0.231 + (0.74 - 0.231) * night, 0.404 + (0.88 - 0.404) * night));
+      // streets in asphalt grey by day (the chart's ink only for the main roads' edge), lit ink at night
+      roadMats.forEach((m, i) => m.color.setRGB(...[0, 1, 2].map((c) => { const d = i === 0 ? [0.36, 0.4, 0.47][c] : [0.52, 0.55, 0.6][c]; const n = [0.62, 0.74, 0.88][c]; return d + (n - d) * night; })));
     },
   };
 }

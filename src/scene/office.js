@@ -26,6 +26,7 @@ const C = {
   road: [[0.62, 0.63, 0.64], [0.1, 0.13, 0.18]],
   shadow: [[0.0, 0.02, 0.06], [0.0, 0.0, 0.02]],
   ring: [[0.89, 0.0, 0.06], [1.0, 0.17, 0.23]],
+  mark: [[0.97, 0.97, 0.95], [0.5, 0.56, 0.66]],
 };
 const ROOF = {
   gen: [[0.86, 0.84, 0.8], [0.76, 0.75, 0.72], [0.66, 0.66, 0.67], [0.7, 0.5, 0.42], [0.58, 0.63, 0.68], [0.9, 0.89, 0.86], [0.8, 0.76, 0.68]],
@@ -162,6 +163,66 @@ export function createOffice({ worldAt }) {
     const bmesh = new THREE.Mesh(merged, bm);
     bmesh.renderOrder = 8;
     group.add(bmesh);
+
+    // street life: dashed centre lines on the main roads, cars in both lanes
+    const major = d.roads.filter((r) => r.w >= 11);
+    {
+      const pos = [];
+      major.forEach(({ g }) => {
+        const pts = g.map(L);
+        for (let i = 0; i < pts.length - 1; i++) {
+          const [ax, az] = pts[i];
+          const [bx, bz] = pts[i + 1];
+          const len = Math.hypot(bx - ax, bz - az);
+          if (len < 1e-4) continue;
+          const ux = (bx - ax) / len, uz = (bz - az) / len, hw = 0.00035, nx = -uz * hw, nz = ux * hw;
+          for (let t0 = 0.002; t0 < len - 0.004; t0 += 0.009) {
+            const t1 = t0 + 0.004;
+            const p0 = [ax + ux * t0, az + uz * t0], p1 = [ax + ux * t1, az + uz * t1];
+            pos.push(p0[0] + nx, Y(6), p0[1] + nz, p0[0] - nx, Y(6), p0[1] - nz, p1[0] - nx, Y(6), p1[1] - nz, p0[0] + nx, Y(6), p0[1] + nz, p1[0] - nx, Y(6), p1[1] - nz, p1[0] + nx, Y(6), p1[1] + nz);
+          }
+        }
+      });
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      const mesh = new THREE.Mesh(g, ground('mark', { grain: 0, opacity: 0.85, order: 4 }));
+      mesh.renderOrder = 4;
+      group.add(mesh);
+    }
+    {
+      const cars = [];
+      d.roads.filter((r) => r.w >= 8).forEach(({ w, g }) => {
+        const pts = g.map(L);
+        const lane = (w * KM) / 4;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const [ax, az] = pts[i];
+          const [bx, bz] = pts[i + 1];
+          const len = Math.hypot(bx - ax, bz - az);
+          if (len < 1e-4) continue;
+          const ux = (bx - ax) / len, uz = (bz - az) / len;
+          for (const side of [-1, 1]) {
+            for (let t0 = rnd() * 0.02; t0 < len; t0 += 0.012 + rnd() * 0.03) {
+              if (cars.length > 1800) break;
+              cars.push([ax + ux * t0 - uz * lane * side, az + uz * t0 + ux * lane * side, Math.atan2(ux, uz) + (side > 0 ? Math.PI : 0)]);
+            }
+          }
+        }
+      });
+      if (cars.length) {
+        const cg = new THREE.BoxGeometry(0.0019, 0.0016, 0.0045);
+        cg.translate(0, 0.0008, 0);
+        const im = new THREE.InstancedMesh(cg, shade([0.3, 0.36, 0.48]), cars.length);
+        const m4 = new THREE.Matrix4();
+        const c = new THREE.Color();
+        const pal = [[0.97, 0.97, 0.97], [0.97, 0.97, 0.97], [0.97, 0.97, 0.97], [0.78, 0.8, 0.83], [0.2, 0.22, 0.25], [0.2, 0.22, 0.25], [0.5, 0.53, 0.57], [0.2, 0.28, 0.45], [0.7, 0.15, 0.15]];
+        cars.forEach(([x, z, a], i) => {
+          m4.compose(new THREE.Vector3(x, Y(6), z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, a, 0)), new THREE.Vector3(1, 1, 1));
+          im.setMatrixAt(i, m4);
+          im.setColorAt(i, c.setRGB(...pal[Math.floor(rnd() * pal.length)]));
+        });
+        group.add(im);
+      }
+    }
 
     // trees
     const tp = d.trees.map(L);

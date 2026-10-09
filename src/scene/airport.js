@@ -20,12 +20,15 @@ const STOREY = mh(3.3);
 const LOGV = `#include <common>
 #include <logdepthbuf_pars_vertex>`;
 
-// Buildings: roof colour from above, shaded walls with storey windows (offices) or a glazed band (terminals)
+// Buildings: roof colour from above; offices with storey windows, terminals with a glazed band, towers in curtain
+// glass that reflects the sky (Fresnel), catches the sun, and shows its mullions, floor lines and panel tints;
+// every wall darkens at its foot where it meets the ground
 const bldVert = /* glsl */ `${LOGV}
   attribute vec3 aRoof; attribute vec3 aWall; attribute vec3 aInfo; attribute vec2 aC;
-  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
+  varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vWp; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
   void main(){
-    vN = normalize(mat3(modelMatrix) * normal); vP = position; vRoof = aRoof; vWall = aWall; vInfo = aInfo; vC = aC;
+    vN = normalize(mat3(modelMatrix) * normal); vNl = normal; vP = position; vRoof = aRoof; vWall = aWall; vInfo = aInfo; vC = aC;
+    vWp = (modelMatrix * vec4(position, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     #include <logdepthbuf_vertex>
   }`;
@@ -38,52 +41,78 @@ const DISC = /* glsl */ `
 const bldFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
   uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;${DISC}
-  varying vec3 vN; varying vec3 vP; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
+  varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vWp; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   // a line that fades out before it would alias (the terminal is a 100 px symbol in the hero, a full plate later)
   float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
+  // the sky a facade reflects: ground below the horizon, haze at it, blue overhead (by day); a dark dome at night
+  vec3 sky(vec3 r, float night){
+    vec3 day = mix(vec3(0.5, 0.52, 0.52), mix(vec3(0.86, 0.9, 0.95), vec3(0.4, 0.58, 0.84), smoothstep(0.0, 0.7, r.y)), smoothstep(-0.08, 0.04, r.y));
+    vec3 dark = mix(vec3(0.03, 0.04, 0.06), mix(vec3(0.1, 0.14, 0.22), vec3(0.02, 0.04, 0.09), smoothstep(0.0, 0.6, r.y)), smoothstep(-0.08, 0.04, r.y));
+    return mix(day, dark, night);
+  }
   void main(){
     #include <logdepthbuf_fragment>
     if (discCut(vC)) discard;
     vec3 n = normalize(vN);
-    float l = clamp(dot(n, normalize(uLight)) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 L = normalize(uLight);
+    vec3 V = normalize(cameraPosition - vWp);
+    float l = clamp(dot(n, L) * 0.5 + 0.5, 0.0, 1.0);
     float roof = step(0.8, n.y);
     float kind = vInfo.x;
-    float h = clamp((vP.y - vInfo.y) / max(1e-5, vInfo.z - vInfo.y), 0.0, 1.0);
+    float rise = vP.y - vInfo.y;
+    float h = clamp(rise / max(1e-5, vInfo.z - vInfo.y), 0.0, 1.0);
+    // a coordinate running along the wall, whichever way it faces
+    vec2 tg = vec2(-vNl.z, vNl.x);
+    float u = dot(vP.xz, tg / max(1e-5, length(tg)));
+    float fy = rise / uStorey;
     // roofs: the satellite colour, with faint panel grain on the big halls
     float grain = (hash(floor(vP.xz * 2600.0)) - 0.5) * 0.035;
-    vec3 roofD = vRoof * (1.0 + grain);
+    vec3 roofD = vRoof * (1.0 + grain) * mix(0.94, 1.04, l);
     vec3 roofN = vRoof * 0.16 + vec3(0.03, 0.05, 0.09);
+    // contact shadow where the walls meet the ground
+    float ao = mix(0.62, 1.0, smoothstep(0.0, uStorey * 1.8, rise));
     // walls and windows
-    float along = vP.x + vP.z;
     float win = 0.0;
     float lit = 0.0;
+    float mull = 0.0;
+    float panel = 0.0;
     if (kind < 0.5) {
-      float fy = fract((vP.y - vInfo.y) / uStorey);
-      float fx = fract(along / (uStorey * 0.55));
+      float pw = uStorey * 0.55;
       float storeys = (vInfo.z - vInfo.y) / uStorey;
-      win = band(fy, 0.34, 0.78) * band(fx, 0.18, 0.82) * step(0.6, storeys) * step(0.04, h);
-      vec2 cell = vec2(floor(along / (uStorey * 0.55)), floor((vP.y - vInfo.y) / uStorey));
-      lit = step(0.42, hash(cell + vInfo.yz * 97.0));
+      win = band(fract(fy), 0.34, 0.78) * band(fract(u / pw), 0.18, 0.82) * step(0.6, storeys) * step(0.04, h);
+      lit = step(0.42, hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 97.0));
     } else if (kind < 1.5) {
       win = band(h, 0.14, 0.84);
+      mull = 1.0 - band(fract(u / (uStorey * 1.1)), 0.05, 0.95);
     } else if (kind > 3.5) {
-      // a glass tower: curtain wall from foot to crown, a dark floor line every storey
-      float fy = fract((vP.y - vInfo.y) / uStorey);
-      win = 1.0 - (1.0 - band(fy, 0.12, 1.0)) * 0.75;
-      vec2 cell = vec2(floor(along / (uStorey * 0.9)), floor((vP.y - vInfo.y) / uStorey));
-      lit = step(0.32, hash(cell + vInfo.yz * 97.0));
+      // curtain wall: a panel grid, a dark spandrel at every floor, each pane a shade off its neighbours
+      float pw = uStorey * 0.45;
+      win = 1.0;
+      mull = max(1.0 - band(fract(u / pw), 0.06, 0.94), (1.0 - band(fract(fy), 0.1, 1.0)) * 1.3);
+      panel = hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 31.0) - 0.5;
+      lit = step(0.32, hash(vec2(floor(u / (pw * 2.0)), floor(fy)) + vInfo.yz * 97.0));
     }
+    // glass: a tinted body under a sky reflection that strengthens at grazing angles, and the sun's glint
+    vec3 R = reflect(-V, n);
+    float fres = 0.05 + 0.95 * pow(1.0 - clamp(dot(n, V), 0.0, 1.0), 5.0);
+    vec3 body = kind > 3.5 ? mix(vec3(0.28, 0.35, 0.44), vWall * 0.8, 0.62) : vec3(0.3, 0.37, 0.46);
+    // seen from above a facade would mirror the pavement; the chart lets it mirror the sky, as photographs read
+    vec3 Rs = normalize(vec3(R.x, abs(R.y) * 0.55 + 0.1, R.z));
+    vec3 glassD = mix(body * mix(0.78, 1.06, l), sky(Rs, 0.0), 0.34 + 0.56 * fres) * (1.0 + panel * 0.1);
+    // towers brighten toward their crowns, where they catch more open sky
+    if (kind > 3.5) glassD *= mix(0.86, 1.14, h);
+    glassD += pow(max(dot(R, L), 0.0), 120.0) * 0.85 + pow(max(dot(R, L), 0.0), 12.0) * 0.06;
+    glassD = mix(glassD, vec3(0.2, 0.24, 0.3), clamp(mull, 0.0, 1.0) * 0.55);
     vec3 wallD = vWall * mix(0.58, 1.0, l);
-    vec3 glassD = mix(vec3(0.3, 0.37, 0.46), vec3(0.52, 0.6, 0.7), l);
-    // towers take their wall colour as the glass tint (Nest One's silver, the office block's indigo)
-    if (kind > 3.5) glassD = mix(glassD, vWall * mix(0.7, 1.15, l), 0.6) + pow(l, 6.0) * 0.18;
-    vec3 dayC = mix(mix(wallD, glassD, win * 0.9), roofD, roof);
+    vec3 dayC = mix(mix(wallD, glassD, win * 0.92), roofD, roof);
     vec3 wallN = vWall * 0.12 + vec3(0.02, 0.035, 0.06);
-    // at night the halls glow softly through their glass, office windows burn here and there
+    // at night the halls glow softly through their glass, office and tower windows burn here and there
     vec3 glow = (kind < 0.5 || kind > 3.5) ? vec3(1.0, 0.78, 0.5) * mix(0.08, 0.85, lit) : vec3(0.5, 0.62, 0.8) * mix(0.55, 0.75, l);
+    glow = mix(glow, sky(Rs, 1.0) * 2.0, kind > 3.5 ? fres * 0.5 : 0.0) * (1.0 - clamp(mull, 0.0, 1.0) * 0.7);
     vec3 nightC = mix(mix(wallN, glow, win), roofN, roof);
-    gl_FragColor = vec4(mix(dayC, nightC, uNight), uOpacity);
+    vec3 col = mix(dayC, nightC, uNight) * mix(ao, 1.0, roof);
+    gl_FragColor = vec4(col, uOpacity);
   }`;
 
 // Ground: flat colour with a whisper of grain so grass and concrete never read as plastic
