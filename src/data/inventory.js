@@ -142,32 +142,4 @@ export const PLAN_ITEMS = [
   { id: 'regions', group: 'regions', price: REGIONS.price },
 ];
 
-// Brands that have run campaigns with the holding (tvline.uz partners); logos in public/img/partners/<id>.png.
-// h: the logo's height in the marquee, as a share of the default (square marks stand taller, wide wordmarks lower)
-export const PARTNERS = [
-  { id: 'click', name: 'Click' },
-  { id: 'payme', name: 'Payme' },
-  { id: 'artel', name: 'Artel' },
-  { id: 'imzo', name: 'Imzo · Akfa' },
-  { id: 'maccoffee', name: 'MacCoffee' },
-  { id: 'crafers', name: 'Crafers', h: 1.4 },
-  { id: 'chocofella', name: 'Chocofella', h: 0.8 },
-  { id: 'delice', name: 'Delice' },
-  { id: 'newport', name: 'Newport', h: 0.62 },
-  { id: 'hotlunch', name: 'Hot Lunch', h: 1.45 },
-  { id: 'tpu', name: 'Tashkent Perfect University' },
-  { id: 'korzinka', name: 'Korzinka', h: 0.62 },
-  { id: 'uzum', name: 'Uzum', h: 0.62 },
-  { id: 'humo', name: 'Humo', h: 0.8 },
-  { id: 'redbull', name: 'Red Bull', h: 0.7 },
-  { id: 'texnomart', name: 'Texnomart', h: 0.56 },
-  { id: 'aab', name: 'Asia Alliance Bank', h: 0.95 },
-  { id: 'octobank', name: 'Octobank', h: 0.62 },
-  { id: 'paynet', name: 'Paynet', h: 0.72 },
-  { id: 'uztelecom', name: 'Uztelecom', h: 1.4 },
-  { id: 'bmw', name: 'BMW', h: 1.45 },
-  { id: 'nikapharm', name: 'Nika Pharm', h: 0.95 },
-  { id: 'nmedov', name: "N'Medov", h: 1.35 },
-  { id: 'cau', name: 'Central Asian University', h: 0.62 },
-  { id: 'zira', name: 'Zira', h: 0.85 },
-];
+export { PARTNERS } from './partners.js';
