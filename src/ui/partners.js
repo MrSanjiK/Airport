@@ -9,9 +9,9 @@ const item = (p) => `<li class="pm-item" style="--h:${p.h || 1};--m:url(/img/par
 const row = (list, rev) => `<div class="pm-row${rev ? ' pm-row--rev' : ''}"><ul class="pm-track">${list.map(item).join('')}${list.map(item).join('').replace(/alt="[^"]*"/g, 'alt="" aria-hidden="true"')}</ul></div>`;
 
 export function partnersHTML() {
-  const half = Math.ceil(PARTNERS.length / 2);
-  const a = [...PARTNERS.slice(0, half), ...PARTNERS.slice(half)];
-  const b = [...PARTNERS.slice(half), ...PARTNERS.slice(0, half)].reverse();
+  // every other brand to each row, so the two rows share the list without repeating each other
+  const a = PARTNERS.filter((_, i) => i % 2 === 0);
+  const b = PARTNERS.filter((_, i) => i % 2 === 1);
   return `<div class="pm">
     <div class="pm-head"><p class="pm-k"><i></i>${t('partners.k')}</p><h3>${t('partners.title')}</h3></div>
     <div class="pm-rows" role="list" aria-label="${t('partners.title')}">${row(a, false)}${row(b, true)}</div>
