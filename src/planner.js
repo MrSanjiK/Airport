@@ -2,7 +2,7 @@ import { t, num, money, onLang } from './i18n/index.js';
 import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS } from './data/inventory.js';
 import logo from './assets/logo.svg?raw';
 import { badge, tagline } from './ui/brand.js';
-import { mountPartners } from './ui/partners.js';
+import { mountPartners, mountPartnerStrip } from './ui/partners.js';
 import { mountFaq } from './ui/faq.js';
 import oaLogo from './assets/oa-logo.svg?raw';
 
@@ -317,7 +317,7 @@ export function initPlanner({ bus }) {
     </div>`;
   };
 
-  const renderAll = () => { renderCalc(); renderStrip(); mountPartners(document.getElementById('partners')); mountFaq(document.getElementById('faq')); renderInquiry(); renderFooter(); };
+  const renderAll = () => { renderCalc(); renderStrip(); mountPartners(document.getElementById('partners')); mountPartnerStrip(document.getElementById('heroPartners')); mountFaq(document.getElementById('faq')); renderInquiry(); renderFooter(); };
   renderAll();
   onLang(renderAll);
   addEventListener('resize', placeThumb);

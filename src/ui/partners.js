@@ -22,6 +22,22 @@ export function partnersHTML() {
   </div>`;
 }
 
+// The first screen's strip: one row of every brand in a glass capsule that mirrors the navbar, its label leading to
+// the full wall in the plan section
+export function mountPartnerStrip(el) {
+  if (!el) return;
+  const list = [...PARTNERS.filter((_, i) => i % 2 === 0), ...PARTNERS.filter((_, i) => i % 2 === 1)];
+  el.innerHTML = `<a class="ps-k" href="#partners"><i aria-hidden="true"></i><span class="ps-title">${t('partners.title')}</span><span class="ps-short">${t('partners.k')}</span><b class="tnum">${PARTNERS.length}</b></a>
+    <div class="pm-rows ps-rows" role="list" aria-label="${t('partners.title')}">${row(list, false)}</div>`;
+  const rows = el.querySelector('.pm-rows');
+  const night = document.documentElement.dataset.theme === 'night';
+  const imgs = [...rows.querySelectorAll(night ? '.pm-night' : '.pm-day')];
+  Promise.all(imgs.map((img) => img.decode().catch(() => {}))).then(() => {
+    rows.classList.add('is-ready');
+    if (io) io.observe(rows); else rows.classList.add('is-run');
+  });
+}
+
 const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('is-run', e.isIntersecting)), { rootMargin: '120px' }) : null;
 export function mountPartners(el) {
   if (!el) return;
