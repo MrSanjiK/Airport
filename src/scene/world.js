@@ -16,7 +16,7 @@ export const TAS = [69.2812, 41.2579];
 export const POSES = {
   intro: { t: [64.6, 41.4], dist: 1900, az: 0, el: 89.9, shift: 0 },
   hero: { t: [68.3, 40.6], dist: 820, az: 4, el: 42, shift: 0 },
-  airport: { t: [69.2687, 41.2634], dist: 46, az: 33, el: 56, shift: 0.24 },
+  airport: { t: [69.2687, 41.2634], dist: 58, az: 33, el: 52, shift: 0.24 },
   // Fly TV and Media Gate look at the same terminal from two other sides, clear of their plates
   flytv: { t: [69.2687, 41.2634], dist: 48, az: -52, el: 38, shift: -0.24 },
   mediagate: { t: [69.2687, 41.2634], dist: 42, az: 128, el: 48, shift: 0.24 },
@@ -297,6 +297,8 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     bg.setRGB(0.929 + (0.039 - 0.929) * state.night, 0.949 + (0.09 - 0.949) * state.night, 0.965 + (0.161 - 0.965) * state.night);
     route.update(state.night, renderer);
     airport.setNight(state.night);
+    // the field's traffic moves while the plate or a close diorama shows it, and keeps the chart drawing meanwhile
+    if (airport.alive()) { airport.update(dt); dirty++; }
     city.update(state.night, renderer, dt, cur.dist);
     office.update(dt, state.night);
     lines.update(state.night, renderer);

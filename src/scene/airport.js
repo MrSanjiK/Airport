@@ -409,7 +409,7 @@ export function createAirport(model, hubWorld) {
     const ca = new Float32Array(n * 2);
     for (let i = 0; i < n; i++) ca.set(cc, i * 2);
     ng.setAttribute('aC', new THREE.BufferAttribute(ca, 2));
-    return { g: ng, c: cc, top };
+    return { g: ng, c: cc, top, ring: pts };
   };
   const T = model.terminals;
   const ringL = (r) => r.map(L);
@@ -450,6 +450,28 @@ export function createAirport(model, hubWorld) {
     if (k === 't1') terminals.T1.top = Math.max(terminals.T1.top, v.top);
     if (k === 't3') terminals.T3.top = Math.max(terminals.T3.top, v.top);
   });
+  // rooftop plant on the big flat roofs (air handlers, chillers, louvred boxes): what makes a roof read as a roof
+  const plant = { hall: [], gates: [], far: [], t1: [], t3: [], airside: [] };
+  {
+    const areaOf = (q) => { let a = 0; for (let i = 0, j = q.length - 1; i < q.length; j = i++) a += (q[j][0] + q[i][0]) * (q[j][1] - q[i][1]); return Math.abs(a / 2); };
+    Object.entries(buckets).forEach(([k, list]) => {
+      if (!plant[k]) return;
+      list.forEach((v) => {
+        const q = v.ring;
+        const area = areaOf(q);
+        if (area < 0.0016) return;
+        const xs = q.map((p) => p[0]), zs = q.map((p) => p[1]);
+        const n = Math.min(26, Math.round(area / 0.0011));
+        for (let i = 0, tries = 0; i < n && tries < n * 6; tries++) {
+          const p = [Math.min(...xs) + rnd() * (Math.max(...xs) - Math.min(...xs)), Math.min(...zs) + rnd() * (Math.max(...zs) - Math.min(...zs))];
+          // clear of the parapet: the box's corners must be on the roof too
+          if (![[0, 0], [0.006, 0], [-0.006, 0], [0, 0.006], [0, -0.006]].every(([dx, dz]) => insideRing([p[0] + dx, p[1] + dz], q))) continue;
+          plant[k].push({ p, top: v.top, w: 0.0035 + rnd() * 0.0055, d: 0.003 + rnd() * 0.004, h: mh(1.6 + rnd() * 1.6), a: rnd() < 0.5 ? 0 : Math.PI / 2, c: rnd() });
+          i++;
+        }
+      });
+    });
+  }
   const edgeHall = lineMat(0.22);
   const edgeSoft = lineMat(0.1);
   const groups = {};
@@ -462,6 +484,24 @@ export function createAirport(model, hubWorld) {
     grp.add(new THREE.Mesh(merged, bldMat()));
     if (k !== 'context') grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(merged, 28), k === 'hall' ? edgeHall : edgeSoft));
   });
+  {
+    const box = new THREE.BoxGeometry(1, 1, 1);
+    box.translate(0, 0.5, 0);
+    const plantMat = shade([1, 1, 1], [0.2, 0.26, 0.36]);
+    const m4 = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const c = new THREE.Color();
+    Object.entries(plant).forEach(([k, list]) => {
+      if (!list.length) return;
+      const im = new THREE.InstancedMesh(box, plantMat, list.length);
+      list.forEach((u, i) => {
+        m4.compose(new THREE.Vector3(u.p[0], u.top, u.p[1]), q.setFromEuler(new THREE.Euler(0, u.a, 0)), new THREE.Vector3(u.w, u.h, u.d));
+        im.setMatrixAt(i, m4);
+        im.setColorAt(i, c.setRGB(...(u.c < 0.55 ? [0.83, 0.84, 0.85] : u.c < 0.85 ? [0.7, 0.72, 0.74] : [0.55, 0.58, 0.62])));
+      });
+      groups[k].add(im);
+    });
+  }
   terminals.T1.parts = [groups.t1];
   terminals.T3.parts = [groups.t3];
 
@@ -562,8 +602,174 @@ export function createAirport(model, hubWorld) {
         tail.setColorAt(i, c.setRGB(...tails[Math.floor(rnd() * tails.length)]));
       });
       fleet.add(body, tail);
+      // ground handling at each parked aircraft: a tug at the nose, a catering truck and a baggage train at the doors
+      const gse = [[0.0002, -0.006, 0.0018, 0.0034, 0.95], [0.0048, 0.008, 0.0024, 0.0062, 0.97], [-0.0052, 0.016, 0.0016, 0.0042, 0.9], [-0.0052, 0.021, 0.0016, 0.0042, 0.9], [0.005, 0.024, 0.0022, 0.0058, 0.62]];
+      const vg = new THREE.BoxGeometry(1, 1, 1);
+      vg.translate(0, 0.5, 0);
+      const vm = new THREE.InstancedMesh(vg, shade([1, 1, 1], [0.3, 0.38, 0.5]), slots.length * gse.length);
+      const q = new THREE.Quaternion();
+      const e3 = new THREE.Euler();
+      const v3 = new THREE.Vector3();
+      let n = 0;
+      slots.forEach((sl) => {
+        const ang = sl.a + Math.PI;
+        const ca = Math.cos(ang), sa = Math.sin(ang);
+        gse.forEach(([lx, lz, w, d, tone]) => {
+          if (rnd() < 0.3) return;
+          const x = sl.p[0] + (lx * ca + lz * sa) * sl.s, z = sl.p[1] + (-lx * sa + lz * ca) * sl.s;
+          m4.compose(v3.set(x, 0, z), q.setFromEuler(e3.set(0, ang, 0)), new THREE.Vector3(w, mh(2.2), d));
+          vm.setMatrixAt(n, m4);
+          vm.setColorAt(n, c.setRGB(...(tone > 0.8 ? [tone, tone, tone * 0.98] : [0.96, 0.78, 0.2])));
+          n++;
+        });
+      });
+      vm.count = n;
+      fleet.add(vm);
     }
   }
+
+  /* ── life on the plate and the close dioramas: traffic on the roads, aircraft taxiing, one taking off from 08L and
+     one landing on 26L, all on the field's own runways, taxiways and streets ── */
+  const life = new THREE.Group();
+  group.add(life);
+  const TS = 1.6; // a little faster than life, so a reader sees a take-off within a chapter
+  const trackOf = (pts) => {
+    const seg = [];
+    let total = 0;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
+      const l = Math.hypot(bx - ax, bz - az);
+      if (l < 1e-6) continue;
+      seg.push({ ax, az, dx: (bx - ax) / l, dz: (bz - az) / l, l, s0: total });
+      total += l;
+    }
+    return { seg, total };
+  };
+  const along = (tr, s, out) => {
+    let k = tr.seg.length - 1;
+    for (let i = 0; i < tr.seg.length; i++) if (s < tr.seg[i].s0 + tr.seg[i].l) { k = i; break; }
+    const g = tr.seg[k];
+    const t = Math.min(g.l, Math.max(0, s - g.s0));
+    out[0] = g.ax + g.dx * t; out[1] = g.az + g.dz * t; out[2] = g.dx; out[3] = g.dz;
+    return out;
+  };
+  const tmp4 = [0, 0, 0, 0];
+  // cars: on the streets round the terminals, each running its street end to end
+  const streets = model.roads.map((r) => ({ w: r.w, tr: trackOf(r.g.map(L)) })).filter((r) => r.tr.total > 0.12 && r.tr.seg.some((g) => Math.hypot(g.ax, g.az) < 1.4));
+  const carList = [];
+  streets.forEach((r) => {
+    const n = Math.max(1, Math.round(r.tr.total / (r.w >= 9 ? 0.07 : 0.16)));
+    for (let i = 0; i < n && carList.length < 140; i++) carList.push({ r, s: rnd() * r.tr.total, v: (0.009 + rnd() * 0.006) * (r.w >= 9 ? 1.4 : 1), side: r.w >= 9 ? (rnd() < 0.5 ? -1 : 1) : 0 });
+  });
+  const carMesh = (() => {
+    if (!carList.length) return null;
+    const cg = new THREE.BoxGeometry(0.0018, mh(1.5) * 0.4, 0.0044);
+    cg.translate(0, mh(1.5) * 0.2, 0);
+    const im = new THREE.InstancedMesh(cg, shade([1, 1, 1], [0.3, 0.36, 0.48]), carList.length);
+    const pal = [[0.97, 0.97, 0.97], [0.97, 0.97, 0.97], [0.78, 0.8, 0.83], [0.2, 0.22, 0.25], [0.5, 0.53, 0.57], [0.2, 0.28, 0.45], [0.7, 0.15, 0.15], [0.95, 0.8, 0.25]];
+    const c = new THREE.Color();
+    carList.forEach((u, i) => im.setColorAt(i, c.setRGB(...pal[Math.floor(rnd() * pal.length)])));
+    im.frustumCulled = false;
+    life.add(im);
+    return im;
+  })();
+  // aircraft under way: two taxiing to and fro on the long taxiways, a departure and an arrival
+  const plane = () => { const p = aircraft.group.clone(); life.add(p); return p; };
+  const taxiways = model.taxiways.map((t) => trackOf(t.g.map(L))).filter((t) => t.total > 0.45).sort((a, b) => b.total - a.total).slice(0, 2);
+  const taxiers = taxiways.map((tr, i) => ({ tr, p: plane(), s: i ? tr.total * 0.6 : 0.05, dir: i ? -1 : 1, v: 0.0085, wait: 0, turn: 0 }));
+  const rw = model.runways.map((r) => { const a = L(r.g[0]), b = L(r.g[r.g.length - 1]); const len = Math.hypot(b[0] - a[0], b[1] - a[1]); return { a, b, len, u: [(b[0] - a[0]) / len, (b[1] - a[1]) / len] }; });
+  const dep = { p: plane(), t: 0 };
+  const arr = { p: plane(), t: 0 };
+  const m4l = new THREE.Matrix4();
+  const ql = new THREE.Quaternion();
+  const el3 = new THREE.Euler();
+  const pl3 = new THREE.Vector3();
+  const one = new THREE.Vector3(1, 1, 1);
+  // the nose leads: the model's fuselage runs down +z from the nose
+  const place = (obj, x, y, z, dx, dz, pitch = 0, k = 1) => {
+    obj.visible = k > 0.02;
+    obj.position.set(x, y, z);
+    obj.rotation.set(pitch, Math.atan2(-dx, -dz), 0, 'YXZ');
+    obj.scale.set(k, 1.8 * k, k);
+  };
+  const ease = (x) => x * x * (3 - 2 * x);
+  const update = (dt) => {
+    const d = Math.min(0.05, dt) * TS;
+    // traffic
+    if (carMesh) {
+      carList.forEach((u, i) => {
+        u.s += u.v * d;
+        if (u.s > u.r.tr.total) u.s -= u.r.tr.total;
+        const [x, z, dx, dz] = along(u.r.tr, u.s, tmp4);
+        const off = u.side * 0.0026;
+        m4l.compose(pl3.set(x - dz * off, 0, z + dx * off), ql.setFromEuler(el3.set(0, Math.atan2(dx, dz), 0)), one);
+        carMesh.setMatrixAt(i, m4l);
+      });
+      carMesh.instanceMatrix.needsUpdate = true;
+    }
+    // taxiing: on to the end, a pause, a slow turn about, and back
+    taxiers.forEach((u) => {
+      if (u.wait > 0) { u.wait -= d; u.turn = Math.min(1, u.turn + d / 4); }
+      else {
+        u.s += u.dir * u.v * d;
+        if (u.s > u.tr.total - 0.02 || u.s < 0.02) { u.s = Math.min(u.tr.total - 0.02, Math.max(0.02, u.s)); u.dir *= -1; u.wait = 5; u.turn = 0; }
+      }
+      const [x, z, dx, dz] = along(u.tr, u.s, tmp4);
+      // during the pause the heading swings round from the old direction to the new one
+      const sw = u.wait > 0 ? 1 - ease(u.turn) : 0;
+      const h = Math.atan2(dx * u.dir, dz * u.dir) + sw * Math.PI;
+      place(u.p, x, 0, z, Math.sin(h), Math.cos(h));
+    });
+    // departure, 08L: line up, roll, rotate, climb out; a pause; again
+    if (rw[0]) {
+      const r = rw[0];
+      dep.t += d;
+      const t = dep.t;
+      const hold = 8, acc = 0.0024, vr = 0.074;
+      const tr = vr / acc;
+      let s, y = 0, pitch = 0, k = Math.min(1, t / 1.5);
+      if (t < hold) s = 0.25;
+      else if (t < hold + tr) s = 0.25 + 0.5 * acc * (t - hold) ** 2;
+      else {
+        const tc = t - hold - tr;
+        s = 0.25 + 0.5 * acc * tr * tr + 0.08 * tc;
+        // about 8 degrees up at 80 m/s, the nose raised
+        y = mh(Math.min(900, 11 * tc));
+        pitch = Math.min(0.16, tc * 0.08);
+        if (tc > 32) k = Math.max(0, 1 - (tc - 32) / 3);
+        if (tc > 44) dep.t = 0;
+      }
+      place(dep.p, r.a[0] + r.u[0] * s, y, r.a[1] + r.u[1] * s, r.u[0], r.u[1], pitch, k);
+    }
+    // arrival, 26L: on the glide path from the east, flare, touchdown, roll-out, off the runway
+    if (rw[1]) {
+      const r = rw[1];
+      arr.t += d;
+      const t = arr.t;
+      const ux = -r.u[0], uz = -r.u[1];
+      const td = 0.35; // touchdown, km past the threshold
+      const app = 34; // seconds on the approach
+      let s, y = 0, pitch = 0, k = 1;
+      if (t < app) {
+        const left = (app - t) * 0.07;
+        s = td - left;
+        y = mh(left * 1000 * 0.0524);
+        pitch = 0.03;
+        k = Math.min(1, t / 2);
+      } else {
+        const tr2 = t - app;
+        const v0 = 0.07, dec = 0.0026;
+        const tstop = (v0 - 0.012) / dec;
+        s = tr2 < tstop ? td + v0 * tr2 - 0.5 * dec * tr2 * tr2 : td + v0 * tstop - 0.5 * dec * tstop * tstop + 0.012 * (tr2 - tstop);
+        if (tr2 > tstop + 6) k = Math.max(0, 1 - (tr2 - tstop - 6) / 2);
+        if (tr2 > tstop + 16) arr.t = 0;
+      }
+      // the arrival runs the runway backwards, from its east threshold
+      place(arr.p, r.b[0] + ux * s, y, r.b[1] + uz * s, ux, uz, pitch, k);
+    }
+  };
+  // the departure and the arrival start out of step
+  arr.t = 20;
 
   /* ── surroundings (plate only): trees, parked cars, the flag at the roundabout ── */
   const context = groups.context;
@@ -696,7 +902,12 @@ export function createAirport(model, hubWorld) {
     groups.far.visible = k < 0.5 && plate < 0.32;
     groups.t1.visible = k < 0.5 && plate < 0.32;
     groups.t3.visible = k < 0.5 && plate < 0.5 && solo < 0.3;
+    // once the plate holds the screen the hall is drawn inside its frame only: turned or zoomed, it never spills out
+    groups.hall.visible = plate < 0.5;
+    life.visible = false;
   };
+  // the field is alive (and the chart must keep drawing) only while the plate or a close diorama shows it
+  const alive = () => mode.hero < 0.5 && (mode.plate > 0.15 || mode.solo > 0.3);
   // the plate pass draws the ground, the city round the field and the fleet too, faded with the field
   const plateOn = (fo) => {
     const show = mode.hero < 0.5;
@@ -706,8 +917,10 @@ export function createAirport(model, hubWorld) {
     plateLand.visible = show;
     context.visible = show;
     groups.gates.visible = true;
+    groups.hall.visible = true;
     groups.far.visible = show;
     groups.t1.visible = show;
+    life.visible = show;
     flatMats.forEach((m) => (m.uniforms.uOpacity.value = m.userData.base * fo));
   };
   const plateOff = () => {
@@ -735,9 +948,11 @@ export function createAirport(model, hubWorld) {
     // the town round the field (its trees, parked cars, flags) is metre-scale: close views only
     context.visible = !hero;
     groups.gates.visible = true;
+    groups.hall.visible = true;
     groups.far.visible = true;
     groups.t1.visible = true;
     groups.t3.visible = hero;
+    life.visible = !hero;
     flatMats.forEach((m) => (m.uniforms.uOpacity.value = m.userData.base * k));
     // diving from the hero onto the plate the field gathers in onto the terminal complex: the disc shrinks from the
     // whole airfield to the plate's own round, so the outer buildings leave one by one instead of all at once
@@ -762,12 +977,12 @@ export function createAirport(model, hubWorld) {
 
   // for the loader's shader compile: every part shown at once, so no program is left to compile mid-scroll
   const showAll = () => {
-    [flat, fleet, plateLand, ...Object.values(groups)].forEach((g) => (g.visible = true));
+    [flat, fleet, plateLand, life, ...Object.values(groups)].forEach((g) => (g.visible = true));
     return () => setSymbol(mode.hero, mode.plate, mode.solo);
   };
 
-  const parts = [flat, fleet, plateLand, ...Object.values(groups)];
-  return { group, origin: model.o, fieldC, parts, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
+  const parts = [flat, fleet, plateLand, life, ...Object.values(groups)];
+  return { group, origin: model.o, fieldC, parts, update, alive, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
 }
 
 // An A320-class airliner in km, nose at the origin, fuselage running down +z.

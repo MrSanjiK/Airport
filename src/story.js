@@ -3,7 +3,7 @@ import { SITES, GROUPS } from './scene/city.js';
 import { t, onLang, num, place, lang } from './i18n/index.js';
 import { REGIONS, LED_ZONES, LED_FACTS } from './data/inventory.js';
 import { profile } from './sections.js';
-import { formatDMS, toLonLat } from './scene/geo.js';
+import { formatDMS, toLonLat, toXZ } from './scene/geo.js';
 import OA_MARK from './assets/oa-mark.svg?raw';
 
 const CHAPTERS = ['hero', 'airport', 'flytv', 'mediagate', 'korzinka', 'horeca', 'regions', 'plan'];
@@ -129,7 +129,13 @@ export function initStory(world, { places, nav, bus }) {
   // Airport zones: numbered markers on the OSM terminal plan, named by callouts
   const ag = world.airport.group;
   const local = (v) => () => ag.localToWorld(tmpV.copy(v));
-  const pickZone = (id) => { bus.dispatchEvent(new CustomEvent('zone', { detail: id })); bus.dispatchEvent(new CustomEvent('zonepick', { detail: id })); };
+  const pickZone = (id) => {
+    bus.dispatchEvent(new CustomEvent('zone', { detail: id }));
+    bus.dispatchEvent(new CustomEvent('zonepick', { detail: id }));
+    // on the plate the camera comes down onto the zone picked
+    const i = LED_ZONES.findIndex((z) => z.id === id);
+    if (i >= 0 && weights.airport > 0.5 && frame.offsetParent) { const v = zoneLabels[i].w(); focusOn({ x: v.x, y: world.goal.ty, z: v.z }, 0.62); }
+  };
   const zoneLabels = LED_ZONES.map((z, i) => {
     const l = addLabel({
       cls: 'wp--zone',
@@ -141,6 +147,7 @@ export function initStory(world, { places, nav, bus }) {
     });
     // the numbers come up once the plate holds the screen, not in a knot over the terminal during the dive
     l.when = () => weights.airport > 0.72;
+    l.zoneIdx = i;
     return l;
   });
   // The approach plate around the 3D airport (comp-3): title band, callouts on leaders, zone photo, price profile.
@@ -153,6 +160,80 @@ export function initStory(world, { places, nav, bus }) {
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter') pickZone(curZone); });
   });
   labelsEl.append(frame);
+  // the field inside the frame is a model to handle: drag to turn it, pinch (or the buttons) to zoom, double-click to
+  // come down on a spot, a zone to fly to it; the view returns to the plate's own once the chapter is left
+  const stage = document.createElement('div');
+  stage.className = 'apt-stage';
+  stage.tabIndex = 0;
+  stage.innerHTML = `<p class="apt-hint"><i aria-hidden="true"></i><span></span></p><div class="apt-ctl"><button type="button" data-z="out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg></button><button type="button" data-z="in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg></button><button type="button" data-z="reset"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5M5 4.5V8h3.5"/></svg></button></div>`;
+  frame.append(stage);
+  const orbit = { az: 0, el: 0, zoom: 1, fx: 0, fy: 0, fz: 0, fk: 0, fGoal: 0, vaz: 0, vel: 0, drag: null };
+  const resetOrbit = () => Object.assign(orbit, { az: 0, el: 0, zoom: 1, fGoal: 0, vaz: 0, vel: 0 });
+  if (import.meta.env.DEV) window.__orbit = orbit;
+  const touched = () => { frame.classList.add('is-touched'); world.invalidate(); };
+  const zoomBy = (f) => { orbit.zoom = clamp(orbit.zoom * f, 0.28, 1.9); touched(); };
+  const focusOn = (v, zoom) => { orbit.fx = v.x; orbit.fy = v.y; orbit.fz = v.z; orbit.fGoal = 1; if (zoom) orbit.zoom = zoom; touched(); };
+  const labelCtl = () => {
+    stage.querySelector('.apt-hint span').textContent = t('airport.hint');
+    stage.querySelectorAll('.apt-ctl button').forEach((b) => { const k = { in: 'zoomIn', out: 'zoomOut', reset: 'reset' }[b.dataset.z]; b.setAttribute('aria-label', t(`airport.${k}`)); b.title = t(`airport.${k}`); });
+    stage.setAttribute('aria-label', t('airport.hint'));
+  };
+  labelCtl();
+  onLang(labelCtl);
+  stage.querySelector('.apt-ctl').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.z === 'in') zoomBy(0.72);
+    else if (b.dataset.z === 'out') zoomBy(1 / 0.72);
+    else { resetOrbit(); frame.classList.remove('is-touched'); world.invalidate(); }
+  });
+  stage.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || e.target.closest('.apt-ctl')) return;
+    // no text selection, no native drag: the gesture belongs to the model
+    e.preventDefault();
+    stage.setPointerCapture(e.pointerId);
+    orbit.drag = { x: e.clientX, y: e.clientY };
+    orbit.vaz = orbit.vel = 0;
+    stage.classList.add('is-drag');
+  });
+  stage.addEventListener('pointermove', (e) => {
+    const d = orbit.drag;
+    if (!d) return;
+    const dx = e.clientX - d.x, dy = e.clientY - d.y;
+    d.x = e.clientX; d.y = e.clientY;
+    const rtl = document.documentElement.dir === 'rtl' ? -1 : 1;
+    orbit.az += -dx * 0.3 * rtl;
+    orbit.el = clamp(orbit.el + dy * 0.2, -30, 26);
+    // the release speed is a smoothed, capped hand speed: a flick glides on a little, never spins the field round
+    orbit.vaz = orbit.vaz * 0.6 + clamp(-dx * 0.3 * rtl, -3, 3) * 0.4;
+    orbit.vel = orbit.vel * 0.6 + clamp(dy * 0.2, -2, 2) * 0.4;
+    if (Math.abs(dx) + Math.abs(dy) > 1) touched();
+  });
+  const endDrag = (e) => { if (!orbit.drag) return; orbit.drag = null; stage.classList.remove('is-drag'); try { stage.releasePointerCapture(e.pointerId); } catch (_) {} };
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  // a pinch on a trackpad (ctrl + wheel) zooms the model; a plain wheel still scrolls the page
+  stage.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    zoomBy(Math.exp(e.deltaY * 0.012));
+  }, { passive: false });
+  stage.addEventListener('dblclick', (e) => {
+    const ll = world.pick(e.clientX, e.clientY);
+    if (!ll) return;
+    const [x, z] = toXZ(ll[0], ll[1]);
+    focusOn({ x, y: world.goal.ty, z }, clamp(orbit.zoom * 0.6, 0.28, 1.9));
+  });
+  stage.addEventListener('keydown', (e) => {
+    const k = { ArrowLeft: [10, 0], ArrowRight: [-10, 0], ArrowUp: [0, -6], ArrowDown: [0, 6] }[e.key];
+    if (k) { e.preventDefault(); orbit.az += k[0]; orbit.el = clamp(orbit.el + k[1], -30, 26); touched(); }
+    else if (e.key === '+' || e.key === '=') zoomBy(0.72);
+    else if (e.key === '-') zoomBy(1 / 0.72);
+  });
+  // over the model the pointer parallax rests, so the view holds still under the hand
+  stage.addEventListener('pointerenter', () => { world.state.parallax = 0; });
+  stage.addEventListener('pointerleave', () => { world.state.parallax = 1; });
   const callWrap = document.createElement('div');
   callWrap.className = 'callouts';
   frame.append(callWrap);
@@ -372,8 +453,24 @@ export function initStory(world, { places, nav, bus }) {
           dist: Math.exp(lerp(Math.log(g.dist), Math.log(f.dist), fw)), az: lerpAngle(g.az, f.az, fw), el: lerp(g.el, f.el, fw), shift: lerp(g.shift, f.shift, fw),
         });
       }
+      // the visitor's own view of the airport plate (turned, zoomed, come down onto a zone), held while it is read
+      const ow = weights.airport;
+      orbit.fk += (orbit.fGoal - orbit.fk) * 0.12;
+      if (ow > 0.001 && (orbit.az || orbit.el || orbit.zoom !== 1 || orbit.fk > 0.001)) {
+        g.az += orbit.az * ow;
+        g.el = clamp(g.el + orbit.el * ow, 18, 84);
+        g.dist *= Math.pow(orbit.zoom, ow);
+        const fk = orbit.fk * ow;
+        g.tx = lerp(g.tx, orbit.fx, fk); g.ty = lerp(g.ty, orbit.fy, fk); g.tz = lerp(g.tz, orbit.fz, fk);
+      }
       world.setGoal(g);
     }
+    // a released drag glides to a stop; leaving the chapter puts the plate's own view back
+    if (!orbit.drag && (Math.abs(orbit.vaz) > 0.01 || Math.abs(orbit.vel) > 0.01)) {
+      orbit.vaz *= 0.86; orbit.vel *= 0.86;
+      orbit.az += orbit.vaz; orbit.el = clamp(orbit.el + orbit.vel, -30, 26);
+    }
+    if (weights.airport < 0.04 && !orbit.drag && (orbit.az || orbit.el || orbit.zoom !== 1 || orbit.fGoal)) { resetOrbit(); orbit.fk = 0; frame.classList.remove('is-touched'); }
     const now = k < 0.5 ? a.id : b.id;
     if (now !== active) {
       active = now;
@@ -440,6 +537,7 @@ export function initStory(world, { places, nav, bus }) {
 
   const proj = {};
   let lastSvg = null;
+  let frameLive = null;
   let blockEls = [];
   let blockMode = null;
   let blockAge = 0;
@@ -525,6 +623,18 @@ export function initStory(world, { places, nav, bus }) {
       if (holding.contains(el) && +holding.style.opacity < 0.3) return;
       blockers.push([r.left - 6, r.top - 6, r.right + 6, r.bottom + 6]);
     });
+    // the airport frame and its callouts are measured with the other reads, before any label is placed
+    const callOp = introDone && !exploring ? clamp(w.airport * 1.6 - 0.5) : 0;
+    let fr = null;
+    let footH = 0;
+    if (callOp > 0.01) {
+      fr = frame.getBoundingClientRect();
+      footH = foot.offsetHeight;
+      if (calloutStale || callouts.some((c) => !c.size)) { callouts.forEach((c) => { c.size = [c.el.offsetWidth, c.el.offsetHeight]; }); calloutStale = !fr.width; }
+    }
+    // a zone's number shows only over the model's clear middle: not past the frame, nor under the callout columns
+    const cw = callouts[0]?.size?.[0] || 170;
+    const zoneBox = fr && framePlaced ? [fr.left + 16 + cw + 6, fr.top + 44 + 10, fr.right - 16 - cw - 6, fr.bottom - footH - 10] : null;
     // labels: compute targets, then declutter greedily by priority
     const heroBox = heroCopy.getBoundingClientRect();
     const legBox = legendEl.getBoundingClientRect();
@@ -545,6 +655,7 @@ export function initStory(world, { places, nav, bus }) {
       else if (cityNow && world.city.k > 0.3 && (l.key === cityNow.key || l.cluster || l.key === 'tas')) target = 0;
       const p = world.project(typeof l.w === 'function' ? l.w() : l.w, l.proj);
       if (!p.visible) target = 0;
+      if (l.zoneIdx !== undefined && zoneBox && (p.x < zoneBox[0] || p.x > zoneBox[2] || p.y < zoneBox[1] || p.y > zoneBox[3])) target = 0;
       if (target > 0 && w.hero > 0.3 && p.x > heroBox.left - 30 && p.x < heroBox.right + 30 && p.y > heroBox.top - 20 && p.y < heroBox.bottom + 20) target = 0;
       if (target > 0 && w.hero > 0.3 && p.x < legBox.right && p.y > legBox.top - 40) target = 0;
       l.target = target;
@@ -555,15 +666,7 @@ export function initStory(world, { places, nav, bus }) {
     cands.sort((a, b) => b.rank - a.rank);
     // sizes are read for every new label before any class changes below
     cands.forEach((l) => { if (!l.size || l.sizeStale) { l.size = [l.el.offsetWidth || 90, l.el.offsetHeight || 34]; l.sizeStale = false; } });
-    // the airport frame, its callouts and the holding chart's leaves are measured here too, ahead of the writes
-    const callOp = introDone && !exploring ? clamp(w.airport * 1.6 - 0.5) : 0;
-    let fr = null;
-    let footH = 0;
-    if (callOp > 0.01) {
-      fr = frame.getBoundingClientRect();
-      footH = foot.offsetHeight;
-      if (calloutStale || callouts.some((c) => !c.size)) { callouts.forEach((c) => { c.size = [c.el.offsetWidth, c.el.offsetHeight]; }); calloutStale = !fr.width; }
-    }
+    // the holding chart's leaves are measured here too, ahead of the writes
     const heroOp = introDone && !exploring ? clamp(w.hero * 1.6 - 0.4) : 0;
     const plateRects = heroOp > 0.02 && holdPlaced && holding.classList.contains('is-drawn') ? plateEls.map((el) => el.getBoundingClientRect()) : null;
     const kept = [];
@@ -613,7 +716,8 @@ export function initStory(world, { places, nav, bus }) {
     world.field.opacity = framePlaced ? callOp : 0;
     const callV = callOp < 0.01 ? 'hidden' : 'visible';
     if (frame.style.visibility !== callV) frame.style.visibility = callV;
-    callWrap.style.pointerEvents = callOp > 0.5 ? 'auto' : 'none';
+    const live = callOp > 0.5;
+    if (frameLive !== live) { frameLive = live; frame.classList.toggle('is-live', live); }
     if (callOp > 0.01) {
       world.field.rect = [fr.left, fr.top, fr.width, fr.height];
       // callouts sit either side of the terminal: the five westernmost on one side, the rest on the other,
@@ -634,7 +738,9 @@ export function initStory(world, { places, nav, bus }) {
           el.style.transform = `translate3d(${(bx - fr.left).toFixed(1)}px, ${(y - bh / 2 - fr.top).toFixed(1)}px, 0)`;
           const ex1 = left ? bx + bw : bx;
           const ex2 = left ? ex1 + 14 : ex1 - 14;
-          svg += `<path class="call-line" style="opacity:${(callOp * 0.85).toFixed(2)}" d="M${ex1.toFixed(1)} ${y.toFixed(1)} L${ex2.toFixed(1)} ${y.toFixed(1)} L${p.x.toFixed(1)} ${p.y.toFixed(1)}"/><circle class="call-dot" style="opacity:${callOp.toFixed(2)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2"/>`;
+          // a zone turned out of the clear middle keeps its callout (a click brings it back into view), not its leader
+          const shown = zoneLabels[c.i].op > 0.3;
+          if (shown) svg += `<path class="call-line" style="opacity:${(callOp * 0.85 * Math.min(1, zoneLabels[c.i].op)).toFixed(2)}" d="M${ex1.toFixed(1)} ${y.toFixed(1)} L${ex2.toFixed(1)} ${y.toFixed(1)} L${p.x.toFixed(1)} ${p.y.toFixed(1)}"/><circle class="call-dot" style="opacity:${callOp.toFixed(2)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2"/>`;
         });
       });
     }
