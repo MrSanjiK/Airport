@@ -1362,6 +1362,12 @@ html.is-intro .dock { visibility: hidden; }
 .budget-bar { display: flex; gap: 3px; height: 12px; border-radius: 999px; overflow: hidden; background: var(--hair-2); }
 .budget-bar i { display: block; min-width: 6px; background: var(--brand); transition: flex-grow 0.6s var(--ease-out); }
 .strip-groups { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 260px; overflow: auto; }
+/* the panel's own lists scroll under the wheel (Lenis allowNestedScroll); their bar is thin and keeps clear of the
+   figures: the content stops short of it, so an overlay bar never sits on a percentage */
+.strip-groups, .strip-list { padding-inline-end: 12px; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 26%, transparent) transparent; }
+.strip-groups::-webkit-scrollbar, .strip-list::-webkit-scrollbar { width: 6px; }
+.strip-groups::-webkit-scrollbar-thumb, .strip-list::-webkit-scrollbar-thumb { border-radius: 3px; background: color-mix(in srgb, var(--ink) 26%, transparent); }
+.strip-groups::-webkit-scrollbar-track, .strip-list::-webkit-scrollbar-track { background: transparent; }
 .strip-groups > li { padding: 10px 12px; border-radius: 14px; background: color-mix(in srgb, var(--brand) 6%, transparent); }
 .sg-head { display: flex; align-items: baseline; gap: 8px; }
 .sg-head i { width: 9px; height: 9px; border-radius: 50%; background: var(--brand); flex: none; align-self: center; }

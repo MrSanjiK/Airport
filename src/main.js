@@ -90,7 +90,9 @@ async function boot() {
   onLang(() => requestAnimationFrame(linkWidths));
 
   // Smooth scroll with anchor handling
-  const lenis = reduced ? null : new Lenis({ duration: 1.25, easing: (x) => 1 - Math.pow(1 - x, 4), smoothWheel: true });
+  // allowNestedScroll: a list that scrolls on its own (the budget breakdown, the brand split, a phone's map card)
+  // takes the wheel while it can still move that way; at its end the page carries on
+  const lenis = reduced ? null : new Lenis({ duration: 1.25, easing: (x) => 1 - Math.pow(1 - x, 4), smoothWheel: true, allowNestedScroll: true });
   if (lenis) {
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
