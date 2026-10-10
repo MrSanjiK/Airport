@@ -251,11 +251,13 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   const spring = (key, target, dt, from) => {
     if (key === 'ld') {
       const x = from;
-      vel.ld += (W * W * (target - x) - 2 * W * vel.ld) * dt;
+      const w = W * (state.pace || 1);
+      vel.ld += (w * w * (target - x) - 2 * w * vel.ld) * dt;
       vel.ldx = x + vel.ld * dt;
       return;
     }
-    vel[key] += (W * W * (target - cur[key]) - 2 * W * vel[key]) * dt;
+    const w = W * (state.pace || 1);
+    vel[key] += (w * w * (target - cur[key]) - 2 * w * vel[key]) * dt;
     cur[key] += vel[key] * dt;
   };
   const clock = new THREE.Clock();
@@ -269,9 +271,13 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     const k = state.reduced ? 1 : 1 - Math.pow(0.0009, dt);
     pointer.sx += (pointer.x - pointer.sx) * k * 0.6;
     pointer.sy += (pointer.y - pointer.sy) * k * 0.6;
+    // the pointer sways the camera only over the wide views (the country, the regions), and gently there; a model
+    // seen close (the airport plate, a diorama, a city, the office) holds perfectly still under the cursor, or it
+    // would wobble with every move of the hand
+    const sway = state.parallax * Math.min(1, Math.max(0, (cur.dist - 160) / 400));
     // a critically damped spring on every camera axis: each move eases in and out, never jerks, however the goal
     // jumps (scroll, drag, a chapter link); distance in log space so long hops feel like a climb
-    const wz = Math.abs(goal.az + pointer.sx * 2.2 * state.parallax - cur.az) > 180 ? 360 * Math.sign(goal.az - cur.az) : 0;
+    const wz = Math.abs(goal.az + pointer.sx * 1.5 * sway - cur.az) > 180 ? 360 * Math.sign(goal.az - cur.az) : 0;
     if (state.reduced) {
       Object.assign(cur, { tx: goal.tx, ty: goal.ty, tz: goal.tz, dist: goal.dist, az: goal.az, el: goal.el, shift: goal.shift, shiftY: goal.shiftY || 0 });
     } else {
@@ -282,8 +288,8 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       cur.dist = Math.exp(vel.ldx);
       // pointer parallax is held at zero through the intro: at a top-down view any azimuth sway would turn the map
       // out of register with the loader's outline
-      spring('az', goal.az - wz + pointer.sx * 2.2 * state.parallax, dt);
-      spring('el', goal.el - pointer.sy * 1.4 * state.parallax, dt);
+      spring('az', goal.az - wz + pointer.sx * 1.5 * sway, dt);
+      spring('el', goal.el - pointer.sy * 0.9 * sway, dt);
       spring('shift', goal.shift, dt);
       spring('shiftY', goal.shiftY || 0, dt);
     }
@@ -332,7 +338,9 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       renderer.autoClear = true;
     }
     drawField();
-    if (warmQ.length) {
+    // as many queued objects a frame as fit in ~6 ms (always at least one): small parts go up together, a big one alone
+    const wt0 = performance.now();
+    while (warmQ.length && (performance.now() - wt0 < 6 || wt0 === performance.now())) {
       const { o, done } = warmQ.shift();
       const saved = [];
       o.traverse((c) => { saved.push([c, c.visible, c.frustumCulled]); c.visible = true; c.frustumCulled = false; });

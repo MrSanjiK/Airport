@@ -69,7 +69,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     if (key === pose) return;
     pose = key;
     clearTimeout(poseTimer);
-    poseTimer = setTimeout(() => aim(pose), 380);
+    poseTimer = setTimeout(() => aim(pose), 180);
   };
 
   const stat = (n, label, plus = '') => `<div class="ab-stat"><b class="tnum" data-count="${n}" data-plus="${plus}">${plus === 'year' ? n : num(n)}${plus && plus !== 'year' ? plus : ''}</b><span>${esc(label)}</span></div>`;
@@ -261,6 +261,8 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     nav?.setCurrent('about');
     story?.setAbout(true);
     world?.office?.load();
+    // the page's camera moves are jumps from block to block: a stiffer spring gets there sooner
+    if (world) world.state.pace = 1.45;
     pose = 'overview';
     render();
     aim(pose);
@@ -281,6 +283,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     el.innerHTML = '';
     story?.setAbout(false);
     world?.office?.show(false);
+    if (world) world.state.pace = 1;
     history.replaceState(null, '', location.pathname);
     // back where the reader left the story, unless a link asked for somewhere else
     requestAnimationFrame(() => {
@@ -296,7 +299,7 @@ export function initAbout({ nav, bus, lenis, reduced }) {
     open, close,
     get isOpen() { return isOpen; },
     // the chart arrives after the loader: from then on the page steers the camera
-    attach(w, s) { world = w; story = s; if (isOpen) { story.setAbout(true); world.office?.load(); aim(pose); } },
+    attach(w, s) { world = w; story = s; if (isOpen) { story.setAbout(true); world.office?.load(); world.state.pace = 1.45; aim(pose); } },
     office: OFFICE,
   };
 }

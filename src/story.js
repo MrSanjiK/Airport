@@ -231,9 +231,6 @@ export function initStory(world, { places, nav, bus }) {
     else if (e.key === '+' || e.key === '=') zoomBy(0.72);
     else if (e.key === '-') zoomBy(1 / 0.72);
   });
-  // over the model the pointer parallax rests, so the view holds still under the hand
-  stage.addEventListener('pointerenter', () => { world.state.parallax = 0; });
-  stage.addEventListener('pointerleave', () => { world.state.parallax = 1; });
   const callWrap = document.createElement('div');
   callWrap.className = 'callouts';
   frame.append(callWrap);

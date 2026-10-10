@@ -855,9 +855,11 @@ html.is-intro .holding { visibility: hidden; }
 .inquiry-copy h3 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
 .inquiry-copy p { color: var(--ink-2); font-size: 15px; }
 .form { padding: 30px 32px 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; }
-.field { display: grid; gap: 7px; }
+.field { display: grid; gap: 7px; align-content: start; }
 .field--wide { grid-column: 1 / -1; }
-.field label { font: 700 12px/1 var(--f-chart); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 8px; }
+.field label { font: 700 12px/1 var(--f-chart); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center; gap: 8px; height: 14px; }
+/* the optional note sits inside the label's own line, so every input in a row starts at the same height */
+.field label small { line-height: 1; }
 .field label small { font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: none; }
 .field input, .field textarea {
   width: 100%; border: 1px solid transparent; background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink);
@@ -1666,7 +1668,8 @@ html.is-about .rail, html.is-about .scroll-cue, html.is-about .legend { display:
 @media (max-width: 560px) { .ab-fmt { grid-template-columns: 1fr; } }
 
 /* FAQ under the calculator */
-.faq { margin-top: clamp(28px, 4vh, 48px); }
+/* the questions close their section with room to breathe: a clear gap before the request form's rule */
+.faq { margin-top: clamp(28px, 4vh, 48px); padding-bottom: clamp(56px, 9vh, 104px); }
 .faq-head { display: grid; justify-items: center; gap: 10px; text-align: center; }
 .faq-head h3 { font: 800 clamp(1.4rem, 2vw, 2rem)/1.1 var(--f-display); letter-spacing: -0.02em; color: var(--ink); }
 .faq-list { display: grid; gap: 8px; max-width: 860px; margin: 22px auto 0; }

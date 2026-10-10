@@ -162,7 +162,7 @@ export function createOffice({ worldAt, compile }) {
     get anchor() { return state.anchor; },
     update(dt, night) {
       const target = want && state.anchor ? 1 : 0;
-      state.k += (target - state.k) * Math.min(1, dt * 2.6);
+      state.k += (target - state.k) * Math.min(1, dt * 4.2);
       if (Math.abs(target - state.k) < 0.002) state.k = target;
       group.visible = state.k > 0.01;
       if (!group.visible) return;

@@ -219,10 +219,15 @@ export function createCityLayer({ scene, sample, terrain, upload = () => Promise
     get k() { return fade.k; },
     update(night, renderer, dt, dist = 10) {
       const want = this.active ? 1 : 0;
-      fade.k += (want - fade.k) * Math.min(1, dt * 3.2);
+      // in quickly, out quicker: a model left behind must not ride along into the next chapter's flight
+      fade.k += (want - fade.k) * Math.min(1, dt * (want ? 3.2 : 5.5));
       if (fade.k < 0.002 && !want) fade.k = 0;
       terrain.uniforms.uFlatK.value = fade.k;
-      groups.forEach((g) => (g.group.visible = !!active && active.parts.includes(g) && fade.k > 0.01));
+      // a town's model is drawn only from a town's distance: from a regional height its thousands of buildings and
+      // its street network (lines a fixed number of pixels wide) would be painted into a few pixels, over and over,
+      // which on a modest graphics chip stalled the flight out to the Regions chapter
+      const near = dist < 150;
+      groups.forEach((g) => (g.group.visible = near && !!active && active.parts.includes(g) && fade.k > 0.01));
       if (!active) return;
       const res = renderer.getDrawingBufferSize(new THREE.Vector2());
       const dpr = renderer.getPixelRatio();
@@ -236,7 +241,8 @@ export function createCityLayer({ scene, sample, terrain, upload = () => Promise
         m.resolution.copy(res);
         m.linewidth = m.userData.w * dpr;
         // seen from a regional height a town's streets would knot into a blot: they thin out with distance
-        m.opacity = m.userData.o * k * Math.min(1, Math.max(0.12, (70 - dist) / 45));
+        m.opacity = m.userData.o * k * Math.min(1, Math.max(0, (90 - dist) / 50));
+        m.visible = m.opacity > 0.004;
       });
       // streets in asphalt grey by day (the chart's ink only for the main roads' edge), lit ink at night
       roadMats.forEach((m, i) => m.color.setRGB(...[0, 1, 2].map((c) => { const d = i === 0 ? [0.36, 0.4, 0.47][c] : [0.52, 0.55, 0.6][c]; const n = [0.62, 0.74, 0.88][c]; return d + (n - d) * night; })));
