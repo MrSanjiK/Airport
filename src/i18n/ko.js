@@ -511,7 +511,8 @@ export default {
   },
   "partners": {
     "k": "파트너",
-    "title": "우리를 신뢰하는 브랜드"
+    "title": "파트너사",
+    "count": "{n}개 브랜드"
   },
   "faq": {
     "k": "질문과 답변",

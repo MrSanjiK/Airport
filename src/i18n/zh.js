@@ -511,7 +511,8 @@ export default {
   },
   "partners": {
     "k": "合作伙伴",
-    "title": "信赖我们的品牌"
+    "title": "我们的合作伙伴",
+    "count": "{n} 个品牌"
   },
   "faq": {
     "k": "问答",

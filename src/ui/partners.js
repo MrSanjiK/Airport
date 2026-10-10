@@ -17,7 +17,7 @@ export function partnersHTML() {
   const a = PARTNERS.filter((_, i) => i % 2 === 0);
   const b = PARTNERS.filter((_, i) => i % 2 === 1);
   return `<div class="pm">
-    <div class="pm-head"><p class="pm-k"><i></i>${t('partners.k')}</p><h3>${t('partners.title')}</h3></div>
+    <div class="pm-head"><p class="pm-k"><i></i>${t('partners.count').replace('{n}', PARTNERS.length)}</p><h3>${t('partners.title')}</h3></div>
     <div class="pm-rows" role="list" aria-label="${t('partners.title')}">${row(a, false)}${row(b, true)}</div>
   </div>`;
 }
@@ -27,7 +27,7 @@ export function partnersHTML() {
 export function mountPartnerStrip(el) {
   if (!el) return;
   const list = [...PARTNERS.filter((_, i) => i % 2 === 0), ...PARTNERS.filter((_, i) => i % 2 === 1)];
-  el.innerHTML = `<a class="ps-k" href="#partners"><i aria-hidden="true"></i><span class="ps-title">${t('partners.title')}</span><span class="ps-short">${t('partners.k')}</span><b class="tnum">${PARTNERS.length}</b></a>
+  el.innerHTML = `<a class="ps-k" href="#partners"><i aria-hidden="true"></i><span class="ps-title">${t('partners.title')}</span><b class="tnum">${PARTNERS.length}</b></a>
     <div class="pm-rows ps-rows" role="list" aria-label="${t('partners.title')}">${row(list, false)}</div>`;
   const rows = el.querySelector('.pm-rows');
   const night = document.documentElement.dataset.theme === 'night';

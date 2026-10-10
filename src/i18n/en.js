@@ -511,7 +511,8 @@ export default {
   },
   "partners": {
     "k": "Partners",
-    "title": "Brands that trust us"
+    "title": "Our partners",
+    "count": "{n} brands"
   },
   "faq": {
     "k": "Questions",

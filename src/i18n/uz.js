@@ -519,7 +519,8 @@ export default {
   },
   "partners": {
     "k": "Hamkorlar",
-    "title": "Bizga ishonadigan brendlar"
+    "title": "Hamkorlarimiz",
+    "count": "{n} brend"
   },
   "faq": {
     "k": "Savol-javob",

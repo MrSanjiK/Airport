@@ -511,7 +511,8 @@ export default {
   },
   "partners": {
     "k": "İş ortakları",
-    "title": "Bize güvenen markalar"
+    "title": "İş ortaklarımız",
+    "count": "{n} marka"
   },
   "faq": {
     "k": "Sorular",
