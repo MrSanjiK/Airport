@@ -318,7 +318,7 @@ export function initStory(world, { places, nav, bus }) {
     const fr = frame.getBoundingClientRect();
     if (fr.width) POSES.airport.shift = Math.abs(fr.left + fr.width / 2 - innerWidth / 2) / innerWidth;
     // a phone's narrow hero looks a little further east, so the airfield's model (east of the terminal) stays whole
-    POSES.hero.t = innerWidth < 700 ? [HERO_T[0] + 0.62, HERO_T[1] + 0.05] : HERO_T;
+    POSES.hero.t = innerWidth < 700 ? [HERO_T[0] + 0.52, HERO_T[1] + 0.8] : HERO_T;
     // the hero terminal stands clear below the holding chart (its tower tip sits a quarter down the screen unshifted)
     POSES.hero.shiftY = holding.offsetParent ? -clamp((holding.offsetTop + holding.offsetHeight) / innerHeight + 0.035 - 0.25, 0, 0.2) : 0;
     keys = CHAPTERS.map((id) => {

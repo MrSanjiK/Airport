@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "Controllo sicurezza",
+      "reg1": "Check-in 1",
+      "reg2": "Check-in 2",
+      "corridor": "Corridoio",
+      "duty": "Duty Free",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "Galleria B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "Lightbox retroilluminati — in 10 zone",
     "lead": "Media Gate gestisce lightbox retroilluminati in aeroporto: il marchio si vede giorno e notte. Dal passaporto dei lightbox scegli quelli adatti al tuo obiettivo.",
     "count": "lightbox",

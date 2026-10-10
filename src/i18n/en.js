@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "Security filter",
+      "reg1": "Check-in 1",
+      "reg2": "Check-in 2",
+      "corridor": "Corridor",
+      "duty": "Duty Free",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "Gallery B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "Backlit lightboxes — in 10 zones",
     "lead": "Media Gate runs bright, backlit lightboxes at the airport: your brand is seen day and night. From the lightbox passport you choose the units that fit your goal.",
     "count": "lightboxes",

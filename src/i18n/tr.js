@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "Güvenlik kontrolü",
+      "reg1": "Check-in 1",
+      "reg2": "Check-in 2",
+      "corridor": "Koridor",
+      "duty": "Duty Free",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "Galeri B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "Işıklı lightbox'lar — 10 bölgede",
     "lead": "Media Gate, havalimanında içten aydınlatmalı parlak lightbox'lar işletir: markanız gece gündüz görünür. Lightbox pasaportundan hedefinize uygun ünitelerini seçersiniz.",
     "count": "lightbox",

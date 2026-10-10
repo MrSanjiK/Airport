@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "安检",
+      "reg1": "值机 1",
+      "reg2": "值机 2",
+      "corridor": "走廊",
+      "duty": "免税店",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "长廊 B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "背光灯箱 — 覆盖 10 个区域",
     "lead": "Media Gate 在机场运营明亮的背光灯箱：品牌日夜可见。您可以根据灯箱档案选择适合目标的位置。",
     "count": "个灯箱",

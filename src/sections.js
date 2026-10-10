@@ -177,7 +177,7 @@ export function initSections({ bus, places }) {
         ['✓', t('mediagate.mount')],
       ], 2)}
       <div class="dir-zones"><h3>${esc(t('mediagate.zonesTitle'))}</h3>
-        <ul>${LIGHTBOX.zones.map((z) => `<li>${esc(z)}</li>`).join('')}</ul></div>
+        <ul>${LIGHTBOX.zones.map((z) => `<li>${esc(t(`mediagate.lz.${z}`))}</li>`).join('')}</ul></div>
       <div class="gallery gallery--6" data-gallery>${LIGHTBOX.imgs.map((n) => `<figure>${img(n, 'Media Gate')}</figure>`).join('')}</div>
       <p class="fits">${esc(t('mediagate.design'))}</p>
       ${profile(LIGHTBOX.price)}

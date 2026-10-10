@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "Filtre de sûreté",
+      "reg1": "Enregistrement 1",
+      "reg2": "Enregistrement 2",
+      "corridor": "Couloir",
+      "duty": "Duty Free",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "Galerie B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "Caissons rétroéclairés — dans 10 zones",
     "lead": "Media Gate exploite des caissons lumineux rétroéclairés à l'aéroport : votre marque se voit jour et nuit. Sur le passeport des caissons, vous choisissez ceux qui servent votre objectif.",
     "count": "caissons",

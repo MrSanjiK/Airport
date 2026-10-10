@@ -45,7 +45,8 @@ export const AIRPORT_TV = {
 
 export const LIGHTBOX = {
   count: 10,
-  zones: ['Filter', 'Registration 1', 'Registration 2', 'Corridor', 'Duty Free', 'B8–B10', 'Cofelito B1–B2', 'Gallery B3–B4', 'Safia B5–B7', 'Milliy B13–B14'],
+  // the zones' names are translated (i18n mediagate.lz)
+  zones: ['filter', 'reg1', 'reg2', 'corridor', 'duty', 'b8', 'cofelito', 'gallery', 'safia', 'milliy'],
   areaM2: 35,
   price: [300, 250, 200],
   imgs: ['lb-bmw', 'lb-gallery', 'lb-pillars', 'lb-stairs', 'lb-hall'],

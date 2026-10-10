@@ -433,6 +433,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "Filtr",
+      "reg1": "Ro'yxatdan o'tish 1",
+      "reg2": "Ro'yxatdan o'tish 2",
+      "corridor": "Koridor",
+      "duty": "Duty Free",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "Galereya B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "Ichki yoritgichli lightbox'lar — 10 ta zonada",
     "lead": "Media Gate — aeroportdagi yorqin, ichki yoritgichli lightbox'lar: brend kun-u tun ko'rinib turadi. Lightbox pasportidan maqsadingizga mos konstruksiyalarni tanlaysiz.",
     "count": "lightbox",

@@ -425,6 +425,18 @@ export default {
     }
   },
   "mediagate": {
+    "lz": {
+      "filter": "보안 검색",
+      "reg1": "체크인 1",
+      "reg2": "체크인 2",
+      "corridor": "복도",
+      "duty": "면세점",
+      "b8": "B8–B10",
+      "cofelito": "Cofelito B1–B2",
+      "gallery": "갤러리 B3–B4",
+      "safia": "Safia B5–B7",
+      "milliy": "Milliy B13–B14"
+    },
     "title": "백라이트 라이트박스 — 10개 구역",
     "lead": "Media Gate는 공항에서 밝은 백라이트 라이트박스를 운영합니다: 브랜드가 밤낮으로 보입니다. 라이트박스 목록에서 목표에 맞는 위치를 고르세요.",
     "count": "개 라이트박스",
