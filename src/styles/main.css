@@ -1756,4 +1756,7 @@ html.at-map:not(.is-explore) .explore-fab { transform: translate3d(0, -78px, 0);
   .apt-frame { --foot: 196px; }
   .callout { width: 196px; padding: 8px 14px 8px 8px; }
   .callout span { font-size: 12.5px; }
+  /* the About page's column grows with the measure and starts where the nav does */
+  .ab-col { width: min(820px, 42vw); margin-inline-start: calc((100vw - var(--wrap)) / 2); }
+  .ab-tl li { width: 320px; }
 }
