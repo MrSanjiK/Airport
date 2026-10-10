@@ -33,6 +33,7 @@ export function createOffice({ worldAt, compile }) {
   group.visible = false;
   const disc = { value: new THREE.Vector4(0, 0, DISC_R[0], DISC_R[1]) };
   const shadeDisc = { value: new THREE.Vector4(0, 0, DISC_R[0], DISC_R[1]) };
+  const discS = { value: new THREE.Vector2(1, 1) };
   const origin = { value: new THREE.Vector3() };
   const grounds = [];
   const mats = [];
@@ -44,7 +45,7 @@ export function createOffice({ worldAt, compile }) {
     const [day, night] = C[key];
     const m = new THREE.ShaderMaterial({
       vertexShader: SHADERS.groundVert, fragmentShader: SHADERS.groundFrag,
-      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale }, uDisc: disc },
+      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale }, uDisc: disc, uDiscS: discS },
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
     });
     m.userData = { day: new THREE.Color(...day), night: new THREE.Color(...night), base: opacity, order };
@@ -54,7 +55,7 @@ export function createOffice({ worldAt, compile }) {
   const shade = (night) => {
     const m = new THREE.ShaderMaterial({
       vertexShader: SHADERS.shadeVert, fragmentShader: SHADERS.shadeFrag,
-      uniforms: { uDay: { value: new THREE.Color(1, 1, 1) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: 1 }, uDisc: shadeDisc, uOrigin: origin },
+      uniforms: { uDay: { value: new THREE.Color(1, 1, 1) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: 1 }, uDisc: shadeDisc, uDiscS: discS, uOrigin: origin },
     });
     mats.push(m);
     return m;
@@ -103,7 +104,7 @@ export function createOffice({ worldAt, compile }) {
 
     const bm = new THREE.ShaderMaterial({
       vertexShader: SHADERS.bldVert, fragmentShader: SHADERS.bldFrag,
-      uniforms: { uNight: { value: 0 }, uStorey: { value: mh(3.6) }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc },
+      uniforms: { uNight: { value: 0 }, uStorey: { value: mh(3.6) }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc, uDiscS: discS },
     });
     mats.push(bm);
     const B = d.bld;

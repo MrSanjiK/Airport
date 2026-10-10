@@ -33,11 +33,13 @@ const bldVert = /* glsl */ `${LOGV}
     #include <logdepthbuf_vertex>
   }`;
 // the diorama: everything beyond r0 dissolves (buildings, trees) or fades (ground) by r1, so the model melts into the chart
+// uDiscS stretches the round into an ellipse (the hero's model follows the long, narrow airfield)
 const DISC = /* glsl */ `
-  uniform vec4 uDisc;
-  float discFade(vec2 p){ return uDisc.w > 0.0 ? smoothstep(uDisc.z, uDisc.w, length(p - uDisc.xy)) : 0.0; }
+  uniform vec4 uDisc; uniform vec2 uDiscS;
+  float discD(vec2 p){ return length((p - uDisc.xy) * uDiscS); }
+  float discFade(vec2 p){ return uDisc.w > 0.0 ? smoothstep(uDisc.z, uDisc.w, discD(p)) : 0.0; }
   // whole buildings and trees stop at the cut, measured from their own centre: a clean edge, never a stipple
-  bool discCut(vec2 c){ return uDisc.w > 0.0 && length(c - uDisc.xy) > mix(uDisc.z, uDisc.w, 0.55); }`;
+  bool discCut(vec2 c){ return uDisc.w > 0.0 && discD(c) > mix(uDisc.z, uDisc.w, 0.55); }`;
 const bldFrag = /* glsl */ `
   #include <logdepthbuf_pars_fragment>
   uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;${DISC}
@@ -215,6 +217,7 @@ export function createAirport(model, hubWorld) {
   const disc = { value: new THREE.Vector4(0, 0, 0, 0) };
   // the same disc in world units, for the shaders that measure in world space
   const shadeDisc = { value: new THREE.Vector4(0, 0, 0, 0) };
+  const discS = { value: new THREE.Vector2(1, 1) };
   // trees, cars and aircraft are instanced: their fade works in world space, measured from the group's origin
   const origin = { value: new THREE.Vector3() };
   const scaleNow = new THREE.Vector3();
@@ -227,7 +230,7 @@ export function createAirport(model, hubWorld) {
     const [day, night] = C[key];
     const m = new THREE.ShaderMaterial({
       vertexShader: groundVert, fragmentShader: groundFrag,
-      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale }, uDisc: disc },
+      uniforms: { uColor: { value: new THREE.Color(...day) }, uOpacity: { value: opacity }, uGrain: { value: grain }, uScale: { value: scale }, uDisc: disc, uDiscS: discS },
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
     });
     m.userData = { day: new THREE.Color(...day), night: new THREE.Color(...night), base: opacity, order };
@@ -238,7 +241,7 @@ export function createAirport(model, hubWorld) {
   const shade = (day, night, { opacity = 1 } = {}) => {
     const m = new THREE.ShaderMaterial({
       vertexShader: shadeVert, fragmentShader: shadeFrag,
-      uniforms: { uDay: { value: new THREE.Color(...day) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: opacity }, uDisc: shadeDisc, uOrigin: origin },
+      uniforms: { uDay: { value: new THREE.Color(...day) }, uNightC: { value: new THREE.Color(...night) }, uNight: { value: 0 }, uLight: { value: LIGHT }, uOpacity: { value: opacity }, uDisc: shadeDisc, uDiscS: discS, uOrigin: origin },
       transparent: opacity < 1,
     });
     mats.push(m);
@@ -248,7 +251,7 @@ export function createAirport(model, hubWorld) {
   const bldMat = () => {
     const m = new THREE.ShaderMaterial({
       vertexShader: bldVert, fragmentShader: bldFrag,
-      uniforms: { uNight: { value: 0 }, uStorey: { value: STOREY }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc },
+      uniforms: { uNight: { value: 0 }, uStorey: { value: STOREY }, uOpacity: { value: 1 }, uLight: { value: LIGHT }, uDisc: disc, uDiscS: discS },
     });
     bmats.push(m);
     return m;
@@ -301,14 +304,18 @@ export function createAirport(model, hubWorld) {
   const flat = new THREE.Group();
   group.add(flat);
   const addFlat = (geo, mat, grp = flat) => { if (!geo) return null; const m = new THREE.Mesh(geo, mat); m.renderOrder = mat.userData.order; grp.add(m); return m; };
-  // the plate's own land: the city around the field, shown only inside the airport plate
+  // the middle of the airfield (between both runways' ends), where the hero's model of the whole field is centred
+  const fieldC = (() => {
+    const ends = model.runways.flatMap((rw) => [L(rw.g[0]), L(rw.g[rw.g.length - 1])]);
+    return [ends.reduce((a, p) => a + p[0], 0) / ends.length, ends.reduce((a, p) => a + p[1], 0) / ends.length];
+  })();
+  // the land round the field: the city on the plate, the plinth of the hero's model
   const plateLand = new THREE.Group();
   group.add(plateLand);
   {
-    const r = 1.6;
-    const g = new THREE.PlaneGeometry(r * 2, r * 2);
+    const g = new THREE.PlaneGeometry(9, 9);
     g.rotateX(-Math.PI / 2);
-    g.translate(0, 0.0002, 0);
+    g.translate(fieldC[0], 0.0002, fieldC[1]);
     addFlat(g, ground('land', { grain: 0.1, order: 0 }), plateLand);
   }
   const Y = (i) => 0.0003 + i * 0.00008;
@@ -354,15 +361,18 @@ export function createAirport(model, hubWorld) {
     });
     rwLabels.push({ ref: rw.ref, a: new THREE.Vector3(a[0], 0.05, a[1]), b: new THREE.Vector3(b[0], 0.05, b[1]) });
   });
+  // paint is a metre wide: it belongs to the close views, never to the hero's model (it would only twinkle there)
+  const marks = new THREE.Group();
+  flat.add(marks);
   {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(white, 3));
-    addFlat(g, ground('white', { grain: 0, order: 7 }));
+    addFlat(g, ground('white', { grain: 0, order: 7 }), marks);
   }
   // taxiway centrelines and stand lead-in lines in apron yellow
   const yellow = ground('yellow', { grain: 0, opacity: 0.95, order: 7 });
-  addFlat(ribbonGeo(model.taxiways.map(({ g }) => ({ w: 0.9, g })), Y(7)), yellow);
-  addFlat(ribbonGeo(model.stands.map((g) => ({ w: 0.6, g })), Y(7)), yellow);
+  addFlat(ribbonGeo(model.taxiways.map(({ g }) => ({ w: 0.9, g })), Y(7)), yellow, marks);
+  addFlat(ribbonGeo(model.stands.map((g) => ({ w: 0.6, g })), Y(7)), yellow, marks);
 
   /* ── buildings ── */
   const pick = (arr, seed) => arr[Math.floor(seed * arr.length) % arr.length];
@@ -705,30 +715,48 @@ export function createAirport(model, hubWorld) {
     setSymbol(mode.hero, mode.plate, mode.solo);
   };
 
-  // the diorama pass (Fly TV and Media Gate, and the airport chapter on a phone): the whole model over the chart,
-  // the ground fading out round the terminal complex
+  // the diorama pass, drawn over the chart with its ground fading out at the edge:
+  // - the hero: the whole airfield as a model on the map (both runways, the aprons and their aircraft, every
+  //   terminal and hangar), as the field looks from the air, centred on the field
+  // - Fly TV and Media Gate (and the airport chapter on a phone): the terminal complex, close up
   const DISC_R = [0.62, 1.15];
-  const discK = () => (mode.hero < 0.5 ? Math.min(1, mode.solo * 1.6) : 0);
+  // the hero's ellipse: about 2.3 km either way along the runways, a kilometre across them
+  const HERO_R = [2.3, 2.75];
+  const HERO_S = 2.35;
+  const discK = () => (mode.hero > 0.02 ? Math.min(1, mode.hero * 4) : mode.hero < 0.5 ? Math.min(1, mode.solo * 1.6) : 0);
   const discOn = (k) => {
+    const hero = mode.hero > 0.02;
     flat.visible = true;
+    marks.visible = !hero;
     fleet.visible = true;
     groups.airside.visible = true;
-    plateLand.visible = true;
-    context.visible = true;
+    // the hero's field stands straight on the chart (its own paving and grass fading out), no plinth under it
+    plateLand.visible = !hero;
+    // the town round the field (its trees, parked cars, flags) is metre-scale: close views only
+    context.visible = !hero;
     groups.gates.visible = true;
     groups.far.visible = true;
     groups.t1.visible = true;
-    groups.t3.visible = false;
+    groups.t3.visible = hero;
     flatMats.forEach((m) => (m.uniforms.uOpacity.value = m.userData.base * k));
-    disc.value.set(0, 0, DISC_R[0], DISC_R[1]);
+    // diving from the hero onto the plate the field gathers in onto the terminal complex: the disc shrinks from the
+    // whole airfield to the plate's own round, so the outer buildings leave one by one instead of all at once
+    const t = hero ? Math.min(1, mode.hero * 2) : 0;
+    const e = t * t * (3 - 2 * t);
+    const cx = fieldC[0] * e, cz = fieldC[1] * e;
+    const r0 = DISC_R[0] + (HERO_R[0] - DISC_R[0]) * e;
+    const r1 = DISC_R[1] + (HERO_R[1] - DISC_R[1]) * e;
+    discS.value.set(1, 1 + (HERO_S - 1) * e);
+    disc.value.set(cx, cz, r0, r1);
     group.updateMatrixWorld();
     group.getWorldScale(scaleNow);
     origin.value.setFromMatrixPosition(group.matrixWorld);
-    shadeDisc.value.set(0, 0, DISC_R[0] * scaleNow.x, DISC_R[1] * scaleNow.x);
+    shadeDisc.value.set(cx * scaleNow.x, cz * scaleNow.x, r0 * scaleNow.x, r1 * scaleNow.x);
   };
   const discOff = () => {
     disc.value.set(0, 0, 0, 0);
     shadeDisc.value.set(0, 0, 0, 0);
+    marks.visible = true;
     plateOff();
   };
 
@@ -739,7 +767,7 @@ export function createAirport(model, hubWorld) {
   };
 
   const parts = [flat, fleet, plateLand, ...Object.values(groups)];
-  return { group, origin: model.o, parts, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
+  return { group, origin: model.o, fieldC, parts, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
 }
 
 // An A320-class airliner in km, nose at the origin, fuselage running down +z.

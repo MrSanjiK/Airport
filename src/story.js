@@ -53,8 +53,12 @@ export function initStory(world, { places, nav, bus }) {
   // TAS
   addLabel({
     cls: 'wp--tas',
-    // in the hero the label hangs below the terminal symbol rather than over it
-    world: () => tmpTas.copy(world.hubWorld).add(tasDrop.set(0, 0.1, 0.075 * world.airport.group.scale.x * heroW)),
+    // in the hero the label hangs below the model of the field, under its middle, rather than over the terminal
+    world: () => {
+      const sc = world.airport.group.scale.x * heroW;
+      const [fx, fz] = world.airport.fieldC;
+      return tmpTas.copy(world.hubWorld).add(tasDrop.set(fx * sc, 0.1, (fz + 1.15) * sc));
+    },
     html: () => `${AERO}<span class="wp-box"><span class="wp-name">TAS</span><span class="wp-sub">${t('map.tas')}</span></span>`,
     weights: { hero: 1, korzinka: 0.7, horeca: 0.6, regions: 0.8, plan: 0.8, explore: 1, about: 0.8 },
     onClick: () => fly({ type: 'tas' }),
@@ -126,16 +130,19 @@ export function initStory(world, { places, nav, bus }) {
   const ag = world.airport.group;
   const local = (v) => () => ag.localToWorld(tmpV.copy(v));
   const pickZone = (id) => { bus.dispatchEvent(new CustomEvent('zone', { detail: id })); bus.dispatchEvent(new CustomEvent('zonepick', { detail: id })); };
-  const zoneLabels = LED_ZONES.map((z, i) =>
-    addLabel({
+  const zoneLabels = LED_ZONES.map((z, i) => {
+    const l = addLabel({
       cls: 'wp--zone',
       world: local(world.airport.zoneLocal(z.terminal, z.spot, z.outdoor)),
       html: () => `<span class="wp-dot">${i + 1}</span>`,
       weights: { airport: 1 },
       onClick: () => pickZone(z.id),
       key: `zone-${z.id}`,
-    }),
-  );
+    });
+    // the numbers come up once the plate holds the screen, not in a knot over the terminal during the dive
+    l.when = () => weights.airport > 0.72;
+    return l;
+  });
   // The approach plate around the 3D airport (comp-3): title band, callouts on leaders, zone photo, price profile.
   const frame = document.createElement('div');
   frame.className = 'apt-frame';
@@ -222,12 +229,15 @@ export function initStory(world, { places, nav, bus }) {
   };
 
   // Scroll keyframes
+  const HERO_T = POSES.hero.t.slice();
   let keys = [];
   const measure = () => {
     const vh = innerHeight;
     // centre the terminal in the airport plate's field, wherever the frame lands at this width
     const fr = frame.getBoundingClientRect();
     if (fr.width) POSES.airport.shift = Math.abs(fr.left + fr.width / 2 - innerWidth / 2) / innerWidth;
+    // a phone's narrow hero looks a little further east, so the airfield's model (east of the terminal) stays whole
+    POSES.hero.t = innerWidth < 700 ? [HERO_T[0] + 0.62, HERO_T[1] + 0.05] : HERO_T;
     // the hero terminal stands clear below the holding chart (its tower tip sits a quarter down the screen unshifted)
     POSES.hero.shiftY = holding.offsetParent ? -clamp((holding.offsetTop + holding.offsetHeight) / innerHeight + 0.035 - 0.25, 0, 0.2) : 0;
     keys = CHAPTERS.map((id) => {
@@ -452,13 +462,16 @@ export function initStory(world, { places, nav, bus }) {
     const nearK = 1 - clamp((dist - 70) / 130);
     const farK = clamp((dist - 60) / 110);
 
-    // the hero symbol is sized for the screen: a landmark on desktop, never a wall over the copy on a phone
-    const heroS = 329 * Math.min(1, Math.max(0.42, (Math.min(innerWidth, innerHeight * 1.6) - 300) / 1100));
+    // the hero shows the whole airfield as a model on the map, sized for the screen: a landmark on desktop, never a
+    // wall over the copy on a phone; at ~40x it hands over to the airport plate's 44x without a change of scale
+    const heroS = 43 * Math.min(1, Math.max(0.42, (Math.min(innerWidth, innerHeight * 1.6) - 300) / 1100));
     // the terminal keeps its plate size through all three airport directions
     const wAir = w.airport + w.flytv + w.mediagate;
     const as = 1 + heroS * w.hero + (PLATE.scale - 1) * wAir;
     // the model keeps the same 4x height exaggeration everywhere, as it reads on the About page
-    world.airport.group.scale.set(as, as, as);
+    // at the hero's scale the field's buildings would lie flat on it: they stand taller there, so the terminals and
+    // the control tower read as a model; the extra height eases out as the camera dives onto the plate
+    world.airport.group.scale.set(as, as * (1 + 1.6 * w.hero), as);
     // the terminal stands on the levelled Tashkent plate when that model is up
     world.airport.group.position.y = world.city.flatY(world.airport.group.position.x, world.airport.group.position.z, world.hubWorld.y);
     // a phone has no plate frame: there the airport chapter shows the diorama too
