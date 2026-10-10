@@ -1,7 +1,7 @@
 export default {
   "meta": {
     "title": "Media Port — aeroportdan har bir viloyatgacha ekranlar",
-    "description": "Toshkent xalqaro aeroporti, Korzinka supermarketlari, 75+ restoran va 11 hududdagi indoor ekranlarda reklama. Real narxlar va media-plan kalkulyatori."
+    "description": "Toshkent xalqaro aeroporti, Korzinka supermarketlari, 75+ ta restoran va 11 ta hududdagi indoor ekranlarda reklama. Real narxlar va media-plan kalkulyatori."
   },
   "langName": "O'zbekcha",
   "nav": {
@@ -25,31 +25,31 @@ export default {
   "mega": {
     "airport": {
       "title": "Toshkent xalqaro aeroporti",
-      "a": "LED ekranlar · 10 zona",
-      "b": "TV tarmog'i · 200 monitor",
-      "c": "Lightbox · 10 zona",
-      "stat": "18 000 000 tashrif / yil"
+      "a": "LED ekranlar · 10 ta zona",
+      "b": "TV tarmog'i · 200 ta monitor",
+      "c": "Lightbox · 10 ta zona",
+      "stat": "18 000 000 ta tashrif / yil"
     },
     "korzinka": {
       "title": "Korzinka supermarketlari",
       "a": "Kassa oldidagi monitorlar",
       "b": "Zallardagi audio reklama",
-      "c": "300+ obyekt",
-      "stat": "900 000 chek / kun"
+      "c": "300+ ta obyekt",
+      "stat": "900 000 ta chek / kun"
     },
     "horeca": {
       "title": "Restoran va kafelar",
-      "a": "75+ joy Toshkentda",
-      "b": "1000+ monitor va kolonkalar",
+      "a": "75+ ta joy Toshkentda",
+      "b": "1000+ ta monitor va kolonkalar",
       "c": "50–60 daqiqa mehmon",
-      "stat": "250 000 tashrif"
+      "stat": "250 000 ta tashrif"
     },
     "regions": {
-      "title": "11 hudud",
+      "title": "11 ta hudud",
       "a": "Farg'ona vodiysi",
       "b": "Samarqand, Buxoro, Qarshi",
       "c": "Jizzax, Toshkent viloyati",
-      "stat": "300 000 tashrif / kun"
+      "stat": "300 000 ta tashrif / kun"
     },
     "plan": {
       "title": "Media-plan kalkulyatori",
@@ -61,21 +61,21 @@ export default {
     "open": "Bo'limga o'tish",
     "mediaport": {
       "title": "Aeroportdagi LED ekranlar",
-      "a": "10 zona · 40 ekran",
+      "a": "10 ta zona · 40 ta ekran",
       "b": "P2 · 15 soniya",
-      "c": "150 ko'rsatuv / kun",
-      "stat": "18 000 000 tashrif / yil"
+      "c": "150 ta ko'rsatuv / kun",
+      "stat": "18 000 000 ta tashrif / yil"
     },
     "flytv": {
       "title": "Aeroportdagi TV tarmog'i",
-      "a": "200 monitor",
+      "a": "200 ta monitor",
       "b": "VIP · CIP · uchib ketish · uchib kelish",
-      "c": "96 ko'rsatuv / kun",
+      "c": "96 ta ko'rsatuv / kun",
       "stat": "24/7"
     },
     "mediagate": {
       "title": "Aeroportdagi lightbox'lar",
-      "a": "10 lightbox · 10 zona",
+      "a": "10 ta lightbox · 10 ta zona",
       "b": "35 m² yuza",
       "c": "Montaj va demontaj bizdan",
       "stat": "VIP va CIP — so'rov bo'yicha"
@@ -87,7 +87,7 @@ export default {
   },
   "hero": {
     "title": "Aeroportdan har bir viloyatgacha — sizning ekraningiz.",
-    "sub": "Media Port, Fly TV, Media Gate va TV Line — aeroportdan har bir viloyatgacha 6 yo'nalish, bitta xarid.",
+    "sub": "Media Port, Fly TV, Media Gate va TV Line — aeroportdan har bir viloyatgacha 6 ta yo'nalish, bitta xarid.",
     "cta": "Media-plan tuzish",
     "link": "Narxlarni ko'rish",
     "scroll": "Marshrut bo'ylab pastga",
@@ -96,19 +96,19 @@ export default {
     "perMonth": "/ oy",
     "perYear": "/ yil",
     "always": "har doim",
-    "cardAirport": "40 LED ekran",
-    "cardAirportSub": "150 ko'rsatuv / kun",
-    "cardKorzinka": "300+ obyekt",
-    "cardKorzinkaSub": "900 000 chek / kun",
-    "cardHoreca": "75+ restoran",
-    "cardHorecaSub": "1000+ monitor"
+    "cardAirport": "40 ta LED ekran",
+    "cardAirportSub": "150 ta ko'rsatuv / kun",
+    "cardKorzinka": "300+ ta obyekt",
+    "cardKorzinkaSub": "900 000 ta chek / kun",
+    "cardHoreca": "75+ ta restoran",
+    "cardHorecaSub": "1000+ ta monitor"
   },
   "map": {
     "north": "Shimol tepaga",
     "explore": "Xaritani o'rganish",
     "back": "Hikoyaga qaytish",
     "hint": "Sudrang — aylantirish · G'ildirak yoki ikki barmoq — yaqinlashtirish · Shift + sudrang — siljitish · Nuqtani bosing — ma'lumot",
-    "tasSub": "40 LED · 200 TV-monitor · 10 lightbox",
+    "tasSub": "40 ta LED · 200 ta TV-monitor · 10 ta lightbox",
     "flyHint": "Bosing — yaqinlashish",
     "korzinkaSub": "Kassa monitorlari va zal audiosi",
     "horecaTip": "HoReCa tarmog'i · monitor va kolonkalar",
@@ -169,8 +169,8 @@ export default {
     "m2": "m²"
   },
   "airport": {
-    "headline": "Toshkent aeroporti. 18 000 000 tashrif. Endi — butun O'zbekiston.",
-    "headSub": "Media Port — aeroportdagi 40 ta LED ekran: 10 zona, kuniga 150 ko'rsatuv, kecha-kunduz.",
+    "headline": "Toshkent aeroporti. 18 000 000 ta tashrif. Endi — butun O'zbekiston.",
+    "headSub": "Media Port — aeroportdagi 40 ta LED ekran: 10 ta zona, kuniga 150 ta ko'rsatuv, kecha-kunduz.",
     "title": "Toshkent xalqaro aeroporti",
     "lead": "Islom Karimov nomidagi Toshkent xalqaro aeroporti — Markaziy Osiyodagi eng yirik aeroport. Kuniga 100 dan ortiq reys, alohida uchib ketish va uchib kelish zallari, VIP va CIP zallari.",
     "code": "IATA: TAS · ICAO: UZTT",
@@ -196,7 +196,7 @@ export default {
     "tabLed": "LED ekranlar",
     "tabTv": "TV tarmog'i",
     "tabLb": "Lightbox",
-    "ledFacts": "40 LED ekran · P2 · 150 ko'rsatuv / kun · 15 soniya · 24/7",
+    "ledFacts": "40 ta LED ekran · P2 · 150 ta ko'rsatuv / kun · 15 soniya · 24/7",
     "plate": "TAS — Media Port zonalari",
     "hint": "Suring va aylantiring",
     "zoomIn": "Yaqinlashtirish",
@@ -214,23 +214,23 @@ export default {
       "dep1": "Uchib ketish zali 1",
       "dep2": "Uchib ketish zali 2",
       "dutyfree": "Duty Free",
-      "arr32": "Uchib kelish zali · 32 ekran",
+      "arr32": "Uchib kelish zali · 32 ta ekran",
       "cipdep": "CIP · uchib ketish",
       "ciparr": "CIP · uchib kelish",
       "forecourt": "Uchib ketish maydoni · tashqi pilonlar",
       "t3": "Terminal 3 · ichki reyslar",
       "waiting": "Kutib olish zali"
     },
-    "tvTitle": "200 monitor butun aeroport bo'ylab",
+    "tvTitle": "200 ta monitor butun aeroport bo'ylab",
     "tvText": "VIP, CIP, uchib ketish va uchib kelish zallarida 85, 75 va 65 dyuymli monitorlar. Har bir monitorda kuniga 96 marta, 15 soniyalik rolik.",
-    "lbTitle": "Lightbox — 10 zonada 10 ta konstruksiya",
+    "lbTitle": "Lightbox — 10 ta zonada 10 ta konstruksiya",
     "lbText": "Ichki yoritgichli statik konstruksiyalar uchib ketish zonalarida. Jami 35 m². Dizayn va bosma — mijozdan, montaj va demontaj — Media Port'dan.",
     "lbVip": "VIP va CIP zallaridagi lightbox — narx so'rov bo'yicha.",
     "lbZones": "Zonalar"
   },
   "korzinka": {
     "title": "Korzinka supermarketlari",
-    "lead": "O'zbekiston zamonaviy chakana savdosining yetakchisi: 2025-yil noyabr holatiga 250+ do'kon, 2026-yilda yana 250 ta — jami 500 dan ortiq.",
+    "lead": "O'zbekiston zamonaviy chakana savdosining yetakchisi: 2025-yil noyabr holatiga 250+ ta do'kon, 2026-yilda yana 250 ta — jami 500 dan ortiq.",
     "venues": "ekranli obyekt",
     "receipts": "chek / kun",
     "monitors": "monitor",
@@ -243,7 +243,7 @@ export default {
     "growth": "Kunlik tashrif",
     "growthNote": "2026 — kutilayotgan ko'rsatkich",
     "online": "Roliklar onlayn almashtiriladi — kampaniya tez ishga tushadi.",
-    "mapNote": "Xaritada OpenStreetMap'dagi 174 ta Korzinka manzili. Tarmoqda jami 250+ do'kon."
+    "mapNote": "Xaritada OpenStreetMap'dagi 174 ta Korzinka manzili. Tarmoqda jami 250+ ta do'kon."
   },
   "horeca": {
     "title": "Restoran va kafelar",
@@ -255,7 +255,7 @@ export default {
     "spot": "soniyalik rolik",
     "check": "so'm o'rtacha chek",
     "dwell": "daqiqa mehmon o'tiradi",
-    "since": "2010-yildan beri 1000+ reklama kampaniyasi",
+    "since": "2010-yildan beri 1000+ ta reklama kampaniyasi",
     "audience": "Mehmonlar — barcha yoshdagi, o'rta va o'rtadan yuqori daromadli odamlar.",
     "venuesTitle": "Tarmoqdagi joylar",
     "mapNote": "Xaritada OpenStreetMap'da topilgan tarmoq restoranlari. To'liq ro'yxat — quyida."
@@ -276,7 +276,7 @@ export default {
     "collapse": "Yig'ish",
     "storesPhoto": "Korzinka do'konlari",
     "citiesTitle": "Tarmoq shaharlari",
-    "title": "11 hudud",
+    "title": "11 ta hudud",
     "lead": "Farg'ona vodiysidan Buxorogacha supermarketlar, kafe va restoranlardagi monitorlar — iste'molchi qiziqishi yuqori bo'lgan shaharlarda.",
     "venues": "obyekt",
     "visitors": "tashrif / kun",
@@ -296,11 +296,11 @@ export default {
     "lead": "Yo'nalishlarni va muddatni tanlang — oylik va umumiy byudjet darhol hisoblanadi. Barcha narxlar oyiga, QQS hisobga olinmagan.",
     "groupAirport": "Aeroport · LED zonalar",
     "groupOther": "Tarmoqlar",
-    "tv": "200 monitor · butun aeroport",
-    "lightbox": "10 lightbox · 10 zona",
-    "korzinka": "300+ obyekt · kassa monitorlari va audio",
-    "horeca": "75+ restoran · Toshkent",
-    "regions": "11 hudud · 100+ obyekt",
+    "tv": "200 ta monitor · butun aeroport",
+    "lightbox": "10 ta lightbox · 10 ta zona",
+    "korzinka": "300+ ta obyekt · kassa monitorlari va audio",
+    "horeca": "75+ ta restoran · Toshkent",
+    "regions": "11 ta hudud · 100+ ta obyekt",
     "term": "Muddat",
     "monthly": "Oylik byudjet",
     "total": "Jami muddat uchun",
@@ -353,7 +353,7 @@ export default {
     "top": "Yuqoriga"
   },
   "mini": {
-    "aDay": "Har kuni terminallardan o'rtacha 50 000 kishi o'tadi: yo'lovchilar, kutib oluvchilar va kuzatuvchilar.",
+    "aDay": "Har kuni terminallardan o'rtacha 50 000 nafar kishi o'tadi: yo'lovchilar, kutib oluvchilar va kuzatuvchilar.",
     "aMonth": "Oyiga 1,5 million tashrif — bir oylik kampaniya shuncha auditoriyaga yetadi.",
     "aYear": "Yiliga 18 million tashrif. Bu faqat yo'lovchilar emas: terminalga kirgan barcha odamlar, kutib oluvchilar bilan birga.",
     "aArea": "Aerovokzal binolarining umumiy maydoni 105 ming m² dan ortiq; uchib ketish va uchib kelish zallari alohida.",
@@ -362,7 +362,7 @@ export default {
     "a247": "Aeroportdagi LED ekranlar va monitorlar kecha-kunduz ishlaydi — 24/7.",
     "aGender": "Auditoriyaning 68% erkaklar, 32% ayollar: biznes sayohatchilar va qaror qabul qiluvchilar ko'p.",
     "aCitizens": "80% O'zbekiston fuqarolari, 20% xorijliklar — mahalliy va xalqaro brendlar uchun bir xil maydon.",
-    "kVenues": "Ekranli 300 dan ortiq obyekt. 2025-yil noyabr holatiga tarmoqda 250+ do'kon, 2026-yilda 500 dan oshadi.",
+    "kVenues": "Ekranli 300 dan ortiq obyekt. 2025-yil noyabr holatiga tarmoqda 250+ ta do'kon, 2026-yilda 500 dan oshadi.",
     "kReceipts": "Kuniga 900 ming chek: har bir xaridor kassada ekran oldidan o'tadi.",
     "kMonitors": "3 000 dan ortiq monitor kassalar yonida — xaridor navbatda kutayotgan, diqqati jamlangan joyda.",
     "kPlays": "Rolik do'kon ishlagan butun vaqt davomida aylanadi; kontent onlayn yangilanadi.",
@@ -371,12 +371,12 @@ export default {
     "hVisitors": "Tarmoqdagi restoranlarga kuniga 250 ming tashrif.",
     "hVenues": "Toshkentdagi 75 dan ortiq milliy taomlar restoranlari va food court'lar; jonli musiqa bo'lmagan joylar tanlangan.",
     "hMonitors": "1 000 dan ortiq monitor va zal kolonkalari — reklama ovoz bilan eshitiladi.",
-    "hPlays": "Kuniga 25–30 ko'rsatuv, muassasa ish vaqti davomida.",
+    "hPlays": "Kuniga 25–30 ta ko'rsatuv, muassasa ish vaqti davomida.",
     "hCheck": "O'rtacha chek 150 ming so'mdan — o'rta va undan yuqori daromadli mehmonlar.",
     "hDwell": "Mehmon zalda 50–60 daqiqa o'tiradi: rolik bir necha marta ko'rinadi.",
-    "rVenues": "11 shaharda 100 dan ortiq obyekt: supermarketlar, kafe va restoranlar.",
+    "rVenues": "11 ta shaharda 100 dan ortiq obyekt: supermarketlar, kafe va restoranlar.",
     "rVisitors": "Tarmoqdagi obyektlarga kuniga 300 mingdan ortiq tashrif.",
-    "rPlays": "Har bir obyektda kuniga 25–30 ko'rsatuv.",
+    "rPlays": "Har bir obyektda kuniga 25–30 ta ko'rsatuv.",
     "rPerVenue": "Har bir obyektda 4 tadan 10 tagacha monitor.",
     "rNotice": "Odamlarning 70% gacha qismi indoor reklamaga e'tibor beradi.",
     "rSee": "Tashrif buyuruvchilarning 50–80% reklamangizni ko'radi.",
@@ -403,8 +403,8 @@ export default {
     "region": "Region"
   },
   "dir": {
-    "label": "6 yo'nalish",
-    "dock": "6 yo'nalish — bitta xarid",
+    "label": "6 ta yo'nalish",
+    "dock": "6 ta yo'nalish — bitta xarid",
     "site": "Rasmiy sayt",
     "holding": "Orient Advertising xoldingi",
     "tagMediaport": "Aeroportdagi LED ekranlar",
@@ -412,12 +412,12 @@ export default {
     "tagMediagate": "Aeroportdagi lightbox'lar",
     "tagKorzinka": "Korzinka supermarketlarida",
     "tagHoreca": "Restoran va kafelarda",
-    "tagRegion": "11 hududda",
+    "tagRegion": "11 ta hududda",
     "tvlineAbout": "TV Line — O'zbekistonda indoor TV yo'nalishining asoschisi: 2010-yildan beri, 1000 dan ortiq reklama kampaniyasi.",
     "holdingK": "Reklama xoldingi"
   },
   "flytv": {
-    "title": "200 monitor butun aeroport bo'ylab",
+    "title": "200 ta monitor butun aeroport bo'ylab",
     "lead": "Fly TV — Toshkent xalqaro aeroporti uchun yaratilgan indoor TV tarmog'i: VIP va CIP zallarida, uchib ketish va uchib kelish zallarida 200 ta monitor. Yo'lovchi reysni kutayotganda kanalni almashtira olmaydi — rolik oxirigacha ko'riladi.",
     "monitors": "monitor",
     "diag": "diagonal, dyuym",
@@ -433,7 +433,7 @@ export default {
     }
   },
   "mediagate": {
-    "title": "Ichki yoritgichli lightbox'lar — 10 zonada",
+    "title": "Ichki yoritgichli lightbox'lar — 10 ta zonada",
     "lead": "Media Gate — aeroportdagi yorqin, ichki yoritgichli lightbox'lar: brend kun-u tun ko'rinib turadi. Lightbox pasportidan maqsadingizga mos konstruksiyalarni tanlaysiz.",
     "count": "lightbox",
     "zones": "zona",
@@ -448,7 +448,7 @@ export default {
     "back": "Asosiy sahifaga",
     "kicker": "Biz haqimizda",
     "sub": "O'zbekistondagi eng yirik reklama kommunikatsiyalari agentligi — aeroportdan har bir viloyatgacha.",
-    "lead": "Orient Advertising reklamaning turli yo'nalishlarini bitta xoldingga jamlaydi. Toshkent xalqaro aeroportida Media Port, Fly TV va Media Gate, butun mamlakat bo'ylab esa TV Line tarmoqlari — Korzinka supermarketlari, restoran va kafelar hamda 11 hudud — brendingizni odamlar eng ko'p bo'ladigan joylarda ko'rsatadi.",
+    "lead": "Orient Advertising reklamaning turli yo'nalishlarini bitta xoldingga jamlaydi. Toshkent xalqaro aeroportida Media Port, Fly TV va Media Gate, butun mamlakat bo'ylab esa TV Line tarmoqlari — Korzinka supermarketlari, restoran va kafelar hamda 11 ta hudud — brendingizni odamlar eng ko'p bo'ladigan joylarda ko'rsatadi.",
     "s1": "TV Line ish boshlagan yil",
     "s2": "yil indoor-reklama bozorida",
     "s3": "kishilik tajribali jamoa",
@@ -467,7 +467,7 @@ export default {
     "t2025": "Korzinka tarmog'i: 2025-yil noyabr holatiga 250 dan ortiq supermarket.",
     "t2026": "2026-yilda yana 250 ta do'kon — tarmoq 500 dan oshadi.",
     "nowK": "Bugun",
-    "tNow": "Oltita yo'nalish: aeroport, supermarketlar, restoran va kafelar hamda 11 hudud — bitta xarid bilan.",
+    "tNow": "Oltita yo'nalish: aeroport, supermarketlar, restoran va kafelar hamda 11 ta hudud — bitta xarid bilan.",
     "workK": "Ish tartibi",
     "workTitle": "Kampaniya qanday o'tadi",
     "w1t": "Rejalashtirish",
@@ -491,7 +491,7 @@ export default {
     "r1": "Ichki reklama bozorida kamida 5 yil",
     "r2": "Aeroportlarda reklama joylashtirishda kamida 2 yil",
     "r3": "Kamida 20 ta brend bilan kelishuv",
-    "r4": "Stendlarga xizmat ko'rsatuvchi kamida 5 mutaxassis",
+    "r4": "Stendlarga xizmat ko'rsatuvchi kamida 5 nafar mutaxassis",
     "r5": "Onlayn boshqaruv: pleylist kamida har 2 soatda yangilanadi",
     "trustK": "Ishonch",
     "trustTitle": "Brendlar bizga qaytib keladi",
@@ -538,6 +538,6 @@ export default {
     "q4": "Reklama qancha turadi?",
     "a4": "Narx format va muddatga bog'liq. Yuqoridagi kalkulyatorda hisoblang yoki aniq hisob uchun biz bilan bog'laning.",
     "q5": "Qanday formatlar bor?",
-    "a5": "Bannerlar va lightbox'lardan tortib LED va multimedia ekranlarigacha — aeroportda, Korzinka supermarketlarida, restoranlarda va 11 hududda."
+    "a5": "Bannerlar va lightbox'lardan tortib LED va multimedia ekranlarigacha — aeroportda, Korzinka supermarketlarida, restoranlarda va 11 ta hududda."
   }
 };

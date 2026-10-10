@@ -1,4 +1,4 @@
-import { t, num, onLang, place, lang } from './i18n/index.js';
+import { t, num, onLang, place, lang, ta } from './i18n/index.js';
 import { CITY_GALLERY } from './data/regions.js';
 import { CITY_PHOTOS } from './data/photo-credits.js';
 import { credit } from './ui/credit.js';
@@ -88,7 +88,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
   const tipHTML = (it) => {
     const sub = {
       tas: t('map.tas'),
-      city: rowByKey[it.key] ? `${num(rowByKey[it.key].screens)} ${t('map.screens')} · ${num(rowByKey[it.key].venues)} ${t('map.venues')}` : '',
+      city: rowByKey[it.key] ? `${num(rowByKey[it.key].screens)}${ta()} ${t('map.screens')} · ${num(rowByKey[it.key].venues)}${ta()} ${t('map.venues')}` : '',
       horeca: it.a || t('map.horecaTip'),
       korzinka: place(it.a) || `${it.town}`,
       venue: it.type === 'venue' ? venueAddr(it.v) : '',
@@ -148,7 +148,7 @@ export function initExplore(world, { bus, places, lenis, story }) {
     let section = '';
     let plan = '';
     if (it.type === 'tas') {
-      body = `<p>${esc(t('airport.lead'))}</p><dl>${row(t('airport.statYear'), num(AIRPORT.visitsYear))}${row('LED', `${LED_FACTS.count} · ${LED_FACTS.playsDay} ${t('units.plays')}`)}${row('IATA / ICAO', 'TAS / UZTT')}</dl>${routeHTML([69.2687, 41.2634])}`;
+      body = `<p>${esc(t('airport.lead'))}</p><dl>${row(t('airport.statYear'), num(AIRPORT.visitsYear))}${row('LED', `${LED_FACTS.count} · ${LED_FACTS.playsDay}${ta()} ${t('units.plays')}`)}${row('IATA / ICAO', 'TAS / UZTT')}</dl>${routeHTML([69.2687, 41.2634])}`;
       section = 'airport';
     } else if (it.type === 'city' && !rowByKey[it.key]) {
       body = `<dl>${row(t('card.stores'), num(korByTown[t(`cities.${it.key}`)] || korByTown.Toshkent || 0))}${row(t('horeca.venues'), `${HORECA.venues}+`)}</dl>`;

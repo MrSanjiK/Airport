@@ -1,6 +1,6 @@
 import { POSES, TAS, PLATE } from './scene/world.js';
 import { SITES, GROUPS } from './scene/city.js';
-import { t, onLang, num, place, lang } from './i18n/index.js';
+import { t, onLang, num, place, lang, ta } from './i18n/index.js';
 import { REGIONS, LED_ZONES, LED_FACTS } from './data/inventory.js';
 import { profile } from './sections.js';
 import { formatDMS, toLonLat, toXZ } from './scene/geo.js';
@@ -73,7 +73,7 @@ export function initStory(world, { places, nav, bus }) {
     if (!row) return;
     addLabel({
       world: world.worldAt(p[0], p[1], 0.3),
-      html: () => `${TRI}<span class="wp-box"><span class="wp-name">${t(`cities.${k}`)}${row.iata ? `<span class="wp-code">${row.iata}</span>` : ''}</span><span class="wp-sub">${num(row.screens)} ${t('map.screens')} · ${num(row.venues)} ${t('map.venues')}</span></span>`,
+      html: () => `${TRI}<span class="wp-box"><span class="wp-name">${t(`cities.${k}`)}${row.iata ? `<span class="wp-code">${row.iata}</span>` : ''}</span><span class="wp-sub">${num(row.screens)}${ta()} ${t('map.screens')} · ${num(row.venues)}${ta()} ${t('map.venues')}</span></span>`,
       weights: { hero: heroCities.includes(k) ? 0.9 : 0, regions: 1, plan: 0.8, korzinka: 0.5, explore: 1, about: 1 },
       // in the Regions chapter a city label picks the city in the plate; elsewhere it opens the map card
       onClick: () => (active === 'regions' && !exploring ? bus.dispatchEvent(new CustomEvent('regionpick', { detail: k })) : fly({ type: 'city', key: k })),
@@ -96,7 +96,7 @@ export function initStory(world, { places, nav, bus }) {
     addLabel({
       cls: 'wp--cluster',
       world: world.worldAt(ll[0], ll[1], 0.4),
-      html: () => `${DOT}<span class="wp-box"><span class="wp-name">${name}</span><span class="wp-sub">${g.n} Korzinka</span></span>`,
+      html: () => `${DOT}<span class="wp-box"><span class="wp-name">${name}</span><span class="wp-sub">${g.n}${ta()} Korzinka</span></span>`,
       weights: { korzinka: 1, regions: 0.6, plan: 0.5, explore: 1, about: 0.6 },
       onClick: () => fly({ type: 'town', name, ll, dist: g.n > 20 ? 34 : 14 }),
       key: `town-${name}`,
@@ -107,7 +107,7 @@ export function initStory(world, { places, nav, bus }) {
   addLabel({
     cls: 'wp--cluster wp--cluster-h',
     world: world.worldAt(hc[0], hc[1], 0.4),
-    html: () => `${DOT}<span class="wp-box"><span class="wp-name">HoReCa · ${t('cities.toshkent')}</span><span class="wp-sub">75+ ${t('horeca.venues')}</span></span>`,
+    html: () => `${DOT}<span class="wp-box"><span class="wp-name">HoReCa · ${t('cities.toshkent')}</span><span class="wp-sub">75+${ta()} ${t('horeca.venues')}</span></span>`,
     weights: { horeca: 1, explore: 1, plan: 0.5, about: 0.8 },
     onClick: () => fly({ type: 'town', name: t('cities.toshkent'), ll: hc, dist: 30 }),
     key: 'horeca-cluster',
@@ -243,7 +243,7 @@ export function initStory(world, { places, nav, bus }) {
     const z = LED_ZONES.find((x) => x.id === curZone) || LED_ZONES[4];
     const fig = frame.querySelector('.apt-photo');
     // resolutions stay left-to-right inside Arabic text (bdi), or 10112×786 reads back as 786×10112
-    fig.querySelector('figcaption').innerHTML = `${t(`airport.zones.${z.id}`)} · <bdi dir="ltr">${z.res}</bdi> · ${LED_FACTS.spotSec} ${t('units.sec')} · ${LED_FACTS.playsDay} ${t('units.plays')}`;
+    fig.querySelector('figcaption').innerHTML = `${t(`airport.zones.${z.id}`)} · <bdi dir="ltr">${z.res}</bdi> · ${LED_FACTS.spotSec} ${t('units.sec')} · ${LED_FACTS.playsDay}${ta()} ${t('units.plays')}`;
     const img = fig.querySelector('img');
     if (!img.src.endsWith(`${z.img}.webp`)) { fig.classList.remove('is-in'); img.onload = () => fig.classList.add('is-in'); img.src = `/img/${z.img}.webp`; }
     else if (img.complete) fig.classList.add('is-in');

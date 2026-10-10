@@ -29,6 +29,9 @@ let current = LANGS[0];
 const listeners = new Set();
 
 export const lang = () => current;
+// Uzbek counts things with "ta" after the numeral (200 ta monitor, 11 ta hudud): templates that join a number and a
+// counted noun put ta() between them; other languages need nothing there
+export const ta = () => (current?.code === 'uz' ? ' ta' : '');
 export const onLang = (fn) => (listeners.add(fn), () => listeners.delete(fn));
 
 export function t(key, fallback = '') {

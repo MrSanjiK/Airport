@@ -1,4 +1,4 @@
-import { t, num, money, onLang, place, lang } from './i18n/index.js';
+import { t, num, money, onLang, place, lang, ta } from './i18n/index.js';
 import { AIRPORT, LED_ZONES, LED_FACTS, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS } from './data/inventory.js';
 import { CITY_PHOTOS } from './data/photo-credits.js';
 import { CITY_VENUES, CITY_GALLERY, CITY_STORES } from './data/regions.js';
@@ -285,9 +285,9 @@ export function initSections({ bus, places }) {
         <ol class="rg-rank">${REGIONS.rows.map((r) => `<li><button type="button" data-pick="${r.key}">
           <span class="rg-rank-n">${esc(t(`cities.${r.key}`))}${r.iata ? `<small>${r.iata}</small>` : ''}</span>
           <span class="rg-rank-bar"><i style="--v:${Math.round((r.screens / max) * 100)}%"></i></span>
-          <span class="rg-rank-v tnum"><b>${r.screens}</b> ${esc(t('map.screens'))} · ${r.venues} ${esc(t('map.venues'))} · ${num(r.daily)}</span>
+          <span class="rg-rank-v tnum"><b>${r.screens}</b>${ta()} ${esc(t('map.screens'))} · ${r.venues}${ta()} ${esc(t('map.venues'))} · ${num(r.daily)}</span>
         </button></li>`).join('')}</ol>
-        <p class="rg-total tnum"><span>${esc(t('regions.total'))}</span><b>${tot.screens}</b> ${esc(t('map.screens'))} · <b>${tot.venues}</b> ${esc(t('map.venues'))} · <b>${num(tot.daily)}</b> ${esc(t('regions.visitors'))}</p>
+        <p class="rg-total tnum"><span>${esc(t('regions.total'))}</span><b>${tot.screens}</b>${ta()} ${esc(t('map.screens'))} · <b>${tot.venues}</b>${ta()} ${esc(t('map.venues'))} · <b>${num(tot.daily)}</b>${ta()} ${esc(t('regions.visitors'))}</p>
         <div class="gallery" data-gallery>${['network-1', 'network-2', 'network-3'].map((n) => `<figure>${img(`rg/${n}`, t('card.networkPhoto'))}<figcaption>${esc(t('card.networkPhoto'))}</figcaption></figure>`).join('')}</div>`;
     } else if (rgKey === 'toshkent') {
       // Tashkent is the Korzinka and HoReCa networks' home rather than a regional row
