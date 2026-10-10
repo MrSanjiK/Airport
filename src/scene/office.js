@@ -98,7 +98,8 @@ export function createOffice({ worldAt, compile }) {
     addMesh(G.canal, water);
     addMesh(G.road, ground('road', { grain: 0.04, order: 3 }));
     addMesh(G.shadow, ground('shadow', { opacity: 0.28, grain: 0, order: 5 }));
-    addMesh(d.marks, ground('mark', { grain: 0, opacity: 0.85, order: 4 }));
+    // lane dashes are under a metre wide: kept soft, a hard white line that thin would twinkle as the view sways
+    addMesh(d.marks, ground('mark', { grain: 0, opacity: 0.55, order: 4 }));
 
     const bm = new THREE.ShaderMaterial({
       vertexShader: SHADERS.bldVert, fragmentShader: SHADERS.bldFrag,

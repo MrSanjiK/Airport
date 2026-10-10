@@ -44,7 +44,10 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   // checking every program's info log on its first use stalls the GPU queue (0.8 s on first sight of a pass):
   // the shaders are stable, so the check runs only with ?debug
   renderer.debug.checkShaderErrors = new URLSearchParams(location.search).has('debug');
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr));
+  // a pixel budget: a 27-inch screen at retina density would ask the GPU for four times a laptop's pixels for a chart
+  // that looks no sharper at that size; above ~5.2 megapixels the density steps down to fit
+  const budgetDpr = () => Math.sqrt(5.2e6 / Math.max(1, innerWidth * innerHeight));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr, Math.max(1, budgetDpr())));
   const scene = new THREE.Scene();
   const bg = new THREE.Color(0.929, 0.949, 0.965);
   scene.background = bg;
@@ -82,11 +85,23 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   const airport = createAirport(data.airportModel, hubWorld);
   aimPlate(airport.origin);
   scene.add(airport.group);
-  const city = createCityLayer({ scene, sample: heights.sample, terrain });
-  // the office's programs compile (in parallel where the driver allows) before its neighbourhood may show
+  // Geometry reaches the GPU the first time it is drawn: a city model or the office's neighbourhood would upload
+  // megabytes in the very frame it appears and stall it. Anything about to appear is queued here instead and drawn
+  // once, one object a frame, through a one-pixel scissor (its colour never reaches the screen), so its buffers are
+  // on the GPU before it shows.
+  const warmQ = [];
+  const warm = (objs) => new Promise((resolve) => {
+    const list = objs.filter(Boolean);
+    if (!list.length) { resolve(); return; }
+    list.forEach((o, i) => warmQ.push({ o, done: i === list.length - 1 ? resolve : null }));
+    dirty++;
+  });
+  const city = createCityLayer({ scene, sample: heights.sample, terrain, upload: warm });
+  // the office's programs compile (in parallel where the driver allows) and its buffers upload before its
+  // neighbourhood may show
   const office = createOffice({
     worldAt: (lon, lat, lift) => worldAt(lon, lat, sample, lift),
-    compile: async (g) => { g.visible = true; try { await renderer.compileAsync(g, camera); } catch (e) { renderer.compile(g, camera); } g.visible = false; },
+    compile: async (g) => { g.visible = true; try { await renderer.compileAsync(g, camera); } catch (e) { renderer.compile(g, camera); } g.visible = false; await warm([...g.children]); },
   });
   await breathe();
   const lines = createDrapedLines(data.vectors, sample);
@@ -315,12 +330,28 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       renderer.autoClear = true;
     }
     drawField();
-    // a GPU that cannot keep up gets fewer pixels, a quarter step at a time, never below one per CSS pixel
+    if (warmQ.length) {
+      const { o, done } = warmQ.shift();
+      const saved = [];
+      o.traverse((c) => { saved.push([c, c.visible, c.frustumCulled]); c.visible = true; c.frustumCulled = false; });
+      renderer.autoClear = false;
+      renderer.setScissorTest(true);
+      renderer.setScissor(0, 0, 1, 1);
+      renderer.render(o, camera);
+      renderer.setScissorTest(false);
+      renderer.autoClear = true;
+      saved.forEach(([c, v, f]) => { c.visible = v; c.frustumCulled = f; });
+      done?.();
+      dirty++;
+    }
+    // a GPU that cannot keep up gets fewer pixels, a step at a time: first down to one per CSS pixel, then (only if
+    // frames still run long) a little under, a softer chart being better than a stuttering one
     slow = slow * 0.96 + (dt > 0.029 ? 1 : 0) * 0.04;
-    if (slow > 0.6 && renderer.getPixelRatio() > 1.01 && time - lastDrop > 3) {
+    const pr = renderer.getPixelRatio();
+    if (slow > 0.6 && pr > 0.86 && time - lastDrop > 3) {
       lastDrop = time;
       slow = 0;
-      renderer.setPixelRatio(Math.max(1, renderer.getPixelRatio() - 0.25));
+      renderer.setPixelRatio(pr > 1.01 ? Math.max(1, pr - 0.25) : 0.85);
       resize();
     }
   };
@@ -359,6 +390,9 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       await Promise.all([all(scene), all(fieldScene)]);
       restore();
       city.unwarm();
+      // and every part of the airport the story shows later (the field, the fleet, the town round it) uploaded now,
+      // under the loader, rather than in the frame its chapter first draws it
+      await warm(airport.parts);
     },
     project, pick,
     onFrame(fn) { listeners.add(fn); return () => listeners.delete(fn); },

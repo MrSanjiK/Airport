@@ -38,12 +38,13 @@ export function initStory(world, { places, nav, bus }) {
     el.className = `wp ${cls}`;
     el.innerHTML = html();
     el.style.opacity = '0';
+    el.style.visibility = 'hidden';
     if (onClick) {
       el.addEventListener('click', onClick);
       el.classList.add('is-clickable');
     }
     labelsEl.append(el);
-    const l = { el, w, html, weights, key, op: 0, proj: {}, far, near, prio: 0, size: null, cluster: cls.includes('wp--cluster') };
+    const l = { el, w, html, weights, key, op: 0, proj: {}, far, near, prio: 0, size: null, cluster: cls.includes('wp--cluster'), tf: 'none', os: '0', pe: '' };
     labels.push(l);
     return l;
   };
@@ -203,6 +204,22 @@ export function initStory(world, { places, nav, bus }) {
   // Rail
   rail.innerHTML = `<ol><span class="rail-fill"></span>${CHAPTERS.slice(1).map((c) => `<li><a href="#${c}" data-c="${c}"><span>${t(`rail.${RAIL[c] || c}`)}</span><i></i></a></li>`).join('')}</ol>`;
   onLang(() => rail.querySelectorAll('a').forEach((a) => (a.querySelector('span').textContent = t(`rail.${RAIL[a.dataset.c] || a.dataset.c}`))));
+  const railLinks = [...rail.querySelectorAll('a')];
+  let railP = '';
+  let railWant = '';
+  let railOn = null;
+  // the rail is written with the other styles, at the end of the frame
+  const flushRail = () => {
+    if (railWant !== railP) { railP = railWant; rail.style.setProperty('--p', railP); }
+    if (railOn !== active) {
+      railOn = active;
+      const ai = CHAPTERS.indexOf(active);
+      railLinks.forEach((el) => {
+        el.classList.toggle('is-on', el.dataset.c === active);
+        el.classList.toggle('is-past', CHAPTERS.indexOf(el.dataset.c) < ai);
+      });
+    }
+  };
 
   // Scroll keyframes
   let keys = [];
@@ -278,6 +295,23 @@ export function initStory(world, { places, nav, bus }) {
       return l;
     }));
   };
+  // the HoReCa chapter's Tashkent model (2.8 MB, 75 venue labels) is fetched, built, uploaded and labelled while the
+  // reader is still a few chapters above it, in idle time, so arriving there costs nothing
+  let preloaded = false;
+  const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 400));
+  const preloadCity = (key) => {
+    if (preloaded) return;
+    preloaded = true;
+    world.city.load(key).then((c) => {
+      if (!c || venueLabels.has(key)) return;
+      idle(() => {
+        if (venueLabels.has(key)) return;
+        addVenueLabels(c);
+        // their sizes are read in a later idle slot, one layout for all of them
+        idle(() => venueLabels.get(key)?.forEach((l) => { l.size = [l.el.offsetWidth || 90, l.el.offsetHeight || 34]; l.sizeStale = false; }));
+      });
+    });
+  };
   let exploring = false;
   // the About page takes the screen: the story's chapters rest, the page itself steers the camera
   let aboutMode = false;
@@ -335,13 +369,9 @@ export function initStory(world, { places, nav, bus }) {
       active = now;
       nav.setCurrent(active === 'hero' ? '' : active);
     }
+    if (introDone && CHAPTERS.indexOf(active) >= 2) preloadCity('toshkent');
     const docH = document.documentElement.scrollHeight - innerHeight;
-    rail.style.setProperty('--p', clamp(y / Math.max(1, docH)).toFixed(4));
-    rail.querySelectorAll('a').forEach((el) => {
-      const idx = CHAPTERS.indexOf(el.dataset.c);
-      el.classList.toggle('is-on', el.dataset.c === active);
-      el.classList.toggle('is-past', idx < CHAPTERS.indexOf(active));
-    });
+    railWant = clamp(y / Math.max(1, docH)).toFixed(4);
   };
 
   // Hero: the holding chart. Orient Advertising branches into the airport's three brands and TV Line's three
@@ -399,10 +429,19 @@ export function initStory(world, { places, nav, bus }) {
   addEventListener('pointermove', (e) => { ptr.x = e.clientX / innerWidth - 0.5; ptr.y = e.clientY / innerHeight - 0.5; }, { passive: true });
 
   const proj = {};
+  let lastSvg = null;
   let blockEls = [];
   let blockMode = null;
   let blockAge = 0;
+  // Every frame reads the page's geometry first and writes styles after: a read after a write would force the
+  // browser to recompute styles and layout mid-frame, many times over with two hundred labels on screen.
+  const foot = frame.querySelector('.apt-foot');
+  let calloutStale = true;
+  addEventListener('resize', () => { calloutStale = true; });
+  onLang(() => { calloutStale = true; });
   world.onFrame(() => {
+    const framePlaced = !!frame.offsetParent;
+    const holdPlaced = !!holding.offsetParent;
     frameState();
     const w = weights;
     document.documentElement.classList.toggle('at-map', w.hero > 0.5 || exploring);
@@ -423,7 +462,7 @@ export function initStory(world, { places, nav, bus }) {
     // the terminal stands on the levelled Tashkent plate when that model is up
     world.airport.group.position.y = world.city.flatY(world.airport.group.position.x, world.airport.group.position.z, world.hubWorld.y);
     // a phone has no plate frame: there the airport chapter shows the diorama too
-    world.airport.setSymbol(w.hero, frame.offsetParent ? w.airport : 0, w.flytv + w.mediagate + (frame.offsetParent ? 0 : w.airport));
+    world.airport.setSymbol(w.hero, framePlaced ? w.airport : 0, w.flytv + w.mediagate + (framePlaced ? 0 : w.airport));
     if (world.roads) world.roads.city = 1 - clamp((w.hero + wAir) * 1.4);
     world.airport.setHot(w.airport);
     const cityNow = world.city.active;
@@ -501,9 +540,21 @@ export function initStory(world, { places, nav, bus }) {
       if (target > 0.05 && l.prio > 0) cands.push(l);
     });
     cands.sort((a, b) => b.rank - a.rank);
+    // sizes are read for every new label before any class changes below
+    cands.forEach((l) => { if (!l.size || l.sizeStale) { l.size = [l.el.offsetWidth || 90, l.el.offsetHeight || 34]; l.sizeStale = false; } });
+    // the airport frame, its callouts and the holding chart's leaves are measured here too, ahead of the writes
+    const callOp = introDone && !exploring ? clamp(w.airport * 1.6 - 0.5) : 0;
+    let fr = null;
+    let footH = 0;
+    if (callOp > 0.01) {
+      fr = frame.getBoundingClientRect();
+      footH = foot.offsetHeight;
+      if (calloutStale || callouts.some((c) => !c.size)) { callouts.forEach((c) => { c.size = [c.el.offsetWidth, c.el.offsetHeight]; }); calloutStale = !fr.width; }
+    }
+    const heroOp = introDone && !exploring ? clamp(w.hero * 1.6 - 0.4) : 0;
+    const plateRects = heroOp > 0.02 && holdPlaced && holding.classList.contains('is-drawn') ? plateEls.map((el) => el.getBoundingClientRect()) : null;
     const kept = [];
     cands.forEach((l) => {
-      if (!l.size || l.sizeStale) { l.size = [l.el.offsetWidth || 90, l.el.offsetHeight || 34]; l.sizeStale = false; }
       const [bw, bh] = l.size;
       const x0 = l.proj.x - bw / 2;
       const y0 = l.proj.y - 8;
@@ -525,39 +576,45 @@ export function initStory(world, { places, nav, bus }) {
       const target = l.target;
       const p = l.proj;
       l.op += (target - l.op) * 0.18;
+      // only what changed is written: a hidden label costs nothing per frame
+      const st = l.el.style;
       if (l.op < 0.01 && target === 0) {
-        if (l.el.style.opacity !== '0') l.el.style.opacity = '0';
-        l.el.style.pointerEvents = 'none';
+        if (l.os !== '0') { l.os = '0'; st.opacity = '0'; }
+        if (l.pe !== 'none') { l.pe = 'none'; st.pointerEvents = 'none'; }
+        if (l.tf !== 'none') { l.tf = 'none'; st.transform = 'none'; st.visibility = 'hidden'; }
         return;
       }
-      l.el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
-      l.el.style.opacity = l.op.toFixed(3);
-      l.el.style.pointerEvents = l.op > 0.5 && l.el.classList.contains('is-clickable') ? 'auto' : 'none';
+      if (l.tf === 'none') st.visibility = '';
+      const tf = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+      if (l.tf !== tf) { l.tf = tf; st.transform = tf; }
+      const os = l.op.toFixed(3);
+      if (l.os !== os) { l.os = os; st.opacity = os; }
+      const pe = l.op > 0.5 && l.el.classList.contains('is-clickable') ? 'auto' : 'none';
+      if (l.pe !== pe) { l.pe = pe; st.pointerEvents = pe; }
     });
 
     let svg = '';
     // airport plate: callouts stacked down the frame's inner edge, each on a leader to its marker
-    const callOp = introDone && !exploring ? clamp(w.airport * 1.6 - 0.5) : 0;
-    frame.style.opacity = callOp.toFixed(3);
-    world.field.opacity = frame.offsetParent ? callOp : 0;
-    frame.style.visibility = callOp < 0.01 ? 'hidden' : 'visible';
+    const callS = callOp.toFixed(3);
+    if (frame.style.opacity !== callS) frame.style.opacity = callS;
+    world.field.opacity = framePlaced ? callOp : 0;
+    const callV = callOp < 0.01 ? 'hidden' : 'visible';
+    if (frame.style.visibility !== callV) frame.style.visibility = callV;
     callWrap.style.pointerEvents = callOp > 0.5 ? 'auto' : 'none';
     if (callOp > 0.01) {
-      const fr = frame.getBoundingClientRect();
       world.field.rect = [fr.left, fr.top, fr.width, fr.height];
       // callouts sit either side of the terminal: the five westernmost on one side, the rest on the other,
       // each column ordered by its markers' height so the leaders never cross
       const pts = callouts.map((c, i) => ({ c, p: zoneLabels[i].proj })).sort((a, b) => a.p.x - b.p.x);
       const top = fr.top + 40 + 16;
-      const bottom = fr.bottom - frame.querySelector('.apt-foot').offsetHeight - 16;
+      const bottom = fr.bottom - footH - 16;
       const half = Math.ceil(pts.length / 2);
       [pts.slice(0, half), pts.slice(half)].forEach((col, side) => {
         col.sort((a, b) => a.p.y - b.p.y);
         const step = (bottom - top) / col.length;
         col.forEach(({ c, p }, j) => {
           const el = c.el;
-          const bw = el.offsetWidth;
-          const bh = el.offsetHeight;
+          const [bw, bh] = c.size;
           const y = top + step * (j + 0.5);
           const left = side === 0;
           const bx = left ? fr.left + 16 : fr.right - 16 - bw;
@@ -570,27 +627,29 @@ export function initStory(world, { places, nav, bus }) {
     }
 
     // hero holding chart
-    const heroOp = introDone && !exploring ? clamp(w.hero * 1.6 - 0.4) : 0;
-    holding.style.opacity = heroOp.toFixed(3);
-    holding.style.visibility = heroOp < 0.01 ? 'hidden' : 'visible';
+    const heroS2 = heroOp.toFixed(3);
+    if (holding.style.opacity !== heroS2) holding.style.opacity = heroS2;
+    const heroV = heroOp < 0.01 ? 'hidden' : 'visible';
+    if (holding.style.visibility !== heroV) holding.style.visibility = heroV;
     if (heroOp > 0.6 && !holding.classList.contains('is-drawn')) holding.classList.add('is-drawn');
     const lift = (1 - heroOp) * 30;
-    holding.style.transform = `translate3d(0, ${lift.toFixed(1)}px, 0) rotateX(${(-ptr.y * 3 + 1).toFixed(2)}deg) rotateY(${(ptr.x * 4 - 1).toFixed(2)}deg)`;
-    if (heroOp > 0.02 && holding.offsetParent && holding.classList.contains('is-drawn')) {
-      plateEls.forEach((el) => {
+    if (heroOp > 0.01) holding.style.transform = `translate3d(0, ${lift.toFixed(1)}px, 0) rotateX(${(-ptr.y * 3 + 1).toFixed(2)}deg) rotateY(${(ptr.x * 4 - 1).toFixed(2)}deg)`;
+    if (plateRects) {
+      plateEls.forEach((el, pi) => {
         const a = anchors[el.dataset.plate];
         // mirrored, Region sits at the far side from the valley: only the terminal keeps its leader
         if (!a || (el.dataset.plate === 'regions' && document.documentElement.dir === 'rtl')) return;
         const p = world.project(a, proj);
         if (!p.visible) return;
-        const r = el.getBoundingClientRect();
+        const r = plateRects[pi];
         const sx = r.left + r.width / 2;
         const sy = r.bottom;
         const my = sy + Math.max(26, (p.y - sy) * 0.5);
         svg += `<path style="opacity:${(heroOp * 0.6).toFixed(2)}" d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${sx.toFixed(1)} ${my.toFixed(1)} L${p.x.toFixed(1)} ${p.y.toFixed(1)}"/><circle style="opacity:${heroOp.toFixed(2)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"/>`;
       });
     }
-    leaders.innerHTML = svg;
+    if (svg !== lastSvg) { lastSvg = svg; leaders.innerHTML = svg; }
+    flushRail();
   });
 
   // Cursor coordinates read off the chart

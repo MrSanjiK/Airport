@@ -34,7 +34,10 @@ const frag = /* glsl */ `
   uniform float uNight, uOpacity, uStorey; uniform vec3 uLight;
   varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vInfo;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-  float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
+  // periodic bands box-filtered over the pixel (as in airport.js): crisp up close, their average once sub-pixel
+  float pint(float x, float a, float b){ return floor(x) * (b - a) + clamp(fract(x), a, b) - a; }
+  float band(float x, float a, float b){ float w = max(fwidth(x), 1e-4); return (pint(x + w * 0.5, a, b) - pint(x - w * 0.5, a, b)) / w; }
+  float detail(float cells){ return 1.0 - smoothstep(0.3, 0.85, cells); }
   void main(){
     #include <logdepthbuf_fragment>
     float venue = vInfo.x, seed = vInfo.y, top = vInfo.z;
@@ -44,14 +47,15 @@ const frag = /* glsl */ `
     // roof palette, one per building
     vec3 r0 = vec3(0.86, 0.85, 0.82), r1 = vec3(0.72, 0.72, 0.71), r2 = vec3(0.66, 0.48, 0.41), r3 = vec3(0.56, 0.6, 0.64), r4 = vec3(0.8, 0.76, 0.68);
     vec3 roofC = seed < 0.34 ? r0 : seed < 0.56 ? r1 : seed < 0.72 ? r2 : seed < 0.86 ? r3 : r4;
-    roofC *= 1.0 + (hash(floor(vP.xz * 3000.0)) - 0.5) * 0.04;
+    vec2 gq = vP.xz * 3000.0;
+    roofC *= 1.0 + (hash(floor(gq)) - 0.5) * 0.04 * detail(max(fwidth(gq.x), fwidth(gq.y)));
     // walls: storey windows along the facade
     vec2 tg = vec2(-vNl.z, vNl.x);
     float u = dot(vP.xz, tg / max(1e-5, length(tg)));
     float fy = vP.y / uStorey;
     float pw = uStorey * 0.6;
-    float win = band(fract(fy), 0.3, 0.76) * band(fract(u / pw), 0.2, 0.8) * step(1.2, top / uStorey) * step(0.5, fy);
-    float lit = step(0.45, hash(vec2(floor(u / pw), floor(fy)) + seed * 57.0));
+    float win = band(fy, 0.3, 0.76) * band(u / pw, 0.2, 0.8) * step(1.2, top / uStorey) * step(0.5, fy);
+    float lit = mix(0.55, step(0.45, hash(vec2(floor(u / pw), floor(fy)) + seed * 57.0)), detail(max(fwidth(u / pw), fwidth(fy))));
     float ao = mix(0.6, 1.0, smoothstep(0.0, uStorey * 1.8, vP.y));
     vec3 wallD = mix(vec3(0.9, 0.89, 0.86), vec3(0.84, 0.86, 0.9), seed) * mix(0.62, 1.0, l);
     vec3 glassD = mix(vec3(0.34, 0.41, 0.5), vec3(0.55, 0.63, 0.73), l);
@@ -65,7 +69,7 @@ const frag = /* glsl */ `
     gl_FragColor = vec4(mix(base, red, venue), uOpacity);
   }`;
 
-export function createCityLayer({ scene, sample, terrain }) {
+export function createCityLayer({ scene, sample, terrain, upload = () => Promise.resolve() }) {
   const LIGHT = new THREE.Vector3(-0.5, 0.8, -0.3);
   const cache = new Map();
   const groups = new Map();
@@ -160,7 +164,8 @@ export function createCityLayer({ scene, sample, terrain }) {
   }
 
   const load = (key) => {
-    if (!cache.has(key)) cache.set(key, fetchBuilt(key).then((d) => { if (!d) return null; const c = assemble(key, d); groups.set(key, c); return c; }));
+    // a model counts as loaded once its buffers are on the GPU (world.js upload queue), so its first frame never stalls
+    if (!cache.has(key)) cache.set(key, fetchBuilt(key).then((d) => { if (!d) return null; const c = assemble(key, d); return upload([...c.group.children]).then(() => { groups.set(key, c); return c; }); }));
     return cache.get(key);
   };
 

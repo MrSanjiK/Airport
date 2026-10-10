@@ -115,7 +115,8 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 .wp {
   position: absolute; top: 0; left: 0; display: grid; justify-items: center;
   font-family: var(--f-chart); color: var(--ink);
-  will-change: transform, opacity; transition: opacity 0.5s var(--ease-out);
+  /* no will-change and no opacity transition: the story eases each label itself, and a hidden label drops its
+     transform so it leaves the compositor (two hundred standing layers cost more per frame than the chart) */
   white-space: nowrap;
 }
 .wp { translate: -50% 0; }

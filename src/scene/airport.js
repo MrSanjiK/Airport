@@ -43,8 +43,13 @@ const bldFrag = /* glsl */ `
   uniform float uNight, uStorey, uOpacity; uniform vec3 uLight;${DISC}
   varying vec3 vN; varying vec3 vNl; varying vec3 vP; varying vec3 vWp; varying vec3 vRoof; varying vec3 vWall; varying vec3 vInfo; varying vec2 vC;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-  // a line that fades out before it would alias (the terminal is a 100 px symbol in the hero, a full plate later)
-  float band(float c, float a, float b){ float d = fwidth(c); return smoothstep(a - d, a + d, c) * (1.0 - smoothstep(b - d, b + d, c)); }
+  // a periodic band (a..b of every unit of x), box-filtered over the pixel's footprint: crisp while a period spans
+  // many pixels, its plain average once it spans less than one, so a facade never crawls or breaks into moire as the
+  // camera sways (the terminal is a 100 px symbol in the hero, a full plate later)
+  float pint(float x, float a, float b){ return floor(x) * (b - a) + clamp(fract(x), a, b) - a; }
+  float band(float x, float a, float b){ float w = max(fwidth(x), 1e-4); return (pint(x + w * 0.5, a, b) - pint(x - w * 0.5, a, b)) / w; }
+  // how much per-cell detail (a lit window, a pane's tint, roof grain) can still be seen: none below a pixel
+  float detail(float cells){ return 1.0 - smoothstep(0.3, 0.85, cells); }
   // the sky a facade reflects: ground below the horizon, haze at it, blue overhead (by day); a dark dome at night
   vec3 sky(vec3 r, float night){
     vec3 day = mix(vec3(0.5, 0.52, 0.52), mix(vec3(0.86, 0.9, 0.95), vec3(0.4, 0.58, 0.84), smoothstep(0.0, 0.7, r.y)), smoothstep(-0.08, 0.04, r.y));
@@ -67,7 +72,8 @@ const bldFrag = /* glsl */ `
     float u = dot(vP.xz, tg / max(1e-5, length(tg)));
     float fy = rise / uStorey;
     // roofs: the satellite colour, with faint panel grain on the big halls
-    float grain = (hash(floor(vP.xz * 2600.0)) - 0.5) * 0.035;
+    vec2 gq = vP.xz * 2600.0;
+    float grain = (hash(floor(gq)) - 0.5) * 0.035 * detail(max(fwidth(gq.x), fwidth(gq.y)));
     vec3 roofD = vRoof * (1.0 + grain) * mix(0.94, 1.04, l);
     vec3 roofN = vRoof * 0.16 + vec3(0.03, 0.05, 0.09);
     // contact shadow where the walls meet the ground
@@ -80,18 +86,19 @@ const bldFrag = /* glsl */ `
     if (kind < 0.5) {
       float pw = uStorey * 0.55;
       float storeys = (vInfo.z - vInfo.y) / uStorey;
-      win = band(fract(fy), 0.34, 0.78) * band(fract(u / pw), 0.18, 0.82) * step(0.6, storeys) * step(0.04, h);
-      lit = step(0.42, hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 97.0));
+      win = band(fy, 0.34, 0.78) * band(u / pw, 0.18, 0.82) * step(0.6, storeys) * step(0.04, h);
+      lit = mix(0.58, step(0.42, hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 97.0)), detail(max(fwidth(u / pw), fwidth(fy))));
     } else if (kind < 1.5) {
       win = band(h, 0.14, 0.84);
-      mull = 1.0 - band(fract(u / (uStorey * 1.1)), 0.05, 0.95);
+      mull = 1.0 - band(u / (uStorey * 1.1), 0.05, 0.95);
     } else if (kind > 3.5) {
       // curtain wall: a panel grid, a dark spandrel at every floor, each pane a shade off its neighbours
       float pw = uStorey * 0.45;
       win = 1.0;
-      mull = max(1.0 - band(fract(u / pw), 0.06, 0.94), (1.0 - band(fract(fy), 0.1, 1.0)) * 1.3);
-      panel = hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 31.0) - 0.5;
-      lit = step(0.32, hash(vec2(floor(u / (pw * 2.0)), floor(fy)) + vInfo.yz * 97.0));
+      mull = max(1.0 - band(u / pw, 0.06, 0.94), (1.0 - band(fy, 0.1, 1.0)) * 1.3);
+      float dk = detail(max(fwidth(u / pw), fwidth(fy)));
+      panel = (hash(vec2(floor(u / pw), floor(fy)) + vInfo.yz * 31.0) - 0.5) * dk;
+      lit = mix(0.68, step(0.32, hash(vec2(floor(u / (pw * 2.0)), floor(fy)) + vInfo.yz * 97.0)), dk);
     }
     // glass: a tinted body under a sky reflection that strengthens at grazing angles, and the sun's glint
     vec3 R = reflect(-V, n);
@@ -130,7 +137,11 @@ const groundFrag = /* glsl */ `
     return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
   void main(){
     #include <logdepthbuf_fragment>
-    float g = (noise(vW * uScale) - 0.5) * 0.7 + (noise(vW * uScale * 4.3) - 0.5) * 0.3;
+    // each octave of grain fades out before its cells shrink under a pixel (they would shimmer as the camera sways)
+    vec2 q1 = vW * uScale, q2 = q1 * 4.3;
+    float f1 = 1.0 - smoothstep(0.35, 0.9, max(fwidth(q1.x), fwidth(q1.y)));
+    float f2 = 1.0 - smoothstep(0.35, 0.9, max(fwidth(q2.x), fwidth(q2.y)));
+    float g = (noise(q1) - 0.5) * 0.7 * f1 + (noise(q2) - 0.5) * 0.3 * f2;
     gl_FragColor = vec4(uColor * (1.0 + g * uGrain), uOpacity * (1.0 - discFade(vW)));
   }`;
 
@@ -727,7 +738,8 @@ export function createAirport(model, hubWorld) {
     return () => setSymbol(mode.hero, mode.plate, mode.solo);
   };
 
-  return { group, origin: model.o, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
+  const parts = [flat, fleet, plateLand, ...Object.values(groups)];
+  return { group, origin: model.o, parts, zoneLocal, rwLabels, setNight, setHot, setSymbol, plateOn, plateOff, discK, discOn, discOff, showAll, terminals };
 }
 
 // An A320-class airliner in km, nose at the origin, fuselage running down +z.

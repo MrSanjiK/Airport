@@ -225,7 +225,11 @@ export function initExplore(world, { bus, places, lenis, story }) {
     if (Math.abs(scrollY - openedAt) > innerHeight * 0.25) closeCard();
   }, { passive: true });
 
-  // keep ring and card glued to their point while the camera moves
+  // keep ring and card glued to their point while the camera moves; the card's size comes from an observer, so the
+  // frame never reads layout after the map labels have been written
+  let cardW = 0;
+  let cardH = 0;
+  new ResizeObserver(() => { cardW = card.offsetWidth; cardH = card.offsetHeight; }).observe(card);
   world.onFrame(() => {
     const target = selected || hover;
     if (!target) return;
@@ -235,8 +239,8 @@ export function initExplore(world, { bus, places, lenis, story }) {
     ring.dataset.type = target.type;
     ring.classList.add('is-on');
     if (selected) {
-      const cw = card.offsetWidth;
-      const ch = card.offsetHeight;
+      const cw = cardW;
+      const ch = cardH;
       const mobile = innerWidth < 700;
       let x = p.x + 28;
       if (x + cw > innerWidth - 16) x = p.x - cw - 28;
