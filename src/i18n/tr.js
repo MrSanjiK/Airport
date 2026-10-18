@@ -332,6 +332,8 @@ export default {
     "errPhone": "Lütfen telefon numarasını eksiksiz girin",
     "doneTitle": "Talebiniz hazır",
     "doneText": "Çevrimiçi gönderim yakında bağlanacak. Şimdilik talebinizi tek dokunuşla gönderin:",
+    "sentTitle": "Talebiniz alındı",
+    "sentText": "Bir yönetici kısa süre içinde sizinle iletişime geçecek. Acilse arayın veya WhatsApp'tan yazın:",
     "call": "Ara",
     "whatsapp": "WhatsApp ile gönder",
     "copy": "Metni kopyala",

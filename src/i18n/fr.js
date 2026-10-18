@@ -332,6 +332,8 @@ export default {
     "errPhone": "Saisissez le numéro de téléphone complet",
     "doneTitle": "Votre demande est prête",
     "doneText": "L'envoi en ligne sera bientôt connecté. En attendant, envoyez votre demande en un geste :",
+    "sentTitle": "Votre demande est envoyée",
+    "sentText": "Un responsable vous contactera rapidement. En cas d'urgence, appelez ou écrivez sur WhatsApp :",
     "call": "Appeler",
     "whatsapp": "Envoyer via WhatsApp",
     "copy": "Copier le texte",

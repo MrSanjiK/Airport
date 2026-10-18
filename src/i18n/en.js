@@ -332,6 +332,8 @@ export default {
     "errPhone": "Please enter the full phone number",
     "doneTitle": "Your request is ready",
     "doneText": "Online submission will be connected soon. For now, send your request in one tap:",
+    "sentTitle": "Your request is in",
+    "sentText": "A manager will contact you shortly. If it is urgent, call or write on WhatsApp:",
     "call": "Call",
     "whatsapp": "Send via WhatsApp",
     "copy": "Copy text",

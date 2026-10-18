@@ -332,6 +332,8 @@ export default {
     "errPhone": "전화번호를 모두 입력하세요",
     "doneTitle": "요청이 준비되었습니다",
     "doneText": "온라인 전송은 곧 연결됩니다. 지금은 한 번의 탭으로 보내세요:",
+    "sentTitle": "요청이 접수되었습니다",
+    "sentText": "담당자가 곧 연락드립니다. 급하시면 전화하거나 WhatsApp으로 메시지를 보내 주세요:",
     "call": "전화하기",
     "whatsapp": "WhatsApp으로 보내기",
     "copy": "텍스트 복사",

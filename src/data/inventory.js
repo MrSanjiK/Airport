@@ -120,6 +120,11 @@ export const REGIONS = {
 
 export const HOLDING = { name: 'Orient Advertising', specialists: 100 };
 export const PHONES = ['+998 93 566 45 01'];
+
+// the CRM's lead endpoint (the Cloudflare worker, "Media Port AI bot" project): the media-plan form posts there and the
+// managers' Telegram chat hears about the request at once. Set VITE_LEAD_API at build time; empty keeps the form's
+// hand-off to a call or WhatsApp only.
+export const LEAD_API = (import.meta.env.VITE_LEAD_API || '').replace(/\/+$/, '');
 export const TERMS = [3, 6, 12];
 
 // The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.

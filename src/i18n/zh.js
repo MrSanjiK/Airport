@@ -332,6 +332,8 @@ export default {
     "errPhone": "请输入完整的电话号码",
     "doneTitle": "您的请求已就绪",
     "doneText": "在线提交即将开通。现在可一键发送请求：",
+    "sentTitle": "您的请求已收到",
+    "sentText": "经理将很快与您联系。如有急事，请致电或通过 WhatsApp 联系：",
     "call": "拨打电话",
     "whatsapp": "通过 WhatsApp 发送",
     "copy": "复制文本",

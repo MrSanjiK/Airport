@@ -336,6 +336,8 @@ export default {
     "errPhone": "Telefon raqamini to'liq kiriting",
     "doneTitle": "So'rovingiz tayyor",
     "doneText": "Onlayn yuborish tez orada ulanadi. Hozircha so'rovni bir tugma bilan yuboring:",
+    "sentTitle": "So'rovingiz qabul qilindi",
+    "sentText": "Menejer tez orada siz bilan bog'lanadi. Shoshilinch bo'lsa, qo'ng'iroq qiling yoki WhatsApp'da yozing:",
     "call": "Qo'ng'iroq qilish",
     "whatsapp": "WhatsApp'da yuborish",
     "copy": "Matnni nusxalash",

@@ -332,6 +332,8 @@ export default {
     "errPhone": "Inserisci il numero di telefono completo",
     "doneTitle": "La tua richiesta è pronta",
     "doneText": "L'invio online sarà attivato a breve. Intanto invia la richiesta con un tocco:",
+    "sentTitle": "Richiesta ricevuta",
+    "sentText": "Un manager ti contatterà a breve. Se è urgente, chiama o scrivi su WhatsApp:",
     "call": "Chiama",
     "whatsapp": "Invia su WhatsApp",
     "copy": "Copia il testo",

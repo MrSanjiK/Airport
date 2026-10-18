@@ -1,5 +1,5 @@
-import { t, num, money, onLang } from './i18n/index.js';
-import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS } from './data/inventory.js';
+import { t, num, money, onLang, lang } from './i18n/index.js';
+import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS, LEAD_API } from './data/inventory.js';
 import logo from './assets/logo.svg?raw';
 import { badge, tagline } from './ui/brand.js';
 import { mountPartners, mountPartnerStrip } from './ui/partners.js';
@@ -224,6 +224,7 @@ export function initPlanner({ bus }) {
         <div class="field"><label for="f-name">${esc(t('form.name'))}</label><input id="f-name" name="name" autocomplete="name" placeholder="${esc(t('form.phName'))}" required /><span class="field-err" aria-live="polite"></span></div>
         <div class="field"><label for="f-company">${esc(t('form.company'))} <small>${esc(t('form.optional'))}</small></label><input id="f-company" name="company" autocomplete="organization" placeholder="${esc(t('form.phCompany'))}" /></div>
         <div class="field field--wide"><label for="f-phone">${esc(t('form.phone'))}</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="${esc(t('form.phPhone'))}" required /><span class="field-err" aria-live="polite"></span></div>
+        <div class="field-trap" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
         <div class="field field--wide"><label for="f-msg">${esc(t('form.message'))} <small>${esc(t('form.optional'))}</small></label><textarea id="f-msg" name="message" rows="3" placeholder="${esc(t('form.phMessage'))}"></textarea></div>
         <div class="form-actions">
           <button class="btn-primary" type="submit"><span class="btn-primary-label">${esc(t('form.submit'))}</span>
@@ -242,7 +243,7 @@ export function initPlanner({ bus }) {
       const parts = [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean);
       phone.value = d.length ? `+998 ${parts.join(' ')}` : '';
     });
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = form.name.value.trim();
       const digits = phone.value.replace(/\D/g, '');
@@ -267,10 +268,30 @@ export function initPlanner({ bus }) {
         state.sel.size && planText(),
         form.message.value.trim() && `${t('form.message')}: ${form.message.value.trim()}`,
       ].filter(Boolean).join('\n');
-      setTimeout(() => {
+      // with the CRM connected the request goes straight to the managers; without it (or if it fails) the visitor
+      // sends it by a call or WhatsApp, as before
+      let sent = false;
+      if (LEAD_API) {
+        const { items } = totals();
+        const BOT_DIR = { mediaport: 'media_port', flytv: 'fly_tv', mediagate: 'media_gate', 'tvl-korzinka': 'tvline_korzinka', 'tvl-horeca': 'tvline_horeca', 'tvl-region': 'tvline_region' };
+        try {
+          const res = await fetch(`${LEAD_API}/api/lead`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name, phone: phone.value, company: form.company.value.trim(), message: form.message.value.trim(), website: form.website.value,
+              lang: lang().code, plan: state.sel.size ? planText() : '', directions: [...new Set(items.map((i) => BOT_DIR[i.dir]).filter(Boolean))],
+              zones: items.filter((i) => i.dir === 'mediaport').map((i) => i.name), term: t(`units.month${state.term}`), page: location.href,
+            }),
+            signal: AbortSignal.timeout(12000),
+          });
+          sent = res.ok;
+        } catch (err) { sent = false; }
+      } else await new Promise((r) => setTimeout(r, 650));
+      {
         form.innerHTML = `<div class="done">
           <svg class="done-check" viewBox="0 0 46 46"><circle cx="23" cy="23" r="21"/><path d="M14 23.5l6 6 12-13"/></svg>
-          <h4>${esc(t('form.doneTitle'))}</h4><p style="color:var(--ink-2)">${esc(t('form.doneText'))}</p>
+          <h4>${esc(t(sent ? 'form.sentTitle' : 'form.doneTitle'))}</h4><p style="color:var(--ink-2)">${esc(t(sent ? 'form.sentText' : 'form.doneText'))}</p>
           <div class="done-actions">
             <a class="btn-quiet" href="tel:${PHONES[0].replace(/\s/g, '')}"><svg viewBox="0 0 16 16"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg>${esc(t('form.call'))}</a>
             <a class="btn-quiet" href="https://wa.me/${PHONES[0].replace(/\D/g, '')}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener"><svg viewBox="0 0 16 16"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L2 14l2.9-.7A6.2 6.2 0 1 0 8 1.8z"/></svg>${esc(t('form.whatsapp'))}</a>
@@ -281,7 +302,7 @@ export function initPlanner({ bus }) {
           try { await navigator.clipboard.writeText(msg); ev.currentTarget.querySelector('span').textContent = t('form.copied'); } catch (err) {}
         });
         form.querySelector('[data-again]').addEventListener('click', renderInquiry);
-      }, 650);
+      }
     });
   };
 
