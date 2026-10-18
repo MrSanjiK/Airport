@@ -2,6 +2,14 @@
 # Build, then deploy: `npm run build` and `npx wrangler deploy`. The CRM/bot backend is the "orient-crm" worker.
 name = "orient-site"
 compatibility_date = "2026-10-01"
+# the workers.dev address stays on as a fallback
+workers_dev = true
+
+# orient-advertising.uz (DNS on Cloudflare): Cloudflare creates the records and certificates on deploy
+routes = [
+  { pattern = "orient-advertising.uz", custom_domain = true },
+  { pattern = "www.orient-advertising.uz", custom_domain = true },
+]
 
 [assets]
 directory = "./dist"
