@@ -123,9 +123,16 @@ export function initNav({ onTheme } = {}) {
     tt.title = tt.querySelector('.sr-only').textContent;
     document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', night ? '#0A1729' : '#EDF2F6'));
   };
+  // the page's colours and the chart change together in half a second: while they do, the paper halos behind the
+  // hero's words (which would show the new paper over the old chart, a white bloom on the night map) step aside
+  let themingTimer = 0;
   tt.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'night' ? 'day' : 'night';
-    document.documentElement.dataset.theme = next;
+    const root = document.documentElement;
+    root.classList.add('is-theming');
+    clearTimeout(themingTimer);
+    themingTimer = setTimeout(() => root.classList.remove('is-theming'), 560);
+    root.dataset.theme = next;
     try { localStorage.setItem('mp-theme', next); } catch (e) {}
     syncTheme();
     onTheme?.(next);

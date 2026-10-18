@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — 공항에서 모든 지역까지의 스크린",
+    "title": "Orient Advertising — 공항에서 모든 지역까지의 스크린",
     "description": "타슈켄트 국제공항, Korzinka 슈퍼마켓, 75개 이상의 레스토랑, 우즈베키스탄 11개 지역의 실내 스크린 광고. 실제 가격과 미디어 플랜 계산기."
   },
   "langName": "한국어",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "연락처",
     "networks": "방향",
-    "rights": "Media Port. 모든 권리 보유.",
+    "rights": "Orient Advertising. 모든 권리 보유.",
     "top": "맨 위로"
   },
   "mini": {

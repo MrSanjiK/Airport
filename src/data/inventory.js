@@ -119,7 +119,7 @@ export const REGIONS = {
 };
 
 export const HOLDING = { name: 'Orient Advertising', specialists: 100 };
-export const PHONES = ['+998 99 178 77 77'];
+export const PHONES = ['+998 93 566 45 01'];
 export const TERMS = [3, 6, 12];
 
 // The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.

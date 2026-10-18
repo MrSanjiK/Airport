@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — экраны от аэропорта до каждого региона",
+    "title": "Orient Advertising — экраны от аэропорта до каждого региона",
     "description": "Реклама на indoor-экранах Ташкентского международного аэропорта, супермаркетов Korzinka, 75+ ресторанов и 11 регионов. Реальные цены и калькулятор медиаплана."
   },
   "langName": "Русский",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "Контакты",
     "networks": "Направления",
-    "rights": "Media Port. Все права защищены.",
+    "rights": "Orient Advertising. Все права защищены.",
     "top": "Наверх"
   },
   "mini": {

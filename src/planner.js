@@ -260,7 +260,7 @@ export function initPlanner({ bus }) {
       const btn = form.querySelector('[type="submit"] .btn-primary-label');
       btn.textContent = t('form.sending');
       const msg = [
-        'Media Port — media-plan',
+        'Orient Advertising — media-plan',
         `${t('form.name')}: ${name}`,
         form.company.value.trim() && `${t('form.company')}: ${form.company.value.trim()}`,
         `${t('form.phone')}: ${phone.value}`,

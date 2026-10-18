@@ -107,6 +107,14 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 
 /* ───────── Stage (WebGL) and overlays ───────── */
 .stage { position: fixed; inset: 0; z-index: 0; }
+/* the chart is as tall as the largest viewport: a phone's address bar folding away mid-scroll never resizes (and
+   reallocates) the drawing buffer */
+@supports (height: 100lvh) { .stage { bottom: auto; height: 100lvh; } }
+/* a live blur over the moving chart is recomputed every frame: phones and modest graphics chips get the same glass
+   without it, a little more opaque */
+@media (max-width: 700px) { .nav::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--plate) 90%, transparent); } }
+html.low-gpu .nav::before, html.low-gpu .mobile-nav, html.low-gpu .explore-bar, html.low-gpu .map-tip, html.low-gpu .mini { -webkit-backdrop-filter: none; backdrop-filter: none; }
+html.low-gpu .nav::before { background: color-mix(in srgb, var(--plate) 92%, transparent); }
 .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .stage canvas[hidden] { display: none; }
 .overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
@@ -334,6 +342,20 @@ html { scrollbar-color: var(--ink-3) transparent; scrollbar-width: thin; }
 .nav-logo:focus-visible { outline: none; }
 .logo { display: inline-flex; width: 104px; color: var(--ink); transition: color 0.6s; }
 .logo svg { width: 100%; height: auto; }
+/* the site wears the holding's mark: Orient Advertising's lock-up in its indigo, light ink at night */
+.nav-logo .logo--oa { width: 156px; color: #12174e; }
+[data-theme='night'] .nav-logo .logo--oa { color: var(--ink); }
+/* a phone's bar holds the lock-up and four controls: tighter gaps, the language chip without its chevron, and the
+   logo takes what is left (106 px at 360, 124 px from 390) */
+@media (max-width: 700px) {
+  .nav-bar { gap: 10px; padding-inline: 14px 6px; }
+  .nav-actions { gap: 6px; }
+  .nav .theme-toggle { width: 64px; }
+  .nav .nav-burger { width: 34px; }
+  .lang-btn { padding: 0 5px; }
+  .lang-btn .lang-chev { display: none; }
+  .nav-logo .logo--oa { width: min(124px, calc(100vw - 254px)); }
+}
 .nav-links { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; position: relative; }
 .nav-links a {
   position: relative; z-index: 1; display: inline-flex; align-items: center; height: 38px; padding: 0 17px;
@@ -550,6 +572,13 @@ main { position: relative; z-index: 3; pointer-events: none; }
 }
 [dir='rtl'] .hero::before { background: radial-gradient(ellipse 58% 62% at 68% 42%, color-mix(in srgb, var(--paper) 92%, transparent) 0%, color-mix(in srgb, var(--paper) 70%, transparent) 46%, transparent 74%); }
 html.is-intro .hero::before { opacity: 0; }
+/* a theme switch: halos out at once, back in once the chart has turned; the words and bars over the map blend
+   their colours over the same half second as the chart */
+.btn-link::before { transition: opacity 0.5s; }
+html.is-theming .hero::before, html.is-theming .btn-link::before { opacity: 0; transition: none; }
+html.is-theming :is(.hero-copy, .hero-copy *, .nav::before, .nav-links a, .legend-cell, .legend-cell *, .legend-title, .dock-k, .hero-partners, .ps-k, .wp-box, .wp-name, .wp-sub, .explore-fab) {
+  transition: color 0.5s, background-color 0.5s, border-color 0.5s, text-shadow 0.5s, fill 0.5s, stroke 0.5s !important;
+}
 .hero-copy { position: absolute; inset-inline-start: 10vw; top: calc(var(--nav-h) + 9.5vh); width: min(40vw, 640px); }
 .hero-title {
   font-weight: 800; font-size: clamp(2.4rem, 3.62vw, 5.6rem); line-height: 1.04; letter-spacing: -0.032em;
@@ -1751,9 +1780,20 @@ html.at-map:not(.is-explore) .explore-fab { transform: translate3d(0, -78px, 0);
   .ps-k { padding: 0 12px 0 14px; gap: 8px; font-size: 10.5px; letter-spacing: 0.1em; }
   .ps-rows { --pm-u: 18px; }
   .ps-rows .pm-item { height: 50px; }
-  html.at-map:not(.is-explore) .explore-fab { transform: translate3d(0, -64px, 0); }
+  html.at-map:not(.is-explore) .explore-fab { transform: none; }
+  html.strip-on:not(.is-explore) .explore-fab { transform: translate3d(0, -64px, 0); }
 }
-@media (max-width: 700px) { .legend { bottom: calc(13vh + 44px); } .scroll-cue { display: none; } }
+/* a phone's first screen is a column, not layers pinned to its corners: the copy, the visitors' sheet, then the
+   partners' strip, each below the other whatever the screen's height (on a short screen the hero simply grows) */
+@media (max-width: 700px) {
+  .hero { height: auto; min-height: 100svh; display: flex; flex-direction: column; padding: calc(var(--nav-h) + 6.5vh) 0 10px; }
+  .hero-copy { position: relative; inset: auto; top: auto; width: auto; margin-inline: var(--gutter); }
+  /* the sheet's tilt lets its far end hang ~40 px below its box: the margin under it keeps that clear of the strip */
+  .legend { position: relative; inset: auto; bottom: auto; width: 100vw; margin: 34px 0 52px -10vw; }
+  [dir='rtl'] .legend { margin: 34px -10vw 52px 0; }
+  .hero-partners { position: relative; inset: auto; bottom: auto; margin: auto 12px 0; flex: none; }
+  .scroll-cue { display: none; }
+}
 
 /* large monitors (a 27-inch screen at 2560 px): the measure opens up, the plates and the airport frame grow with it */
 @media (min-width: 1800px) {

@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — schermi dall'aeroporto a ogni regione",
+    "title": "Orient Advertising — schermi dall'aeroporto a ogni regione",
     "description": "Pubblicità su schermi indoor all'aeroporto internazionale di Tashkent, nei supermercati Korzinka, in 75+ ristoranti e in 11 regioni dell'Uzbekistan. Prezzi reali e calcolatore del piano media."
   },
   "langName": "Italiano",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "Contatti",
     "networks": "Direzioni",
-    "rights": "Media Port. Tutti i diritti riservati.",
+    "rights": "Orient Advertising. Tutti i diritti riservati.",
     "top": "Torna su"
   },
   "mini": {

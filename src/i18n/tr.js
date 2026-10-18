@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — havalimanından her bölgeye ekranlar",
+    "title": "Orient Advertising — havalimanından her bölgeye ekranlar",
     "description": "Taşkent Uluslararası Havalimanı, Korzinka süpermarketleri, 75+ restoran ve Özbekistan'ın 11 bölgesindeki iç mekân ekranlarında reklam. Gerçek fiyatlar ve medya planı hesaplayıcı."
   },
   "langName": "Türkçe",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "İletişim",
     "networks": "Yönler",
-    "rights": "Media Port. Tüm hakları saklıdır.",
+    "rights": "Orient Advertising. Tüm hakları saklıdır.",
     "top": "Yukarı"
   },
   "mini": {

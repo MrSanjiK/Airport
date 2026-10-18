@@ -20,9 +20,29 @@ const loader = document.getElementById('loader');
 let ld = null;
 const progress = (p) => ld?.set(p);
 
+// a modest graphics chip, by its name where the browser tells it (budget Mali, Adreno 5xx/early 6xx, PowerVR, plain
+// Intel HD/UHD, software rendering), or a device with few cores or little memory: these get a lighter chart
+function lowGPU() {
+  try {
+    if (/[?&]low\b/.test(location.search)) return true;
+    if ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 3) return true;
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl2') || c.getContext('webgl');
+    if (!gl) return true;
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const name = String(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return /swiftshader|llvmpipe|software|powervr|mali-[t4]|mali-g(3\d|5[0-7]|7[0-2])\b|adreno\D*([1-5]\d\d|60\d|61[0-6])\b|intel.*\b(hd|uhd) graphics/i.test(name);
+  } catch (e) { return false; }
+}
+
 function quality() {
   const small = Math.min(innerWidth, innerHeight) < 700 || innerWidth < 900;
   const lowMem = (navigator.deviceMemory || 8) <= 4;
+  const low = lowGPU();
+  if (low) document.documentElement.classList.add('low-gpu');
+  // a lighter mesh and no live blur, but the same sharpness as any phone: the chart is never drawn soft on purpose
+  if (low) return { dem: 1024, seg: { segX: 420, segZ: 280 }, overlay: 1.25, dpr: small ? 1.5 : 1.25, low };
   if (small || lowMem) return { dem: 1024, seg: { segX: 420, segZ: 280 }, overlay: 1.25, dpr: 1.5 };
   // a retina screen at desktop width is over 3000 device pixels across: the chart caps lower there
   return { dem: 2048, seg: { segX: 960, segZ: 640 }, overlay: 2, dpr: innerWidth * (window.devicePixelRatio || 1) > 3000 ? 1.5 : 1.75 };
@@ -74,7 +94,7 @@ async function boot() {
 
   let world;
   const nav = initNav({
-    onTheme: (next) => world && gsap.to(world.state, { night: next === 'night' ? 1 : 0, duration: reduced ? 0 : 1.4, ease: 'power2.inOut' }),
+    onTheme: (next) => world && gsap.to(world.state, { night: next === 'night' ? 1 : 0, duration: reduced ? 0 : 0.5, ease: 'power1.inOut' }),
   });
 
   const vectors = await early.vectors;
@@ -151,6 +171,10 @@ async function boot() {
     document.documentElement.classList.toggle('is-sheet', [...sheets.values()].some(Boolean));
   }, { threshold: [0, 0.12, 0.3] });
   ['.planner-sheet', '#footer'].forEach((q) => { const el = document.querySelector(q); if (el) io.observe(el); });
+  // the explore button steps up over the hero's partner strip only while that strip is on screen (on a phone the strip
+  // sits in the page's flow, below the fold on a short screen)
+  const strip = document.getElementById('heroPartners');
+  if (strip) new IntersectionObserver(([e]) => document.documentElement.classList.toggle('strip-on', e.isIntersecting)).observe(strip);
 
   if (!webglOK()) {
     const fb = document.getElementById('fallbackMap');

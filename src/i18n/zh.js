@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — 从机场到每个地区的屏幕",
+    "title": "Orient Advertising — 从机场到每个地区的屏幕",
     "description": "塔什干国际机场、Korzinka 超市、75 家以上餐厅及乌兹别克斯坦 11 个地区的室内屏幕广告。真实价格与媒体计划计算器。"
   },
   "langName": "中文",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "联系方式",
     "networks": "方向",
-    "rights": "Media Port。保留所有权利。",
+    "rights": "Orient Advertising。保留所有权利。",
     "top": "回到顶部"
   },
   "mini": {

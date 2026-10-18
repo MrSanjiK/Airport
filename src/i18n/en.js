@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — screens from the airport to every region",
+    "title": "Orient Advertising — screens from the airport to every region",
     "description": "Indoor screen advertising at Tashkent International Airport, Korzinka supermarkets, 75+ restaurants and 11 regions of Uzbekistan. Real prices and a media-plan calculator."
   },
   "langName": "English",
@@ -345,7 +345,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "Contacts",
     "networks": "Directions",
-    "rights": "Media Port. All rights reserved.",
+    "rights": "Orient Advertising. All rights reserved.",
     "top": "Back to top"
   },
   "mini": {

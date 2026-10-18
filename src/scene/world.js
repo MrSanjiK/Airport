@@ -46,7 +46,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   renderer.debug.checkShaderErrors = new URLSearchParams(location.search).has('debug');
   // a pixel budget: a 27-inch screen at retina density would ask the GPU for four times a laptop's pixels for a chart
   // that looks no sharper at that size; above ~5.2 megapixels the density steps down to fit
-  const budgetDpr = () => Math.sqrt(5.2e6 / Math.max(1, innerWidth * innerHeight));
+  const budgetDpr = () => Math.sqrt((quality.low ? 2.4e6 : 5.2e6) / Math.max(1, innerWidth * innerHeight));
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr, Math.max(1, budgetDpr())));
   const scene = new THREE.Scene();
   const bg = new THREE.Color(0.929, 0.949, 0.965);
@@ -157,9 +157,15 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   };
   addEventListener('pointermove', onPointer, { passive: true });
 
+  // the canvas's own size: the chart's coordinates (labels, picks, the airport frame) are measured against it
+  let cw = -1;
+  let ch = -1;
   const resize = () => {
     const w = canvas.clientWidth || innerWidth;
     const h = canvas.clientHeight || innerHeight;
+    if (w === cw && h === ch) return;
+    cw = w;
+    ch = h;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -170,12 +176,12 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   resize();
   addEventListener('resize', resize);
 
-  const state = { night: 0, parallax: 1, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches };
+  const state = { night: 0, parallax: 1, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches, low: !!quality.low };
   const v3 = new THREE.Vector3();
   const project = (world, out = {}) => {
     v3.copy(world).project(camera);
-    out.x = (v3.x * 0.5 + 0.5) * innerWidth;
-    out.y = (-v3.y * 0.5 + 0.5) * innerHeight;
+    out.x = (v3.x * 0.5 + 0.5) * cw;
+    out.y = (-v3.y * 0.5 + 0.5) * ch;
     out.z = v3.z;
     out.visible = v3.z < 1 && v3.z > -1 && out.x > -200 && out.x < innerWidth + 200 && out.y > -200 && out.y < innerHeight + 200;
     out.dist = camera.position.distanceTo(world);
@@ -188,7 +194,7 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -5);
   const hit = new THREE.Vector3();
   const pick = (cx, cy) => {
-    ndc.set((cx / innerWidth) * 2 - 1, -(cy / innerHeight) * 2 + 1);
+    ndc.set((cx / cw) * 2 - 1, -(cy / ch) * 2 + 1);
     ray.setFromCamera(ndc, camera);
     if (!ray.ray.intersectPlane(plane, hit)) return null;
     let [lon, lat] = toLonLat(hit.x, hit.z);
@@ -304,7 +310,8 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     route.update(state.night, renderer);
     airport.setNight(state.night);
     // the field's traffic moves while the plate or a close diorama shows it, and keeps the chart drawing meanwhile
-    if (airport.alive()) { airport.update(dt); dirty++; }
+    const lifeOn = airport.alive();
+    if (lifeOn) airport.update(dt);
     city.update(state.night, renderer, dt, cur.dist);
     office.update(dt, state.night);
     lines.update(state.night, renderer);
@@ -315,7 +322,9 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
     const sig = `${cur.tx.toFixed(5)},${cur.ty.toFixed(5)},${cur.tz.toFixed(5)},${cur.dist.toFixed(4)},${cur.az.toFixed(3)},${cur.el.toFixed(3)},${cur.shift.toFixed(4)},${cur.shiftY.toFixed(4)},${state.night.toFixed(3)},${scrollY},${field.opacity.toFixed(3)},${city.k.toFixed(3)},${office.k.toFixed(3)},${route.progress.toFixed(3)},${lines.opacity.toFixed(3)},${innerWidth}x${innerHeight},${dirty}`;
     quiet = sig === lastSig ? quiet + 1 : 0;
     lastSig = sig;
-    if (quiet > 45) return;
+    if (quiet > 45 && !lifeOn) return;
+    // with only the field's traffic moving, a modest chip draws every other frame (30 fps of cars and aircraft)
+    if (lifeOn && quiet > 2 && state.low && (tick++ & 1)) return;
     listeners.forEach((fn) => fn(time, dt));
     // the airport as a diorama: drawn on its own over the chart (depth cleared), its ground fading into the map
     const dk = airport.discK();
@@ -354,24 +363,37 @@ export async function createWorld(canvas, { data, onProgress, quality }) {
       done?.();
       dirty++;
     }
-    // a GPU that cannot keep up gets fewer pixels, a step at a time: first down to one per CSS pixel, then (only if
-    // frames still run long) a little under, a softer chart being better than a stuttering one
-    slow = slow * 0.96 + (dt > 0.029 ? 1 : 0) * 0.04;
+    // a GPU that cannot keep up gets fewer pixels, a quarter step at a time and never below one per CSS pixel (under
+    // that the chart turns to mush). Only frames under ~22 fps count as slow: a phone in low-power mode, or a browser
+    // that caps animation at 30 fps, runs steady 33 ms frames that are no sign of a struggling chip. Once frames run
+    // freely again for a while, the pixels come back the same way.
+    slow = slow * 0.96 + (dt > 0.045 ? 1 : 0) * 0.04;
+    fast = dt < 0.024 ? fast + dt : 0;
     const pr = renderer.getPixelRatio();
-    if (slow > 0.6 && pr > 0.86 && time - lastDrop > 3) {
+    if (slow > 0.6 && pr > 1.01 && time - lastDrop > 3) {
       lastDrop = time;
       slow = 0;
-      renderer.setPixelRatio(pr > 1.01 ? Math.max(1, pr - 0.25) : 0.85);
+      renderer.setPixelRatio(Math.max(1, pr - 0.25));
+      cw = -1;
+      resize();
+    } else if (fast > 10 && pr < startPr - 0.01 && time - lastDrop > 10) {
+      lastDrop = time;
+      fast = 0;
+      renderer.setPixelRatio(Math.min(startPr, pr + 0.25));
+      cw = -1;
       resize();
     }
   };
   let quiet = 0;
+  let tick = 0;
   let lastSig = '';
   let dirty = 0;
   // any input wakes the story up, even one that moves nothing yet (a key, a click on a chip)
   ['pointerdown', 'click', 'keydown', 'wheel', 'touchmove'].forEach((ev) => addEventListener(ev, () => dirty++, { passive: true, capture: true }));
   let slow = 0;
+  let fast = 0;
   let lastDrop = 0;
+  const startPr = renderer.getPixelRatio();
 
   document.addEventListener('visibilitychange', () => {
     const vis = document.visibilityState === 'visible';

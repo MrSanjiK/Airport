@@ -1,6 +1,6 @@
 export default {
   "meta": {
-    "title": "Media Port — aeroportdan har bir viloyatgacha ekranlar",
+    "title": "Orient Advertising — aeroportdan har bir viloyatgacha ekranlar",
     "description": "Toshkent xalqaro aeroporti, Korzinka supermarketlari, 75+ ta restoran va 11 ta hududdagi indoor ekranlarda reklama. Real narxlar va media-plan kalkulyatori."
   },
   "langName": "O'zbekcha",
@@ -349,7 +349,7 @@ export default {
     "slogan": "Osmon qadar hayratlanasiz",
     "contacts": "Aloqa",
     "networks": "Yo'nalishlar",
-    "rights": "Media Port. Barcha huquqlar himoyalangan.",
+    "rights": "Orient Advertising. Barcha huquqlar himoyalangan.",
     "top": "Yuqoriga"
   },
   "mini": {

@@ -3,11 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Media Port — aeroportdan har bir viloyatgacha ekranlar</title>
+  <title>Orient Advertising — aeroportdan har bir viloyatgacha ekranlar</title>
   <meta name="description" content="Toshkent xalqaro aeroporti, Korzinka supermarketlari, 75+ ta restoran va 11 ta hududdagi indoor ekranlarda reklama. Real narxlar va media-plan kalkulyatori." />
   <meta name="theme-color" content="#EDF2F6" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0A1729" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Orient Advertising" />
+  <meta property="og:title" content="Orient Advertising — aeroportdan har bir viloyatgacha ekranlar" />
+  <meta property="og:description" content="Media Port, Fly TV, Media Gate va TV Line: Toshkent aeroporti, Korzinka, restoranlar va 11 ta hududdagi ekranlar — bitta xarid." />
+  <meta property="og:image" content="https://airport-lime-one.vercel.app/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preload" href="/data/places.json" as="fetch" crossorigin />
   <script>
     // Theme before paint: stored choice, else the visitor's system preference.
@@ -43,7 +53,7 @@
 
   <header class="nav" id="nav">
     <div class="nav-bar">
-      <a class="nav-logo" href="#top" aria-label="Media Port"><span class="logo" data-logo></span></a>
+      <a class="nav-logo" href="#top" aria-label="Orient Advertising"><span class="logo logo--oa" data-oa-logo></span></a>
       <ul class="nav-links" role="list">
         <li><a href="#airport" data-mega="mediaport">Media Port</a></li>
         <li><a href="#flytv" data-mega="flytv">Fly TV</a></li>
@@ -61,12 +71,12 @@
           <div class="call-pop" id="callPop" role="dialog" aria-labelledby="callNum" hidden>
             <p class="call-k"><span data-i18n="footer.contacts">Aloqa</span> · Orient Advertising</p>
             <div class="call-row">
-              <a class="call-num tnum" id="callNum" href="tel:+998991787777">+998 99 178 77 77</a>
+              <a class="call-num tnum" id="callNum" href="tel:+998935664501">+998 93 566 45 01</a>
               <button class="call-copy" id="callCopy" type="button" data-i18n-attr="aria-label:form.copy" aria-label="Nusxalash"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg><span class="call-done" data-i18n="form.copied">Nusxalandi</span></button>
             </div>
             <div class="call-acts">
-              <a class="call-act" href="tel:+998991787777"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg><span data-i18n="form.call">Qo'ng'iroq qilish</span></a>
-              <a class="call-act" href="https://wa.me/998991787777" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L2 14l2.9-.7A6.2 6.2 0 1 0 8 1.8z"/></svg><span>WhatsApp</span></a>
+              <a class="call-act" href="tel:+998935664501"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg><span data-i18n="form.call">Qo'ng'iroq qilish</span></a>
+              <a class="call-act" href="https://wa.me/998935664501" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L2 14l2.9-.7A6.2 6.2 0 1 0 8 1.8z"/></svg><span>WhatsApp</span></a>
             </div>
           </div>
         </div>
@@ -133,37 +143,37 @@
             <figure class="hleaf" data-plate="airport" style="--brand:#163b67">
               <span class="hl-logo hl-logo--airport"><span class="logo" data-logo></span></span>
               <figcaption class="hl-stat"><b data-i18n="hero.cardAirport">40 ta LED ekran</b><span data-i18n="hero.cardAirportSub">150 ta ko'rsatuv / kun</span></figcaption>
-              <span class="hl-photo"><img src="/plates/photo-airport.png" alt="Media Port" decoding="async" /></span>
+              <span class="hl-photo"><img src="/plates/photo-airport.webp" alt="Media Port" loading="lazy" decoding="async" /></span>
             </figure>
             <figure class="hleaf" data-plate="flytv" style="--brand:#e40045">
-              <span class="hl-logo hl-logo--flytv"><img class="lg-day" src="/img/brand/flytv.png" alt="Fly TV" decoding="async" /><img class="lg-night" src="/img/brand/flytv-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <span class="hl-logo hl-logo--flytv"><img class="lg-day" src="/img/brand/flytv.png" alt="Fly TV" loading="lazy" decoding="async" /><img class="lg-night" src="/img/brand/flytv-d.png" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
               <figcaption class="hl-stat"><b data-i18n="mega.flytv.a">200 ta monitor</b><span data-i18n="mega.flytv.c">96 ta ko'rsatuv / kun</span></figcaption>
-              <span class="hl-photo"><img src="/img/tv-gates.webp" alt="Fly TV" decoding="async" /></span>
+              <span class="hl-photo"><img src="/img/tv-gates.webp" alt="Fly TV" loading="lazy" decoding="async" /></span>
             </figure>
             <figure class="hleaf" data-plate="mediagate" style="--brand:#153b66">
-              <span class="hl-logo hl-logo--mediagate"><img class="lg-day" src="/img/brand/mediagate.png" alt="Media Gate" decoding="async" /><img class="lg-night" src="/img/brand/mediagate-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <span class="hl-logo hl-logo--mediagate"><img class="lg-day" src="/img/brand/mediagate.png" alt="Media Gate" loading="lazy" decoding="async" /><img class="lg-night" src="/img/brand/mediagate-d.png" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
               <figcaption class="hl-stat"><b data-i18n="mega.mediagate.a">10 ta lightbox · 10 ta zona</b><span data-i18n="mega.mediagate.b">35 m² yuza</span></figcaption>
-              <span class="hl-photo"><img src="/img/lb-pillars.webp" alt="Media Gate" decoding="async" /></span>
+              <span class="hl-photo"><img src="/img/lb-pillars.webp" alt="Media Gate" loading="lazy" decoding="async" /></span>
             </figure>
               </div>
             </div>
             <div class="hold-group" data-group="tvline">
-              <p class="hold-gk hold-gk--tvl"><img class="hold-tvl lg-day" src="/img/brand/tvline.png" alt="TV Line" decoding="async" /><img class="hold-tvl lg-night" src="/img/brand/tvline-d.png" alt="" aria-hidden="true" decoding="async" /><b>TV Line</b><span data-i18n="mega.tvline.stat">2010-yildan beri</span></p>
+              <p class="hold-gk hold-gk--tvl"><img class="hold-tvl lg-day" src="/img/brand/tvline.png" alt="TV Line" loading="lazy" decoding="async" /><img class="hold-tvl lg-night" src="/img/brand/tvline-d.png" alt="" aria-hidden="true" loading="lazy" decoding="async" /><b>TV Line</b><span data-i18n="mega.tvline.stat">2010-yildan beri</span></p>
               <div class="hold-leaves">
             <figure class="hleaf" data-plate="korzinka" style="--brand:#e2001b">
-              <span class="hl-logo hl-logo--korzinka"><img src="/img/brand/korzinka.png" alt="Korzinka" decoding="async" /></span>
+              <span class="hl-logo hl-logo--korzinka"><img src="/img/brand/korzinka.png" alt="Korzinka" loading="lazy" decoding="async" /></span>
               <figcaption class="hl-stat"><b data-i18n="hero.cardKorzinka">300+ ta obyekt</b><span data-i18n="hero.cardKorzinkaSub">900 000 ta chek / kun</span></figcaption>
-              <span class="hl-photo"><img src="/plates/photo-korzinka.png" alt="TV Line · Korzinka" decoding="async" /></span>
+              <span class="hl-photo"><img src="/plates/photo-korzinka.webp" alt="TV Line · Korzinka" loading="lazy" decoding="async" /></span>
             </figure>
             <figure class="hleaf" data-plate="horeca" style="--brand:#e11783">
               <span class="hl-logo hl-logo--horeca"><span class="hl-word">HoReCa</span></span>
               <figcaption class="hl-stat"><b data-i18n="hero.cardHoreca">75+ ta restoran</b><span data-i18n="hero.cardHorecaSub">1000+ ta monitor</span></figcaption>
-              <span class="hl-photo"><img src="/plates/photo-horeca.png" alt="TV Line · HoReCa" decoding="async" /></span>
+              <span class="hl-photo"><img src="/plates/photo-horeca.webp" alt="TV Line · HoReCa" loading="lazy" decoding="async" /></span>
             </figure>
             <figure class="hleaf" data-plate="regions" style="--brand:#ad4482">
-              <span class="hl-logo hl-logo--regions"><img class="lg-day" src="/img/brand/region-script.png" alt="Region" decoding="async" /><img class="lg-night" src="/img/brand/region-script-d.png" alt="" aria-hidden="true" decoding="async" /></span>
+              <span class="hl-logo hl-logo--regions"><img class="lg-day" src="/img/brand/region-script.png" alt="Region" loading="lazy" decoding="async" /><img class="lg-night" src="/img/brand/region-script-d.png" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
               <figcaption class="hl-stat"><b data-i18n="mega.regions.title">11 ta hudud</b><span data-i18n="mega.regions.stat">300 000 ta tashrif / kun</span></figcaption>
-              <span class="hl-photo"><img src="/img/rg-cafe-screens.webp" alt="TV Line · Region" decoding="async" /></span>
+              <span class="hl-photo"><img src="/img/rg-cafe-screens.webp" alt="TV Line · Region" loading="lazy" decoding="async" /></span>
             </figure>
               </div>
             </div>
