@@ -275,5 +275,11 @@ async function boot() {
 
 boot();
 
+// the AI chat: its own small chunk, fetched once the page has loaded and the browser is idle, so the chart never waits
+const chat = () => import('./ui/chat.js').then((m) => m.initChat()).catch((e) => console.warn('[chat]', e));
+const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 4000 }) : setTimeout(fn, 1200));
+const later = () => setTimeout(() => idle(chat), /[#?&]chat\b/.test(location.href) ? 0 : 1500);
+if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
+
 if (import.meta.hot) import.meta.hot.accept(() => location.reload());
 export { t };

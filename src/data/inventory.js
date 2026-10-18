@@ -125,6 +125,9 @@ export const PHONES = ['+998 93 566 45 01'];
 // managers' Telegram chat hears about the request at once. VITE_LEAD_API at build time overrides it; if the request
 // fails the form still hands off to a call or WhatsApp.
 export const LEAD_API = (import.meta.env.VITE_LEAD_API || 'https://crm.orient-advertising.uz').replace(/\/+$/, '');
+// the Telegram bot (the same AI assistant as the site's chat, and the managers on the other end)
+export const BOT = 'orientadvertising_bot';
+export const BOT_URL = `https://t.me/${BOT}?start=site`;
 export const TERMS = [3, 6, 12];
 
 // The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.

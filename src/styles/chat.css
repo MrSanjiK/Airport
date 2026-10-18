@@ -1,0 +1,215 @@
+/* ───────── The AI chat: the corner button, its nudge and the panel ─────────
+   Over the moving chart nothing here blurs live (that costs the GPU every frame): surfaces are frosted plates. */
+
+/* `hidden` wins over the display rules below: a closed panel must not sit invisibly over the page */
+.oc-panel[hidden], .oc-teaser[hidden], .oc-badge[hidden] { display: none !important; }
+
+.oc-fab {
+  position: fixed; inset-inline-end: 22px; bottom: 20px; z-index: 45;
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px 0 7px;
+  border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--ink); color: var(--paper);
+  font: 650 14px/1 var(--f-text); letter-spacing: 0.005em; white-space: nowrap;
+  box-shadow: 0 16px 34px -14px rgba(10, 30, 60, 0.6), 0 2px 6px rgba(10, 30, 60, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  opacity: 0; transform: translate3d(0, 18px, 0) scale(0.92);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), box-shadow 0.4s, background-color 0.6s var(--ease-io), color 0.6s var(--ease-io);
+}
+.oc-fab.is-in { opacity: 1; transform: none; }
+.oc-fab:hover { transform: translateY(-2px); box-shadow: 0 20px 40px -14px rgba(10, 30, 60, 0.7), 0 2px 6px rgba(10, 30, 60, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.14); }
+.oc-fab:focus-visible { outline: 2px solid var(--route); outline-offset: 3px; }
+.oc-fab-ico {
+  position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--route); color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(227, 0, 15, 0.9);
+}
+.oc-fab-ico::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--route);
+  opacity: 0; animation: oc-ring 4.8s 2s var(--ease-out) infinite;
+}
+@keyframes oc-ring { 0% { opacity: 0.7; transform: scale(0.85); } 40%, 100% { opacity: 0; transform: scale(1.45); } }
+.oc-fab-ico svg, .oc-teaser svg, .oc-panel svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.oc-fab-ico svg { width: 19px; height: 19px; }
+.oc-fab-ico .oc-spark { fill: currentColor; stroke: none; animation: oc-twinkle 3.2s ease-in-out infinite; transform-origin: 12.4px 10.4px; }
+@keyframes oc-twinkle { 0%, 70%, 100% { transform: scale(1); } 80% { transform: scale(1.35) rotate(45deg); } }
+.oc-online { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 2px var(--ink); inset-inline-end: -1px; bottom: -1px; }
+.oc-badge {
+  position: absolute; top: -5px; inset-inline-end: -4px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
+  display: grid; place-items: center; background: var(--route); color: #fff; font: 700 11.5px/1 var(--f-text);
+  box-shadow: 0 0 0 2px var(--paper); animation: oc-pop 0.5s var(--ease-out);
+}
+@keyframes oc-pop { from { transform: scale(0.4); } }
+
+/* the fab rides over the hero's partner strip exactly like the explore button, which stands beside it */
+html.has-chat .explore-fab { inset-inline-end: calc(22px + var(--chat-w, 0px)); }
+html.at-map:not(.is-explore) .oc-fab { transform: translate3d(0, -78px, 0); }
+html.is-intro .oc-fab, html.is-intro .oc-teaser { visibility: hidden; }
+html.chat-open .oc-fab { opacity: 0; pointer-events: none; transform: scale(0.9); }
+
+.oc-teaser {
+  position: fixed; inset-inline-end: 22px; bottom: 80px; z-index: 46; display: flex; align-items: flex-start; gap: 2px;
+  max-width: min(300px, calc(100vw - 32px)); padding: 6px; border-radius: 20px;
+  background: var(--plate); border: 1px solid var(--glass-line); box-shadow: var(--float), var(--sheen);
+  opacity: 0; transform: translate3d(0, 10px, 0) scale(0.96); transform-origin: 100% 100%;
+  transition: opacity 0.45s var(--ease-out), transform 0.5s var(--ease-out);
+}
+[dir='rtl'] .oc-teaser { transform-origin: 0 100%; }
+.oc-teaser.is-on { opacity: 1; transform: none; }
+html.at-map:not(.is-explore) .oc-teaser { bottom: 158px; }
+.oc-teaser-open { display: flex; align-items: center; gap: 10px; padding: 6px 4px 6px 6px; border: 0; background: none; cursor: pointer; text-align: start; color: var(--ink); font: 550 13.5px/1.35 var(--f-text); }
+.oc-teaser-x { flex: none; width: 26px; height: 26px; border: 0; border-radius: 50%; display: grid; place-items: center; background: transparent; color: var(--ink-3); cursor: pointer; }
+.oc-teaser-x:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
+.oc-teaser-x svg { width: 14px; height: 14px; }
+
+/* ---------- the panel ---------- */
+.oc-panel {
+  position: fixed; inset-inline-end: 22px; bottom: 20px; z-index: 82;
+  width: min(408px, calc(100vw - 32px)); height: min(680px, calc(100vh - 110px)); height: min(680px, calc(100dvh - 110px));
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 28px; background: var(--plate); color: var(--ink);
+  border: 1px solid var(--glass-line); box-shadow: var(--float), 0 40px 90px -40px rgba(10, 30, 60, 0.55), var(--sheen);
+  opacity: 0; transform: translate3d(0, 16px, 0) scale(0.95); transform-origin: 100% 100%;
+  transition: opacity 0.38s var(--ease-out), transform 0.5s var(--ease-out);
+}
+[dir='rtl'] .oc-panel { transform-origin: 0 100%; }
+.oc-panel.is-on { opacity: 1; transform: none; }
+
+.oc-head { display: flex; align-items: center; gap: 12px; padding: 14px 14px 14px 16px; border-bottom: 1px solid var(--hair-2); }
+.oc-ava {
+  position: relative; flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(120% 120% at 30% 20%, #2a3f8f, #12174e 70%); color: #fff;
+  box-shadow: 0 8px 18px -10px rgba(18, 23, 78, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.oc-ava svg { width: 30px; height: 30px; fill: currentColor; stroke: none; }
+.oc-ava--sm { width: 34px; height: 34px; }
+.oc-ava--sm svg { width: 24px; height: 24px; }
+.oc-who { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.oc-who b { font: 750 16px/1.1 var(--f-display); letter-spacing: -0.01em; }
+.oc-who small { display: flex; align-items: center; gap: 6px; font: 500 12px/1.2 var(--f-text); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.oc-who .oc-online { position: static; flex: none; width: 7px; height: 7px; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
+.oc-tg {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px 0 10px; border-radius: 999px;
+  background: #2aabee; color: #fff; text-decoration: none; font: 650 12.5px/1 var(--f-text);
+  box-shadow: 0 8px 16px -10px rgba(42, 171, 238, 0.95); transition: transform 0.3s var(--ease-out), filter 0.3s;
+}
+.oc-tg:hover { transform: translateY(-1px); filter: brightness(1.06); }
+.oc-tg svg { width: 16px; height: 16px; stroke-width: 1.7; }
+.oc-x { flex: none; width: 34px; height: 34px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink-2); transition: background-color 0.25s, color 0.25s; }
+.oc-x:hover { background: color-mix(in srgb, var(--ink) 13%, transparent); color: var(--ink); }
+.oc-x svg { width: 16px; height: 16px; stroke-width: 2.2; }
+
+.oc-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+.oc-list { display: flex; flex-direction: column; gap: 8px; padding: 16px 14px 12px; }
+
+.oc-msg { display: flex; flex-direction: column; align-items: flex-start; max-width: 86%; }
+.oc-msg--me { align-self: flex-end; align-items: flex-end; }
+.oc-msg.is-new { animation: oc-in 0.45s var(--ease-out) both; }
+@keyframes oc-in { from { opacity: 0; transform: translate3d(0, 10px, 0); } }
+.oc-bubble {
+  padding: 10px 14px; border-radius: 20px; font: 400 14.5px/1.5 var(--f-text); overflow-wrap: anywhere;
+  background: color-mix(in srgb, var(--ink) 6.5%, var(--plate)); color: var(--ink);
+  border-end-start-radius: 7px; user-select: text;
+}
+.oc-msg--me .oc-bubble { background: var(--route); color: #fff; border-end-start-radius: 20px; border-end-end-radius: 7px; }
+.oc-msg--me.is-tmp .oc-bubble { opacity: 0.75; }
+.oc-msg--mgr .oc-bubble { background: color-mix(in srgb, #2aabee 12%, var(--plate)); box-shadow: inset 3px 0 0 #2aabee; }
+[dir='rtl'] .oc-msg--mgr .oc-bubble { box-shadow: inset -3px 0 0 #2aabee; }
+.oc-from { font: 700 11px/1 var(--f-text); letter-spacing: 0.06em; text-transform: uppercase; color: #1d8fd0; margin: 4px 0 5px 12px; }
+.oc-bubble b { font-weight: 700; }
+.oc-bubble a { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 2px; }
+.oc-msg--ai .oc-bubble a { color: var(--route); text-decoration-color: color-mix(in srgb, var(--route) 35%, transparent); }
+.oc-p, .oc-li { display: block; }
+.oc-li { position: relative; padding-inline-start: 16px; margin: 2px 0; }
+.oc-li::before { content: ''; position: absolute; inset-inline-start: 4px; top: 0.66em; width: 5px; height: 5px; border-radius: 50%; background: var(--route); }
+.oc-msg--me .oc-li::before { background: #fff; }
+.oc-gap { display: block; height: 7px; }
+.oc-retry { margin-top: 6px; border: 0; background: none; cursor: pointer; color: var(--route); font: 600 12.5px/1.2 var(--f-text); padding: 0; }
+
+.oc-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 4px 0 2px; animation: oc-in 0.5s 0.15s var(--ease-out) both; }
+.oc-chip {
+  height: 36px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--route) 30%, transparent); background: var(--route-soft); color: var(--route);
+  font: 600 13px/1 var(--f-text); transition: background-color 0.25s, color 0.25s, transform 0.25s var(--ease-out);
+}
+.oc-chip:hover { background: var(--route); color: #fff; transform: translateY(-1px); }
+
+.oc-deck {
+  align-self: flex-start; display: flex; align-items: center; gap: 12px; width: min(300px, 86%); padding: 10px 12px 10px 10px; border-radius: 18px;
+  text-decoration: none; color: var(--ink); background: var(--plate); border: 1px solid var(--card-line); box-shadow: var(--shadow-sm);
+  transition: transform 0.3s var(--ease-out), border-color 0.3s;
+}
+.oc-deck.is-new { animation: oc-in 0.45s var(--ease-out) both; }
+.oc-deck:hover { transform: translateY(-2px); border-color: var(--hair); }
+.oc-deck-ico { flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--route-soft); color: var(--route); }
+.oc-deck-ico svg { width: 21px; height: 21px; }
+.oc-deck-t { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.oc-deck-t b { font: 700 14px/1.2 var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.oc-deck-t small { font: 500 12px/1 var(--f-text); color: var(--ink-3); }
+.oc-deck-go { flex: none; display: inline-flex; align-items: center; gap: 4px; font: 650 12.5px/1 var(--f-text); color: var(--route); }
+.oc-deck-go svg { width: 14px; height: 14px; stroke-width: 2.2; }
+[dir='rtl'] .oc-deck-go svg { transform: scaleX(-1); }
+
+.oc-typing .oc-bubble { display: flex; align-items: center; gap: 5px; padding: 13px 14px; }
+.oc-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); animation: oc-dot 1.2s ease-in-out infinite; }
+.oc-typing i:nth-child(2) { animation-delay: 0.15s; }
+.oc-typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes oc-dot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.45; } 30% { transform: translateY(-4px); opacity: 1; } }
+/* the words come only if the answer takes a while */
+.oc-typing span { max-width: 0; overflow: hidden; white-space: nowrap; opacity: 0; margin-inline-start: 4px; font: 500 12.5px/1 var(--f-text); color: var(--ink-3); animation: oc-slow 0.6s 5s var(--ease-out) forwards; }
+@keyframes oc-slow { to { max-width: 240px; opacity: 1; } }
+
+.oc-notice { align-self: center; max-width: 90%; margin: 4px 0; padding: 8px 12px; border-radius: 12px; text-align: center; font: 500 12.5px/1.4 var(--f-text); color: var(--ink-2); background: color-mix(in srgb, var(--route) 8%, transparent); }
+.oc-moved { align-self: center; display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 2px; padding: 8px 14px; border-radius: 999px; text-decoration: none; font: 600 12.5px/1 var(--f-text); color: #1d8fd0; background: color-mix(in srgb, #2aabee 12%, transparent); }
+.oc-moved svg { width: 15px; height: 15px; }
+
+.oc-form { padding: 10px 12px 10px; border-top: 1px solid var(--hair-2); }
+.oc-trap { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; inset-inline-start: -9999px; }
+.oc-input {
+  display: flex; align-items: flex-end; gap: 8px; padding: 6px 6px 6px 16px; border-radius: 24px;
+  background: color-mix(in srgb, var(--ink) 5.5%, var(--plate)); border: 1.5px solid transparent; transition: border-color 0.25s, background-color 0.25s;
+}
+[dir='rtl'] .oc-input { padding: 6px 16px 6px 6px; }
+.oc-input:focus-within { border-color: color-mix(in srgb, var(--route) 55%, transparent); background: var(--plate); }
+.oc-input textarea {
+  flex: 1; min-height: 36px; max-height: 132px; resize: none; border: 0; outline: 0; background: none; color: var(--ink);
+  font: 400 15px/1.45 var(--f-text); padding: 7px 0; scrollbar-width: none;
+}
+.oc-input textarea::placeholder { color: var(--ink-3); }
+.oc-send {
+  flex: none; width: 36px; height: 36px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--route); color: #fff; box-shadow: 0 8px 16px -8px rgba(227, 0, 15, 0.9);
+  transition: transform 0.3s var(--ease-out), opacity 0.25s, background-color 0.25s;
+}
+.oc-send svg { width: 18px; height: 18px; stroke-width: 2.4; }
+.oc-send:hover:not(:disabled) { transform: scale(1.06); }
+.oc-send:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.oc-note { margin: 7px 4px 0; text-align: center; font: 500 11px/1.3 var(--f-text); color: var(--ink-3); }
+
+@media (max-width: 960px) {
+  .oc-fab { inset-inline-end: 16px; bottom: 16px; width: 52px; height: 52px; padding: 0; justify-content: center; }
+  .oc-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .oc-fab-ico { width: 52px; height: 52px; background: var(--route); box-shadow: none; }
+  .oc-fab-ico svg { width: 24px; height: 24px; }
+  .oc-fab .oc-online { inset-inline-end: 3px; bottom: 3px; box-shadow: 0 0 0 2px var(--route); }
+  html.has-chat .explore-fab { inset-inline-end: calc(16px + var(--chat-w, 0px)); }
+  html.at-map:not(.is-explore) .oc-fab { transform: none; }
+  html.strip-on:not(.is-explore) .oc-fab { transform: translate3d(0, -64px, 0); }
+  .oc-teaser, html.at-map:not(.is-explore) .oc-teaser { inset-inline-end: 16px; bottom: 80px; }
+  html.strip-on:not(.is-explore) .oc-teaser { bottom: 144px; }
+}
+
+/* a phone: the chat is the whole screen, over the page, and keeps clear of the keyboard */
+@media (max-width: 700px) {
+  .oc-panel {
+    inset: var(--oc-top, 0px) 0 auto 0; width: 100%; height: var(--oc-vh, 100dvh); border-radius: 0; border: 0;
+    transform: translate3d(0, 40px, 0); transform-origin: 50% 100%;
+  }
+  .oc-head { padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px 14px; }
+  .oc-form { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .oc-input textarea { font-size: 16px; }
+  .oc-msg { max-width: 90%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oc-fab, .oc-panel, .oc-teaser { transition-duration: 0.01ms; }
+  .oc-fab-ico::after, .oc-spark, .oc-msg.is-new, .oc-deck.is-new, .oc-chips { animation: none; }
+}

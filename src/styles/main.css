@@ -331,6 +331,9 @@ html.low-gpu .nav::before { background: color-mix(in srgb, var(--plate) 92%, tra
 .call-done { position: absolute; bottom: calc(100% + 6px); inset-inline-end: 0; padding: 4px 8px; border-radius: 999px; background: var(--ink); color: var(--paper); font: 600 11px/1 var(--f-text); white-space: nowrap; opacity: 0; transform: translateY(4px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
 .call-copy.is-done .call-done { opacity: 1; transform: none; }
 .call-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+/* the bot spans the row under the call and WhatsApp: the AI answers there at any hour */
+.call-act--tg { grid-column: 1 / -1; background: #2aabee; color: #fff; }
+.call-act--tg:hover { background: color-mix(in srgb, #2aabee 88%, #000); }
 .call-act { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 40px; padding: 0 10px; border-radius: 999px; text-decoration: none; font: 600 13px/1 var(--f-text); color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); transition: background-color 0.3s, color 0.3s; white-space: nowrap; }
 .call-act svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
 .call-act:first-child { background: var(--route); color: #fff; }
@@ -950,6 +953,7 @@ html.is-intro .holding { visibility: hidden; }
   transition: transform 0.45s var(--ease-out), border-color 0.3s, box-shadow 0.45s var(--ease-out);
 }
 .pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--route); transition: transform 0.45s var(--ease-out); }
+.pill--tg i { background: #2aabee; }
 .pill svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.45s var(--ease-out); }
 .pill:hover { transform: translateY(-2px); border-color: var(--ink-3); box-shadow: 0 1px 0 rgba(16, 40, 72, 0.04), 0 16px 26px -14px rgba(16, 40, 72, 0.5); }
 .pill:hover i { transform: scale(1.7); }

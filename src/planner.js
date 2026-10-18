@@ -1,5 +1,5 @@
 import { t, num, money, onLang, lang } from './i18n/index.js';
-import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS, LEAD_API } from './data/inventory.js';
+import { LED_ZONES, AIRPORT_TV, LIGHTBOX, KORZINKA, HORECA, REGIONS, TERMS, PHONES, HOLDING, DIRECTIONS, LEAD_API, BOT_URL } from './data/inventory.js';
 import logo from './assets/logo.svg?raw';
 import { badge, tagline } from './ui/brand.js';
 import { mountPartners, mountPartnerStrip } from './ui/partners.js';
@@ -295,6 +295,7 @@ export function initPlanner({ bus }) {
           <div class="done-actions">
             <a class="btn-quiet" href="tel:${PHONES[0].replace(/\s/g, '')}"><svg viewBox="0 0 16 16"><path d="M4 2.5h2l1 3-1.5 1a8 8 0 0 0 4 4l1-1.5 3 1v2a1.5 1.5 0 0 1-1.6 1.5A11.5 11.5 0 0 1 2.5 4.1 1.5 1.5 0 0 1 4 2.5z"/></svg>${esc(t('form.call'))}</a>
             <a class="btn-quiet" href="https://wa.me/${PHONES[0].replace(/\D/g, '')}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener"><svg viewBox="0 0 16 16"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L2 14l2.9-.7A6.2 6.2 0 1 0 8 1.8z"/></svg>${esc(t('form.whatsapp'))}</a>
+            <a class="btn-quiet" href="${BOT_URL}" target="_blank" rel="noopener"><svg viewBox="0 0 16 16"><path d="M14.5 2.5 1.8 7.4c-.6.2-.6 1 0 1.2l3.1 1 1.2 3.7c.2.5.8.6 1.1.2l1.8-1.9 3.2 2.4c.4.3 1 .1 1.1-.4l2.1-10.1c.1-.6-.4-1.1-1-.9z"/><path d="m4.9 9.6 7.3-4.8-5.6 6"/></svg>Telegram</a>
             <button class="btn-quiet" type="button" data-copy><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"/><path d="M3 10.5V3.5A1 1 0 0 1 4 2.5h7"/></svg><span>${esc(t('form.copy'))}</span></button>
             <button class="btn-quiet" type="button" data-again>${esc(t('form.again'))}</button>
           </div></div>`;
@@ -322,6 +323,7 @@ export function initPlanner({ bus }) {
           <a class="footer-oa" href="#about" aria-label="Orient Advertising"><span class="hold-logo" aria-hidden="true">${oaLogo}</span><small>${esc(t('dir.holdingK'))}</small></a>
           <div class="footer-pills">
             <a class="pill" href="https://wa.me/${tel.replace(/\D/g, '')}" target="_blank" rel="noopener"><i></i>WhatsApp</a>
+            <a class="pill pill--tg" href="${BOT_URL}" target="_blank" rel="noopener"><i></i>Telegram</a>
             <a class="pill" href="tel:${tel}"><i></i>${esc(t('form.call'))}</a>
           </div>
         </div>
