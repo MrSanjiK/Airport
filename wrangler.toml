@@ -1,0 +1,7 @@
+# The website on Cloudflare (free plan, commercial use allowed): the built page and its data as static assets.
+# Build, then deploy: `npm run build` and `npx wrangler deploy`. The CRM/bot backend is the "orient-crm" worker.
+name = "orient-site"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./dist"
