@@ -1,6 +1,8 @@
 # The website on Cloudflare (free plan, commercial use allowed): the built page and its data as static assets.
 # Build, then deploy: `npm run build` and `npx wrangler deploy`. The CRM/bot backend is the "orient-crm" worker.
 name = "orient-site"
+# the Orient account, named so a deploy never lands in another account the same login can reach
+account_id = "9dae019ab9bb6f3998524d2e7e1dbc23"
 compatibility_date = "2026-10-01"
 # the workers.dev address stays on as a fallback
 workers_dev = true
