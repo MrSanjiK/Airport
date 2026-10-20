@@ -128,6 +128,8 @@ export const LEAD_API = (import.meta.env.VITE_LEAD_API || 'https://crm.orient-ad
 // the Telegram bot (the same AI assistant as the site's chat, and the managers on the other end)
 export const BOT = 'orientadvertising_bot';
 export const BOT_URL = `https://t.me/${BOT}?start=site`;
+// the operator the site's chat and the bot speak as (the worker's OPERATOR_NAME), in each script
+export const OPERATOR = { name: 'Nilufar', ru: 'Нилуфар', ar: 'نيلوفر', ko: '닐루파르' };
 export const TERMS = [3, 6, 12];
 
 // The six directions, each under its original brand (decks in the project root). Media Port is also the site's name.
