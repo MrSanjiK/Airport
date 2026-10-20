@@ -1,10 +1,10 @@
-/* ───────── The operator chat: the corner capsule, its nudge and the panel ─────────
-   The site's own clothes: a frosted capsule like the explore button, a plate like the call popover, hairlines, the
-   chart's condensed capitals for small labels and the route's red dot. Over the moving chart nothing blurs live (that
-   costs the GPU every frame): surfaces are frosted plates. */
+/* ───────── The chat: the round Orient button, its nudge and the panel ─────────
+   The site's own clothes: the brand's mark in a navy circle, a plate like the call popover, hairlines, the chart's
+   condensed capitals for small labels and the route's red dot. Over the moving chart nothing blurs live (that costs
+   the GPU every frame): surfaces are frosted plates. */
 
 /* `hidden` wins over the display rules below: a closed panel must not sit invisibly over the page */
-.oc-panel[hidden], .oc-teaser[hidden], .oc-badge[hidden] { display: none !important; }
+.oc-panel[hidden], .oc-teaser[hidden], .oc-badge[hidden], .oc-icon[hidden] { display: none !important; }
 
 /* the operator's monogram: the brand's navy, a soft highlight, a living green dot */
 .oc-av {
@@ -13,35 +13,43 @@
   font: 700 12.5px/1 var(--f-display); letter-spacing: 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 10px -6px rgba(18, 23, 78, 0.8);
 }
+.oc-av--ai svg { width: 72%; height: 72%; fill: currentColor; }
 .oc-av--mgr { background: radial-gradient(120% 120% at 28% 18%, #ff3b48 0%, #c4000d 72%); }
 .oc-av--mgr svg { width: 15px; height: 15px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; }
-.oc-av--fab, .oc-av--head { width: 34px; height: 34px; font-size: 14.5px; }
 .oc-av--head { width: 40px; height: 40px; font-size: 16px; }
-.oc-av--fab::after, .oc-av--head::after {
+.oc-av--head::after {
   content: ''; position: absolute; inset-inline-end: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 50%;
   background: #22c55e; box-shadow: 0 0 0 2px var(--plate);
 }
 .oc-av-gap { flex: none; width: 28px; }
 
-/* ---------- the corner capsule ---------- */
+/* ---------- the round button: the Orient mark ---------- */
 .oc-fab {
   position: fixed; inset-inline-end: 22px; bottom: 20px; z-index: 45;
-  display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 5px;
-  border: 1px solid var(--glass-line); border-radius: 999px; cursor: pointer; color: var(--ink);
-  background: var(--frost); box-shadow: var(--shadow-sm), var(--sheen);
-  opacity: 0; transform: translate3d(0, 14px, 0);
-  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), border-color 0.3s, box-shadow 0.4s;
+  display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; color: #fff;
+  background: radial-gradient(120% 120% at 28% 18%, #2c4a9a 0%, #12174e 70%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 0 1px rgba(18, 23, 78, 0.12), 0 16px 32px -14px rgba(10, 30, 60, 0.7);
+  opacity: 0; transform: translate3d(0, 14px, 0) scale(0.9);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), box-shadow 0.4s;
 }
+:root[data-theme='night'] .oc-fab { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(186, 210, 240, 0.28), 0 16px 32px -14px rgba(0, 0, 0, 0.8); }
 .oc-fab.is-in { opacity: 1; transform: none; }
-.oc-fab:hover { transform: translateY(-2px); border-color: var(--hair); }
+.oc-fab:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 0 1px rgba(18, 23, 78, 0.12), 0 20px 38px -14px rgba(10, 30, 60, 0.8); }
 .oc-fab:focus-visible { outline: 2px solid var(--route); outline-offset: 3px; }
-.oc-fab-t { display: grid; gap: 3px; text-align: start; }
-.oc-fab-t b { font: 650 13.5px/1 var(--f-text); color: var(--ink); }
-.oc-fab-t small { font: 600 10px/1 var(--f-chart); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.oc-fab-mark { display: grid; place-items: center; width: 34px; height: 34px; transition: transform 1.4s var(--ease-out); }
+.oc-fab-mark svg { width: 100%; height: 100%; fill: currentColor; }
+.oc-fab:hover .oc-fab-mark { transform: rotate(60deg); }
+/* the mandala breathes a few times after it appears, then rests */
+.oc-fab::after {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid #2c4a9a; opacity: 0; pointer-events: none;
+  animation: oc-ring 3.6s 2.5s var(--ease-out) 3;
+}
+@keyframes oc-ring { 0% { opacity: 0.6; transform: scale(0.9); } 55%, 100% { opacity: 0; transform: scale(1.35); } }
+.oc-fab-dot { position: absolute; inset-inline-end: 3px; bottom: 3px; width: 11px; height: 11px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 2.5px var(--paper); }
 .oc-badge {
-  position: absolute; top: -6px; inset-inline-end: -4px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  position: absolute; top: -4px; inset-inline-end: -4px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
   display: grid; place-items: center; background: var(--route); color: #fff; font: 700 11px/1 var(--f-chart); letter-spacing: 0.04em;
-  box-shadow: 0 0 0 2px var(--plate); animation: oc-pop 0.5s var(--ease-out);
+  box-shadow: 0 0 0 2px var(--paper); animation: oc-pop 0.5s var(--ease-out);
 }
 @keyframes oc-pop { from { transform: scale(0.4); } }
 
@@ -49,11 +57,11 @@
 html.has-chat .explore-fab { inset-inline-end: calc(22px + var(--chat-w, 0px)); }
 html.at-map:not(.is-explore) .oc-fab { transform: translate3d(0, -78px, 0); }
 html.is-intro .oc-fab, html.is-intro .oc-teaser { visibility: hidden; }
-html.chat-open .oc-fab { opacity: 0; pointer-events: none; }
+html.chat-open .oc-fab { opacity: 0; pointer-events: none; transform: scale(0.9); }
 
 /* ---------- the nudge: the call popover's plate ---------- */
 .oc-teaser {
-  position: fixed; inset-inline-end: 22px; bottom: 76px; z-index: 46; display: flex; align-items: flex-start; gap: 2px;
+  position: fixed; inset-inline-end: 22px; bottom: 88px; z-index: 46; display: flex; align-items: flex-start; gap: 2px;
   width: min(320px, calc(100vw - 32px)); padding: 8px; border-radius: 22px;
   background: var(--frost); border: 1px solid var(--glass-line); box-shadow: var(--float), var(--sheen);
   opacity: 0; transform: translate3d(0, 10px, 0) scale(0.97); transform-origin: 100% 100%;
@@ -61,11 +69,12 @@ html.chat-open .oc-fab { opacity: 0; pointer-events: none; }
 }
 [dir='rtl'] .oc-teaser { transform-origin: 0 100%; }
 .oc-teaser.is-on { opacity: 1; transform: none; }
-html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
+html.at-map:not(.is-explore) .oc-teaser { bottom: 166px; }
 .oc-teaser-open { display: flex; align-items: flex-start; gap: 10px; padding: 6px 2px 6px 6px; border: 0; background: none; cursor: pointer; text-align: start; color: var(--ink); }
 .oc-teaser-open > span:last-child { display: grid; gap: 4px; }
 .oc-teaser-open b { font: 650 11px/1 var(--f-chart); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
 .oc-teaser-open b em { font-style: normal; color: var(--ink-3); }
+.oc-teaser .oc-av { width: 32px; height: 32px; }
 .oc-teaser-open span span { font: 450 13.5px/1.42 var(--f-text); color: var(--ink-2); }
 .oc-teaser-x { flex: none; width: 26px; height: 26px; border: 0; border-radius: 50%; display: grid; place-items: center; background: transparent; color: var(--ink-3); cursor: pointer; }
 .oc-teaser-x:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
@@ -119,8 +128,8 @@ html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
   background: color-mix(in srgb, var(--ink) 6%, var(--plate)); color: var(--ink);
 }
 /* a run of bubbles reads as one: the corners where they meet, and the tail by the avatar, are tight */
-.oc-row--op .oc-bubble, .oc-row--mgr .oc-bubble { border-end-start-radius: 6px; }
-.oc-row--op:not(.is-first) .oc-bubble, .oc-row--mgr:not(.is-first) .oc-bubble { border-start-start-radius: 6px; }
+.oc-row--ai .oc-bubble, .oc-row--op .oc-bubble, .oc-row--mgr .oc-bubble { border-end-start-radius: 6px; }
+.oc-row--ai:not(.is-first) .oc-bubble, .oc-row--op:not(.is-first) .oc-bubble, .oc-row--mgr:not(.is-first) .oc-bubble { border-start-start-radius: 6px; }
 .oc-row--me .oc-bubble { background: var(--ink); color: var(--paper); border-end-end-radius: 6px; }
 .oc-row--me.is-tmp .oc-bubble { opacity: 0.7; }
 .oc-row--mgr .oc-bubble { background: color-mix(in srgb, var(--route) 7%, var(--plate)); }
@@ -128,7 +137,7 @@ html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
 .oc-from i { width: 6px; height: 6px; border-radius: 50%; background: var(--route); box-shadow: 0 0 0 3px var(--route-soft); }
 .oc-bubble b { font-weight: 700; }
 .oc-bubble a { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 2px; }
-.oc-row--op .oc-bubble a, .oc-row--mgr .oc-bubble a { color: var(--route); text-decoration-color: color-mix(in srgb, var(--route) 35%, transparent); }
+.oc-row--ai .oc-bubble a, .oc-row--op .oc-bubble a, .oc-row--mgr .oc-bubble a { color: var(--route); text-decoration-color: color-mix(in srgb, var(--route) 35%, transparent); }
 .oc-p, .oc-li { display: block; }
 .oc-li { position: relative; padding-inline-start: 15px; margin: 2px 0; }
 .oc-li::before { content: ''; position: absolute; inset-inline-start: 3px; top: 0.66em; width: 5px; height: 5px; border-radius: 50%; background: var(--route); }
@@ -147,6 +156,18 @@ html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
 .oc-chip i { width: 6px; height: 6px; border-radius: 50%; background: var(--route); transition: transform 0.4s var(--ease-out); }
 .oc-chip:hover { transform: translateY(-1px); border-color: var(--ink-3); box-shadow: 0 12px 22px -14px rgba(16, 40, 72, 0.5); }
 .oc-chip:hover i { transform: scale(1.6); }
+/* the way to the operator: the one dark pill among them */
+.oc-chip--op { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.oc-chip--op svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.oc-chip--op:hover { border-color: var(--ink); }
+
+/* the operator joining: a quiet line in the middle */
+.oc-joined {
+  align-self: center; display: inline-flex; align-items: center; gap: 8px; margin: 8px 0 10px; padding: 5px 13px 5px 5px; border-radius: 999px;
+  border: 1px solid var(--hair-2); background: var(--plate); font: 500 12px/1.3 var(--f-text); color: var(--ink-2);
+}
+.oc-joined.is-new { animation: oc-in 0.5s var(--ease-out) both; }
+.oc-joined .oc-av { width: 24px; height: 24px; font-size: 11px; }
 
 .oc-deck {
   align-self: flex-start; display: flex; align-items: center; gap: 12px; width: min(290px, 82%); margin: 2px 0 9px 36px; padding: 9px 10px 9px 9px;
@@ -200,10 +221,9 @@ html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
 .oc-note { margin: 8px 4px 0; text-align: center; font: 600 9.5px/1.3 var(--f-chart); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
 
 @media (max-width: 960px) {
-  /* a phone: a round frosted button like the explore button, the monogram in it */
-  .oc-fab { inset-inline-end: 16px; bottom: 16px; width: 48px; height: 48px; padding: 0; justify-content: center; }
-  .oc-fab-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .oc-av--fab { width: 38px; height: 38px; font-size: 15.5px; }
+  /* a phone: the same round button, a little smaller */
+  .oc-fab { inset-inline-end: 16px; bottom: 16px; width: 50px; height: 50px; }
+  .oc-fab-mark { width: 30px; height: 30px; }
   html.has-chat .explore-fab { inset-inline-end: calc(16px + var(--chat-w, 0px)); }
   html.at-map:not(.is-explore) .oc-fab { transform: none; }
   html.strip-on:not(.is-explore) .oc-fab { transform: translate3d(0, -64px, 0); }
@@ -225,5 +245,5 @@ html.at-map:not(.is-explore) .oc-teaser { bottom: 154px; }
 
 @media (prefers-reduced-motion: reduce) {
   .oc-fab, .oc-panel, .oc-teaser { transition-duration: 0.01ms; }
-  .oc-row.is-new, .oc-deck.is-new, .oc-chips, .oc-typing i { animation: none; }
+  .oc-row.is-new, .oc-deck.is-new, .oc-joined.is-new, .oc-chips, .oc-typing i, .oc-fab::after { animation: none; }
 }

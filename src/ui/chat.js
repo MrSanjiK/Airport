@@ -1,93 +1,98 @@
 import '../styles/chat.css';
+import mark from '../assets/oa-mark.svg?raw';
 import { lang, onLang } from '../i18n/index.js';
 import { BOT_URL, LEAD_API, OPERATOR } from '../data/inventory.js';
 
-/* The chat in the corner of the site: the company's operator (the same AI as the Telegram bot, the CRM worker's
-   /api/chat), one conversation per visitor, kept in their browser by a signed token. A manager's replies appear here
-   too; "Telegram" moves the whole conversation into the bot. Loaded as its own chunk once the page is idle, so the
-   chart never waits. It wears the site's own clothes: frosted capsules, plates, hairlines, the chart's condensed
-   capitals and the route's red dot. */
+/* The chat in the corner of the site: the company's AI assistant (the same AI as the Telegram bot, the CRM worker's
+   /api/chat), and its operator when the visitor asks for one. One conversation per visitor, kept in their browser by
+   a signed token. A manager's replies appear here too; "Telegram" moves the whole conversation into the bot. Loaded as
+   its own chunk once the page is idle, so the chart never waits. It wears the site's own clothes: a round button with
+   the Orient mark, plates, hairlines, the chart's condensed capitals and the route's red dot. */
 
 const S = {
   uz: {
-    sub: 'Onlayn · savol bering', status: 'Onlayn · Orient Advertising', today: 'Bugun',
-    hello: (n) => `Assalomu alaykum! Men ${n}, Orient Advertising’dan 👋\n\nAeroport, Korzinka, restoranlar va 11 ta hududdagi ekranlar haqida so‘rang: narx, auditoriya, joylar. Qaysi mahsulotingizni reklama qilmoqchisiz?`,
-    chips: ['Narxlar qancha?', 'Aeroportda reklama', 'Korzinka ekranlari', 'Menejer qo‘ng‘iroq qilsin'],
+    ai: 'AI-yordamchi', aiStatus: 'Onlayn · Orient Advertising', opStatus: 'Virtual operator · onlayn', today: 'Bugun',
+    hello: 'Assalomu alaykum! 👋 Men Orient Advertising’ning AI-yordamchisiman.\n\nAeroport, Korzinka, restoranlar va 11 ta hududdagi ekranlar haqida so‘rang: narx, auditoriya, joylar. Operator bilan gaplashmoqchi bo‘lsangiz, pastdagi tugmani bosing.',
+    chips: ['Narxlar qancha?', 'Aeroportda reklama', 'Korzinka ekranlari'], opBtn: 'Operator bilan bog‘lanish',
+    joined: (n) => `${n}, virtual operator, suhbatga qo‘shildi`,
     ph: 'Xabar yozing…', send: 'Yuborish', close: 'Yopish', tg: 'Telegram’da davom etish',
-    manager: 'Menejer', deck: 'PDF · taqdimot', open: 'Ochish', typing: (n) => `${n} yozmoqda`, retry: 'Aloqa uzildi. Qayta yuborish',
+    manager: 'Menejer', deck: 'PDF · taqdimot', typingAi: 'Javob yozilmoqda', typing: (n) => `${n} yozmoqda`, retry: 'Aloqa uzildi. Qayta yuborish',
     rate: 'Juda ko‘p xabar. Bir daqiqadan so‘ng yozing.', aiErr: 'Kechirasiz, hozir javob bera olmadim. Qayta yozing yoki +998 93 566 45 01 raqamiga qo‘ng‘iroq qiling.',
-    note: 'Virtual operator · narxlar QQSsiz', moved: 'Suhbat Telegram’da davom etmoqda',
+    noteAi: 'AI-yordamchi · narxlar QQSsiz', noteOp: 'Virtual operator · narxlar QQSsiz', moved: 'Suhbat Telegram’da davom etmoqda',
     teaser: 'Narx yoki joylar bo‘yicha savolingiz bo‘lsa, yozing — darhol javob beraman.',
   },
   ru: {
-    sub: 'Онлайн · задайте вопрос', status: 'Онлайн · Orient Advertising', today: 'Сегодня',
-    hello: (n) => `Здравствуйте! Я ${n} из Orient Advertising 👋\n\nСпросите об экранах в аэропорту, Korzinka, ресторанах и 11 регионах: цены, аудитория, площадки. Что вы хотите прорекламировать?`,
-    chips: ['Сколько стоит?', 'Реклама в аэропорту', 'Экраны в Korzinka', 'Перезвоните мне'],
+    ai: 'AI-ассистент', aiStatus: 'Онлайн · Orient Advertising', opStatus: 'Виртуальный оператор · онлайн', today: 'Сегодня',
+    hello: 'Здравствуйте! 👋 Я AI-ассистент Orient Advertising.\n\nСпросите об экранах в аэропорту, Korzinka, ресторанах и 11 регионах: цены, аудитория, площадки. Хотите поговорить с оператором — нажмите кнопку ниже.',
+    chips: ['Сколько стоит?', 'Реклама в аэропорту', 'Экраны в Korzinka'], opBtn: 'Связаться с оператором',
+    joined: (n) => `${n}, виртуальный оператор, подключилась к диалогу`,
     ph: 'Напишите сообщение…', send: 'Отправить', close: 'Закрыть', tg: 'Продолжить в Telegram',
-    manager: 'Менеджер', deck: 'PDF · презентация', open: 'Открыть', typing: (n) => `${n} печатает`, retry: 'Нет связи. Отправить ещё раз',
+    manager: 'Менеджер', deck: 'PDF · презентация', typingAi: 'Пишу ответ', typing: (n) => `${n} печатает`, retry: 'Нет связи. Отправить ещё раз',
     rate: 'Слишком много сообщений. Напишите через минуту.', aiErr: 'Извините, не получилось ответить. Напишите ещё раз или позвоните: +998 93 566 45 01.',
-    note: 'Виртуальный оператор · цены без НДС', moved: 'Диалог продолжается в Telegram',
+    noteAi: 'AI-ассистент · цены без НДС', noteOp: 'Виртуальный оператор · цены без НДС', moved: 'Диалог продолжается в Telegram',
     teaser: 'Есть вопрос о ценах или площадках? Напишите — отвечу сразу.',
   },
   en: {
-    sub: 'Online · ask a question', status: 'Online · Orient Advertising', today: 'Today',
-    hello: (n) => `Hello! I’m ${n} from Orient Advertising 👋\n\nAsk me about screens at the airport, in Korzinka, restaurants and 11 regions: prices, audience, venues. What would you like to advertise?`,
-    chips: ['What are the prices?', 'Airport advertising', 'Korzinka screens', 'Have a manager call me'],
+    ai: 'AI assistant', aiStatus: 'Online · Orient Advertising', opStatus: 'Virtual operator · online', today: 'Today',
+    hello: 'Hello! 👋 I’m Orient Advertising’s AI assistant.\n\nAsk me about screens at the airport, in Korzinka, restaurants and 11 regions: prices, audience, venues. To talk to an operator, press the button below.',
+    chips: ['What are the prices?', 'Airport advertising', 'Korzinka screens'], opBtn: 'Talk to an operator',
+    joined: (n) => `${n}, a virtual operator, has joined the chat`,
     ph: 'Write a message…', send: 'Send', close: 'Close', tg: 'Continue in Telegram',
-    manager: 'Manager', deck: 'PDF · presentation', open: 'Open', typing: (n) => `${n} is typing`, retry: 'Connection lost. Send again',
+    manager: 'Manager', deck: 'PDF · presentation', typingAi: 'Writing an answer', typing: (n) => `${n} is typing`, retry: 'Connection lost. Send again',
     rate: 'Too many messages. Please write again in a minute.', aiErr: 'Sorry, I couldn’t answer just now. Please try again or call +998 93 566 45 01.',
-    note: 'Virtual operator · prices excl. VAT', moved: 'The conversation continues in Telegram',
+    noteAi: 'AI assistant · prices excl. VAT', noteOp: 'Virtual operator · prices excl. VAT', moved: 'The conversation continues in Telegram',
     teaser: 'A question about prices or venues? Write — I’ll answer right away.',
   },
   ar: {
-    sub: 'متصلة · اسأل', status: 'متصلة · Orient Advertising', today: 'اليوم',
-    hello: (n) => `مرحبًا! أنا ${n} من Orient Advertising 👋\n\nاسألني عن الشاشات في المطار وKorzinka والمطاعم و11 منطقة: الأسعار والجمهور والمواقع. ما الذي تريد الإعلان عنه؟`,
-    chips: ['ما هي الأسعار؟', 'الإعلان في المطار', 'شاشات Korzinka', 'اتصلوا بي'],
+    ai: 'المساعد الذكي', aiStatus: 'متصل · Orient Advertising', opStatus: 'مشغّلة افتراضية · متصلة', today: 'اليوم',
+    hello: 'مرحبًا! 👋 أنا المساعد الذكي لـ Orient Advertising.\n\nاسألني عن الشاشات في المطار وKorzinka والمطاعم و11 منطقة: الأسعار والجمهور والمواقع. للتحدث مع مشغّل، اضغط الزر أدناه.',
+    chips: ['ما هي الأسعار؟', 'الإعلان في المطار', 'شاشات Korzinka'], opBtn: 'التواصل مع مشغّل',
+    joined: (n) => `انضمت ${n}، المشغّلة الافتراضية، إلى المحادثة`,
     ph: 'اكتب رسالة…', send: 'إرسال', close: 'إغلاق', tg: 'المتابعة في Telegram',
-    manager: 'مدير', deck: 'PDF · عرض تقديمي', open: 'فتح', typing: (n) => `${n} تكتب`, retry: 'انقطع الاتصال. إعادة الإرسال',
+    manager: 'مدير', deck: 'PDF · عرض تقديمي', typingAi: 'جارٍ كتابة الرد', typing: (n) => `${n} تكتب`, retry: 'انقطع الاتصال. إعادة الإرسال',
     rate: 'رسائل كثيرة جدًا. اكتب بعد دقيقة.', aiErr: 'عذرًا، لم أتمكن من الرد الآن. حاول مجددًا أو اتصل على ‎+998 93 566 45 01.',
-    note: 'مشغّلة افتراضية · الأسعار بدون ضريبة', moved: 'تستمر المحادثة في Telegram',
+    noteAi: 'المساعد الذكي · الأسعار بدون ضريبة', noteOp: 'مشغّلة افتراضية · الأسعار بدون ضريبة', moved: 'تستمر المحادثة في Telegram',
     teaser: 'لديك سؤال عن الأسعار أو المواقع؟ اكتب وسأجيب فورًا.',
   },
   zh: {
-    sub: '在线 · 欢迎咨询', status: '在线 · Orient Advertising', today: '今天',
-    hello: (n) => `您好！我是 Orient Advertising 的 ${n} 👋\n\n欢迎咨询机场、Korzinka 超市、餐厅及 11 个地区的屏幕广告：价格、受众和点位。您想推广什么产品？`,
-    chips: ['价格是多少？', '机场广告', 'Korzinka 屏幕', '请经理给我回电'],
-    ph: '输入消息…', send: '发送', close: '关闭', tg: '在 Telegram 继续', manager: '经理', deck: 'PDF · 介绍资料', open: '打开',
-    typing: (n) => `${n} 正在输入`, retry: '连接中断，重新发送', rate: '消息过多，请一分钟后再试。', aiErr: '抱歉，暂时无法回复。请重试或致电 +998 93 566 45 01。',
-    note: '虚拟客服 · 价格不含增值税', moved: '对话已转到 Telegram', teaser: '对价格或点位有疑问？请留言，我马上回复。',
+    ai: 'AI 助手', aiStatus: '在线 · Orient Advertising', opStatus: '虚拟客服 · 在线', today: '今天',
+    hello: '您好！👋 我是 Orient Advertising 的 AI 助手。\n\n欢迎咨询机场、Korzinka 超市、餐厅及 11 个地区的屏幕广告：价格、受众和点位。如需与客服沟通，请点击下方按钮。',
+    chips: ['价格是多少？', '机场广告', 'Korzinka 屏幕'], opBtn: '联系客服', joined: (n) => `虚拟客服 ${n} 已加入对话`,
+    ph: '输入消息…', send: '发送', close: '关闭', tg: '在 Telegram 继续', manager: '经理', deck: 'PDF · 介绍资料',
+    typingAi: '正在回复', typing: (n) => `${n} 正在输入`, retry: '连接中断，重新发送', rate: '消息过多，请一分钟后再试。', aiErr: '抱歉，暂时无法回复。请重试或致电 +998 93 566 45 01。',
+    noteAi: 'AI 助手 · 价格不含增值税', noteOp: '虚拟客服 · 价格不含增值税', moved: '对话已转到 Telegram', teaser: '对价格或点位有疑问？请留言，我马上回复。',
   },
   tr: {
-    sub: 'Çevrimiçi · soru sorun', status: 'Çevrimiçi · Orient Advertising', today: 'Bugün',
-    hello: (n) => `Merhaba! Ben ${n}, Orient Advertising’den 👋\n\nHavalimanı, Korzinka, restoranlar ve 11 bölgedeki ekranları sorun: fiyatlar, kitle, lokasyonlar. Neyin reklamını yapmak istiyorsunuz?`,
-    chips: ['Fiyatlar ne kadar?', 'Havalimanında reklam', 'Korzinka ekranları', 'Beni arayın'],
-    ph: 'Mesaj yazın…', send: 'Gönder', close: 'Kapat', tg: 'Telegram’da devam et', manager: 'Yönetici', deck: 'PDF · sunum', open: 'Aç',
-    typing: (n) => `${n} yazıyor`, retry: 'Bağlantı kesildi. Tekrar gönder', rate: 'Çok fazla mesaj. Bir dakika sonra yazın.', aiErr: 'Üzgünüm, şu an yanıt veremedim. Tekrar deneyin ya da +998 93 566 45 01 numarasını arayın.',
-    note: 'Sanal operatör · fiyatlara KDV dahil değil', moved: 'Sohbet Telegram’da devam ediyor', teaser: 'Fiyat ya da lokasyon sorunuz mu var? Yazın, hemen yanıtlayayım.',
+    ai: 'AI asistan', aiStatus: 'Çevrimiçi · Orient Advertising', opStatus: 'Sanal operatör · çevrimiçi', today: 'Bugün',
+    hello: 'Merhaba! 👋 Ben Orient Advertising’in AI asistanıyım.\n\nHavalimanı, Korzinka, restoranlar ve 11 bölgedeki ekranları sorun: fiyatlar, kitle, lokasyonlar. Bir operatörle konuşmak için aşağıdaki düğmeye basın.',
+    chips: ['Fiyatlar ne kadar?', 'Havalimanında reklam', 'Korzinka ekranları'], opBtn: 'Operatöre bağlan', joined: (n) => `Sanal operatör ${n} sohbete katıldı`,
+    ph: 'Mesaj yazın…', send: 'Gönder', close: 'Kapat', tg: 'Telegram’da devam et', manager: 'Yönetici', deck: 'PDF · sunum',
+    typingAi: 'Yanıt yazılıyor', typing: (n) => `${n} yazıyor`, retry: 'Bağlantı kesildi. Tekrar gönder', rate: 'Çok fazla mesaj. Bir dakika sonra yazın.', aiErr: 'Üzgünüm, şu an yanıt veremedim. Tekrar deneyin ya da +998 93 566 45 01 numarasını arayın.',
+    noteAi: 'AI asistan · fiyatlara KDV dahil değil', noteOp: 'Sanal operatör · fiyatlara KDV dahil değil', moved: 'Sohbet Telegram’da devam ediyor', teaser: 'Fiyat ya da lokasyon sorunuz mu var? Yazın, hemen yanıtlayayım.',
   },
   fr: {
-    sub: 'En ligne · posez une question', status: 'En ligne · Orient Advertising', today: 'Aujourd’hui',
-    hello: (n) => `Bonjour ! Je suis ${n}, d’Orient Advertising 👋\n\nInterrogez-moi sur les écrans à l’aéroport, chez Korzinka, dans les restaurants et 11 régions : prix, audience, emplacements. Que souhaitez-vous promouvoir ?`,
-    chips: ['Quels sont les prix ?', 'Publicité à l’aéroport', 'Écrans Korzinka', 'Rappelez-moi'],
-    ph: 'Écrivez un message…', send: 'Envoyer', close: 'Fermer', tg: 'Continuer sur Telegram', manager: 'Conseiller', deck: 'PDF · présentation', open: 'Ouvrir',
-    typing: (n) => `${n} écrit`, retry: 'Connexion perdue. Renvoyer', rate: 'Trop de messages. Réessayez dans une minute.', aiErr: 'Désolée, je n’ai pas pu répondre. Réessayez ou appelez le +998 93 566 45 01.',
-    note: 'Opératrice virtuelle · prix HT', moved: 'La conversation continue sur Telegram', teaser: 'Une question sur les prix ou les emplacements ? Écrivez, je réponds tout de suite.',
+    ai: 'Assistant IA', aiStatus: 'En ligne · Orient Advertising', opStatus: 'Opératrice virtuelle · en ligne', today: 'Aujourd’hui',
+    hello: 'Bonjour ! 👋 Je suis l’assistant IA d’Orient Advertising.\n\nInterrogez-moi sur les écrans à l’aéroport, chez Korzinka, dans les restaurants et 11 régions : prix, audience, emplacements. Pour parler à une opératrice, appuyez sur le bouton ci-dessous.',
+    chips: ['Quels sont les prix ?', 'Publicité à l’aéroport', 'Écrans Korzinka'], opBtn: 'Parler à une opératrice', joined: (n) => `${n}, opératrice virtuelle, a rejoint la conversation`,
+    ph: 'Écrivez un message…', send: 'Envoyer', close: 'Fermer', tg: 'Continuer sur Telegram', manager: 'Conseiller', deck: 'PDF · présentation',
+    typingAi: 'Rédaction de la réponse', typing: (n) => `${n} écrit`, retry: 'Connexion perdue. Renvoyer', rate: 'Trop de messages. Réessayez dans une minute.', aiErr: 'Désolé, je n’ai pas pu répondre. Réessayez ou appelez le +998 93 566 45 01.',
+    noteAi: 'Assistant IA · prix HT', noteOp: 'Opératrice virtuelle · prix HT', moved: 'La conversation continue sur Telegram', teaser: 'Une question sur les prix ou les emplacements ? Écrivez, je réponds tout de suite.',
   },
   it: {
-    sub: 'Online · fai una domanda', status: 'Online · Orient Advertising', today: 'Oggi',
-    hello: (n) => `Salve! Sono ${n} di Orient Advertising 👋\n\nChiedimi degli schermi in aeroporto, da Korzinka, nei ristoranti e in 11 regioni: prezzi, pubblico, location. Cosa vorresti pubblicizzare?`,
-    chips: ['Quali sono i prezzi?', 'Pubblicità in aeroporto', 'Schermi Korzinka', 'Richiamatemi'],
-    ph: 'Scrivi un messaggio…', send: 'Invia', close: 'Chiudi', tg: 'Continua su Telegram', manager: 'Manager', deck: 'PDF · presentazione', open: 'Apri',
-    typing: (n) => `${n} sta scrivendo`, retry: 'Connessione persa. Invia di nuovo', rate: 'Troppi messaggi. Riprova tra un minuto.', aiErr: 'Spiacente, non sono riuscita a rispondere. Riprova o chiama il +998 93 566 45 01.',
-    note: 'Operatrice virtuale · prezzi IVA esclusa', moved: 'La conversazione continua su Telegram', teaser: 'Una domanda su prezzi o location? Scrivi, rispondo subito.',
+    ai: 'Assistente IA', aiStatus: 'Online · Orient Advertising', opStatus: 'Operatrice virtuale · online', today: 'Oggi',
+    hello: 'Salve! 👋 Sono l’assistente IA di Orient Advertising.\n\nChiedimi degli schermi in aeroporto, da Korzinka, nei ristoranti e in 11 regioni: prezzi, pubblico, location. Per parlare con un’operatrice, premi il pulsante qui sotto.',
+    chips: ['Quali sono i prezzi?', 'Pubblicità in aeroporto', 'Schermi Korzinka'], opBtn: 'Parla con un’operatrice', joined: (n) => `${n}, operatrice virtuale, si è unita alla chat`,
+    ph: 'Scrivi un messaggio…', send: 'Invia', close: 'Chiudi', tg: 'Continua su Telegram', manager: 'Manager', deck: 'PDF · presentazione',
+    typingAi: 'Sto scrivendo la risposta', typing: (n) => `${n} sta scrivendo`, retry: 'Connessione persa. Invia di nuovo', rate: 'Troppi messaggi. Riprova tra un minuto.', aiErr: 'Spiacente, non sono riuscito a rispondere. Riprova o chiama il +998 93 566 45 01.',
+    noteAi: 'Assistente IA · prezzi IVA esclusa', noteOp: 'Operatrice virtuale · prezzi IVA esclusa', moved: 'La conversazione continua su Telegram', teaser: 'Una domanda su prezzi o location? Scrivi, rispondo subito.',
   },
   ko: {
-    sub: '온라인 · 문의하기', status: '온라인 · Orient Advertising', today: '오늘',
-    hello: (n) => `안녕하세요! Orient Advertising의 ${n}입니다 👋\n\n공항, Korzinka, 레스토랑, 11개 지역의 스크린 광고에 대해 물어보세요: 가격, 타깃, 위치. 어떤 제품을 광고하고 싶으신가요?`,
-    chips: ['가격이 얼마인가요?', '공항 광고', 'Korzinka 스크린', '전화 주세요'],
-    ph: '메시지를 입력하세요…', send: '보내기', close: '닫기', tg: 'Telegram에서 계속하기', manager: '매니저', deck: 'PDF · 소개 자료', open: '열기',
-    typing: (n) => `${n} 입력 중`, retry: '연결이 끊겼어요. 다시 보내기', rate: '메시지가 너무 많아요. 1분 후 다시 보내주세요.', aiErr: '죄송해요, 지금은 답변할 수 없어요. 다시 시도하거나 +998 93 566 45 01로 전화해 주세요.',
-    note: '가상 상담원 · 가격은 부가세 별도', moved: '대화는 Telegram에서 계속됩니다', teaser: '가격이나 위치가 궁금하신가요? 메시지를 남겨 주시면 바로 답변드려요.',
+    ai: 'AI 어시스턴트', aiStatus: '온라인 · Orient Advertising', opStatus: '가상 상담원 · 온라인', today: '오늘',
+    hello: '안녕하세요! 👋 Orient Advertising의 AI 어시스턴트입니다.\n\n공항, Korzinka, 레스토랑, 11개 지역의 스크린 광고에 대해 물어보세요: 가격, 타깃, 위치. 상담원과 이야기하려면 아래 버튼을 누르세요.',
+    chips: ['가격이 얼마인가요?', '공항 광고', 'Korzinka 스크린'], opBtn: '상담원 연결', joined: (n) => `가상 상담원 ${n}님이 대화에 참여했습니다`,
+    ph: '메시지를 입력하세요…', send: '보내기', close: '닫기', tg: 'Telegram에서 계속하기', manager: '매니저', deck: 'PDF · 소개 자료',
+    typingAi: '답변 작성 중', typing: (n) => `${n} 입력 중`, retry: '연결이 끊겼어요. 다시 보내기', rate: '메시지가 너무 많아요. 1분 후 다시 보내주세요.', aiErr: '죄송해요, 지금은 답변할 수 없어요. 다시 시도하거나 +998 93 566 45 01로 전화해 주세요.',
+    noteAi: 'AI 어시스턴트 · 가격은 부가세 별도', noteOp: '가상 상담원 · 가격은 부가세 별도', moved: '대화는 Telegram에서 계속됩니다', teaser: '가격이나 위치가 궁금하신가요? 메시지를 남겨 주시면 바로 답변드려요.',
   },
 };
 const code = () => lang()?.code ?? 'uz';
@@ -102,13 +107,14 @@ const ICON = {
   pdf: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
   go: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>',
   person: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 19.5c.9-3.4 3.7-5.2 7-5.2s6.1 1.8 7 5.2"/></svg>',
+  headset: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 14v-2a7.5 7.5 0 0 1 15 0v2"/><rect x="3.5" y="13" width="4" height="6" rx="1.6"/><rect x="16.5" y="13" width="4" height="6" rx="1.6"/><path d="M18.5 19c0 1.4-1.6 2.3-4 2.3h-1.5"/></svg>',
 };
 
 const KEY = 'oa-chat';
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null') || {}; } catch (e) { return {}; } };
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-/* The operator writes light Markdown: bold, italics, links, bullets. Escaped first, then marked up. */
+/* The assistant writes light Markdown: bold, italics, links, bullets. Escaped first, then marked up. */
 function md(text) {
   const inline = (line) => {
     let h = esc(line)
@@ -145,22 +151,26 @@ export function initChat() {
   if (!API || document.querySelector('.oc-fab')) return;
   const saved = load();
   const st = {
-    token: saved.token || null, log: Array.isArray(saved.log) ? saved.log : [], live: !!saved.live, telegram: !!saved.telegram,
+    token: saved.token || null, log: Array.isArray(saved.log) ? saved.log : [], live: !!saved.live, telegram: !!saved.telegram, operator: !!saved.operator,
     open: false, sending: false, busy: false, unread: 0, pending: null, notice: null, poll: 0, shown: 0, active: Date.now(),
   };
-  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ token: st.token, log: st.log.slice(-80), live: st.live, telegram: st.telegram })); } catch (e) { /* private mode */ } };
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ token: st.token, log: st.log.slice(-80), live: st.live, telegram: st.telegram, operator: st.operator })); } catch (e) { /* private mode */ } };
   const lastId = () => st.log.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0);
   st.shown = lastId();
   const touch = matchMedia('(hover: none)').matches;
   const root = document.documentElement;
-  const avatar = (cls = '') => `<span class="oc-av ${cls}" aria-hidden="true">${esc(initial())}</span>`;
+  // the faces: the Orient mark for the assistant, the operator's initial, a person for a manager
+  const faceAi = (cls = '') => `<span class="oc-av oc-av--ai ${cls}" aria-hidden="true">${mark}</span>`;
+  const faceOp = (cls = '') => `<span class="oc-av ${cls}" aria-hidden="true">${esc(initial())}</span>`;
+  const faceMgr = () => `<span class="oc-av oc-av--mgr" aria-hidden="true">${ICON.person}</span>`;
 
-  /* ---------- the corner capsule, the nudge and the panel ---------- */
+  /* ---------- the round button, the nudge and the panel ---------- */
   const fab = document.createElement('button');
   fab.className = 'oc-fab';
   fab.type = 'button';
   fab.setAttribute('aria-haspopup', 'dialog');
   fab.setAttribute('aria-expanded', 'false');
+  fab.innerHTML = `<span class="oc-fab-mark" aria-hidden="true">${mark}</span><i class="oc-fab-dot"></i><b class="oc-badge" hidden></b>`;
 
   const teaser = document.createElement('div');
   teaser.className = 'oc-teaser';
@@ -175,6 +185,7 @@ export function initChat() {
     <header class="oc-head">
       <span class="oc-head-av"></span>
       <div class="oc-who"><b id="ocTitle"></b><small><i class="oc-dot"></i><span class="oc-status"></span></small></div>
+      <button class="oc-icon oc-op" type="button">${ICON.headset}</button>
       <a class="oc-icon oc-tg" href="${BOT_URL}" target="_blank" rel="noopener">${ICON.tg}</a>
       <button class="oc-icon oc-x" type="button">${ICON.x}</button>
     </header>
@@ -197,41 +208,51 @@ export function initChat() {
   const sendBtn = form.querySelector('.oc-send');
   const trap = form.querySelector('.oc-trap');
   const tgLink = panel.querySelector('.oc-tg');
+  const opBtn = panel.querySelector('.oc-op');
 
-  // the explore button stands beside this one, whatever this one's width in the current language
+  // the explore button stands beside this one
   const measure = () => root.style.setProperty('--chat-w', `${fab.offsetWidth + 10}px`);
   if ('ResizeObserver' in window) new ResizeObserver(measure).observe(fab);
 
+  // who is speaking shows in the header and the footnote: the assistant, or the operator once asked for
+  const head = () => {
+    const L = s();
+    panel.querySelector('.oc-head-av').innerHTML = st.operator ? faceOp('oc-av--head') : faceAi('oc-av--head');
+    panel.querySelector('#ocTitle').textContent = st.operator ? opName() : L.ai;
+    panel.querySelector('.oc-status').textContent = st.operator ? L.opStatus : L.aiStatus;
+    panel.querySelector('.oc-note').textContent = st.operator ? L.noteOp : L.noteAi;
+    opBtn.hidden = st.operator;
+  };
   const labels = () => {
     const L = s();
-    const n = opName();
-    fab.innerHTML = `${avatar('oc-av--fab')}<span class="oc-fab-t"><b>${esc(n)}</b><small>${esc(L.sub)}</small></span><b class="oc-badge" hidden></b>`;
-    fab.setAttribute('aria-label', `${n} · ${L.sub}`);
-    teaser.innerHTML = `<button class="oc-teaser-open" type="button">${avatar()}<span><b>${esc(n)} <em>· Orient Advertising</em></b><span>${esc(L.teaser)}</span></span></button><button class="oc-teaser-x" type="button" aria-label="${esc(L.close)}">${ICON.x}</button>`;
-    panel.querySelector('.oc-head-av').innerHTML = avatar('oc-av--head');
-    panel.querySelector('#ocTitle').textContent = n;
-    panel.querySelector('.oc-status').textContent = L.status;
+    fab.setAttribute('aria-label', `Orient Advertising · ${L.ai}`);
+    fab.title = L.ai;
+    teaser.innerHTML = `<button class="oc-teaser-open" type="button">${faceAi()}<span><b>Orient Advertising <em>· ${esc(L.ai)}</em></b><span>${esc(L.teaser)}</span></span></button><button class="oc-teaser-x" type="button" aria-label="${esc(L.close)}">${ICON.x}</button>`;
     panel.querySelector('.oc-x').setAttribute('aria-label', L.close);
+    opBtn.title = L.opBtn;
+    opBtn.setAttribute('aria-label', L.opBtn);
     tgLink.title = L.tg;
     tgLink.setAttribute('aria-label', L.tg);
     input.placeholder = L.ph;
     sendBtn.setAttribute('aria-label', L.send);
-    panel.querySelector('.oc-note').textContent = L.note;
+    head();
     badge();
     measure();
   };
 
   /* ---------- the conversation ---------- */
-  // what the list shows, in order: the operator's (and managers') messages split into bubbles, the visitor's, decks
+  // what the list shows, in order: the assistant's, the operator's and managers' messages split into bubbles, the
+  // visitor's, decks, and the moment the operator joined
   function items() {
     const out = [];
-    const op = (text, id, fresh, extra = {}) => parts(text).forEach((p, i) => out.push({ kind: extra.kind ?? 'op', html: md(p), key: `${id}.${i}`, fresh, delay: i, ...extra }));
-    op(s().hello(opName()), 'hello', false);
+    const say = (text, id, fresh, kind) => parts(text).forEach((p, i) => out.push({ kind, html: md(p), fresh, delay: i }));
+    say(s().hello, 'hello', false, 'ai');
     st.log.forEach((m) => {
       const fresh = Number(m.id) > st.shown;
       if (m.role === 'deck') out.push({ kind: 'deck', m, fresh });
+      else if (m.role === 'system') out.push({ kind: 'joined', m, fresh });
       else if (m.role === 'user') out.push({ kind: 'me', html: esc(m.text).replace(/\n/g, '<br>'), fresh, failed: m.failed });
-      else op(m.text, m.id, fresh, m.role === 'manager' ? { kind: 'mgr' } : {});
+      else say(m.text, m.id, fresh, m.role === 'manager' ? 'mgr' : m.by === 'operator' ? 'op' : 'ai');
     });
     if (st.pending) out.push({ kind: 'me', html: esc(st.pending.text).replace(/\n/g, '<br>'), fresh: true, tmp: true, failed: st.pending.failed });
     return out;
@@ -243,15 +264,16 @@ export function initChat() {
       const m = it.m;
       return `<a class="oc-deck${anim}" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="oc-deck-ico">${ICON.pdf}</span><span class="oc-deck-t"><b>${esc(m.name)}</b><small>${esc(L.deck)}</small></span><span class="oc-deck-go">${ICON.go}</span></a>`;
     }
+    if (it.kind === 'joined') return `<p class="oc-joined${anim}">${faceOp()}<span>${esc(L.joined(opName()))}</span></p>`;
     if (it.kind === 'me') {
       const fail = it.failed ? `<button class="oc-retry" type="button">${esc(L.retry)}</button>` : '';
       return `<div class="oc-row oc-row--me${it.tmp ? ' is-tmp' : ''}${anim}"><div class="oc-bubble">${it.html}</div>${fail}</div>`;
     }
-    // the operator's avatar sits by the last bubble of each run, as in a messenger
+    // the speaker's face sits by the last bubble of each run, as in a messenger
     const last = !next || next.kind !== it.kind;
     const first = !prev || prev.kind !== it.kind;
     const label = it.kind === 'mgr' && first ? `<span class="oc-from"><i></i>${esc(L.manager)}</span>` : '';
-    const face = it.kind === 'mgr' ? `<span class="oc-av oc-av--mgr" aria-hidden="true">${ICON.person}</span>` : avatar();
+    const face = it.kind === 'mgr' ? faceMgr() : it.kind === 'op' ? faceOp() : faceAi();
     return `<div class="oc-row oc-row--${it.kind}${first ? ' is-first' : ''}${last ? ' is-last' : ''}${anim}">${last ? face : '<span class="oc-av-gap"></span>'}<div class="oc-col">${label}<div class="oc-bubble">${it.html}</div></div></div>`;
   }
 
@@ -263,14 +285,21 @@ export function initChat() {
     const html = [`<p class="oc-day"><span>${esc(L.today)}</span></p>`];
     all.forEach((it, i) => {
       html.push(draw(it, all[i + 1], all[i - 1]));
-      // the quick questions belong right under the greeting, until the visitor has written
-      if (i === 1 && !st.log.length && !st.pending) html.push(`<div class="oc-chips">${L.chips.map((c) => `<button type="button" class="oc-chip"><i></i>${esc(c)}</button>`).join('')}</div>`);
+      // the quick questions belong right under the greeting, until the visitor has written; the operator is one of them
+      if (i === 1 && !st.log.length && !st.pending) {
+        html.push(`<div class="oc-chips">${L.chips.map((c) => `<button type="button" class="oc-chip"><i></i>${esc(c)}</button>`).join('')}${st.operator ? '' : `<button type="button" class="oc-chip oc-chip--op" data-op>${ICON.headset}${esc(L.opBtn)}</button>`}</div>`);
+      }
     });
-    if (st.sending || st.busy) html.push(`<div class="oc-row oc-row--op is-last oc-typing">${avatar()}<div class="oc-col"><div class="oc-bubble"><i></i><i></i><i></i></div><span class="oc-typing-t">${esc(L.typing(opName()))}</span></div></div>`);
+    if (st.sending || st.busy) {
+      const face = st.operator || st.calling ? faceOp() : faceAi();
+      const words = st.operator || st.calling ? L.typing(opName()) : L.typingAi;
+      html.push(`<div class="oc-row oc-row--op is-first is-last oc-typing">${face}<div class="oc-col"><div class="oc-bubble"><i></i><i></i><i></i></div><span class="oc-typing-t">${esc(words)}</span></div></div>`);
+    }
     if (st.notice) html.push(`<p class="oc-notice">${esc(st.notice)}</p>`);
     if (st.telegram) html.push(`<a class="oc-moved" href="${BOT_URL}" target="_blank" rel="noopener">${ICON.tg}<span>${esc(L.moved)}</span></a>`);
     list.innerHTML = html.join('');
     st.shown = Math.max(st.shown, lastId());
+    head();
     if (stick) requestAnimationFrame(() => body.scrollTo({ top: body.scrollHeight, behavior: jump ? 'auto' : 'smooth' }));
   }
 
@@ -285,18 +314,21 @@ export function initChat() {
     if (j.token) st.token = j.token;
     if ('live' in j) st.live = !!j.live;
     if ('telegram' in j) st.telegram = !!j.telegram;
+    if ('operator' in j) st.operator = !!j.operator;
   };
 
-  async function send(text) {
+  // a message from the visitor, or (path 'operator') their wish to talk to the operator
+  async function send(text, path = 'send') {
     text = text.trim();
-    if (!text || st.sending) return;
+    if ((!text && path === 'send') || st.sending) return;
     st.notice = null;
     st.active = Date.now();
-    st.pending = { id: `tmp${Date.now()}`, role: 'user', text, tmp: true };
+    st.pending = text ? { id: `tmp${Date.now()}`, role: 'user', text, tmp: true } : null;
     st.sending = true;
+    st.calling = path === 'operator';
     render({ jump: true });
     try {
-      const j = await post('send', { token: st.token, text, after: lastId(), lang: code(), page: location.href, website: trap.value }, 45000);
+      const j = await post(path, { token: st.token, text, after: lastId(), lang: code(), page: location.href, website: trap.value }, 45000);
       if (j.status === 429) { st.pending = null; st.notice = s().rate; return; }
       if (!j.ok) throw new Error(String(j.status));
       apply(j);
@@ -307,19 +339,22 @@ export function initChat() {
       st.busy = !!j.busy;
     } catch (e) {
       if (st.pending) st.pending.failed = true;
+      else st.notice = s().aiErr;
     } finally {
       st.sending = false;
+      st.calling = false;
       persist();
       render();
       schedule();
     }
   }
+  const callOperator = () => { if (!st.operator) send('', 'operator'); };
 
   async function sync() {
     if (!st.token) return [];
     try {
       const j = await post('history', { token: st.token, after: lastId() });
-      if (j.token === null) { Object.assign(st, { token: null, log: [], live: false, telegram: false }); persist(); render(); return []; }
+      if (j.token === null) { Object.assign(st, { token: null, log: [], live: false, telegram: false, operator: false }); persist(); render(); return []; }
       apply(j);
       const fresh = merge(j.messages);
       const heard = fresh.filter((m) => m.role !== 'user');
@@ -333,9 +368,9 @@ export function initChat() {
     } catch (e) { return []; }
   }
 
-  /* A person may be writing besides the operator (a manager answering the visitor, or another tab's answer on its
-     way): the widget listens, quickly while the chat is open, slowly while it is closed, and less and less as the
-     visit goes quiet; a hidden tab does not listen at all. */
+  /* A person may be writing besides the AI (a manager answering the visitor, or another tab's answer on its way): the
+     widget listens, quickly while the chat is open, slowly while it is closed, and less and less as the visit goes
+     quiet; a hidden tab does not listen at all. */
   function schedule() {
     clearTimeout(st.poll);
     if (!st.token || !(st.live || st.busy) || document.visibilityState !== 'visible') return;
@@ -348,7 +383,6 @@ export function initChat() {
 
   function badge() {
     const b = fab.querySelector('.oc-badge');
-    if (!b) return;
     b.hidden = !st.unread;
     b.textContent = st.unread > 9 ? '9+' : String(st.unread);
   }
@@ -392,6 +426,7 @@ export function initChat() {
   }
   fab.addEventListener('click', () => (st.open ? close() : open()));
   panel.querySelector('.oc-x').addEventListener('click', close);
+  opBtn.addEventListener('click', callOperator);
   panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
   /* ---------- typing ---------- */
@@ -414,7 +449,7 @@ export function initChat() {
   });
   list.addEventListener('click', (e) => {
     const chip = e.target.closest('.oc-chip');
-    if (chip) return send(chip.textContent);
+    if (chip) return chip.hasAttribute('data-op') ? callOperator() : send(chip.textContent);
     if (e.target.closest('.oc-retry') && st.pending) { const { text } = st.pending; st.pending = null; send(text); }
   });
 
